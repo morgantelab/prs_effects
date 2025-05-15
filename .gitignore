@@ -1,0 +1,10 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+chr_22_test/
+errors/
+filter/
+logs/
+other/
+results/
