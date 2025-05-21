@@ -50,10 +50,11 @@ for CHR in {1..22}; do
       --keep "${ID_FILE}" \
       --rm-dup exclude-all \
       --snps-only just-acgt \
-      --maf 0.05 \
+      --maf 0.01 \
       --mac 5 \
       --geno 0.1 \
       --hwe 1e-5 \
+      --threads 8 \
       --make-bed \
       --out "${OUTPUT_DIR}/ukb_chr${CHR}_filtered"
 done
@@ -65,4 +66,5 @@ for CHR in {1..22} ; do
       --freq \
       --out "${OUTPUT_DIR}/ukb_chr${CHR}_filtered"
 done
+
 

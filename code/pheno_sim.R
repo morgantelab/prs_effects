@@ -6,132 +6,132 @@ base_dir <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/filter"
 results_dir <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results"
 plink2_path <- "/data2/morgante_lab/yuxuans/software/plink2"
 
-# h2 <- 0.5
-# p <- 1000
-# n_snps <- 1000
-# 
-# set.seed(123)  # For reproducibility
-# full_fam <- fread(
-#  paste0(base_dir, "/ukb_chr21_filtered.fam"),
-#   col.names = c("FID", "IID", "PID", "MID", "Sex", "Pheno")
-# )
-# 
-# sample_indices <- sample(nrow(full_fam), 50000)
-# sample_ids <- full_fam[sample_indices, .(FID, IID)]
-# # Write sample IDs to keep
-# fwrite(sample_ids[, .(FID, IID)],
-#        paste0(results_dir, "/subset_samples.txt"),
-#        sep = " ", col.names = FALSE)
-# 
-# # (1) Select random causal SNPs genome-wide --------------------------------
-# # Combine frequencies across chromosomes
-# all_freq <- rbindlist(lapply(1:22, function(chr) {
-#   fread(paste0(base_dir, "/ukb_chr", chr, "_filtered.afreq"),
-#         select = c(1, 2, 3, 4, 6),  # CHR, SNP ID, REF, ALT, ALT_FREQ
-#         col.names = c("chr", "snp", "ref", "alt", "maf"))
-# }))
-# ### 339047 SNPs left
-# # Randomly select SNPs
-# set.seed(123)
-# causal_snps <- all_freq[sample(.N, n_snps)][, index := .I]
-# causal_snps_list <- causal_snps %>% select(snp)
-# # Write causal SNPs to extract
-# write.table(causal_snps_list, file = paste0(results_dir, "/causal_snps.txt"),
-#        col.names = FALSE, sep = "\t", quote = F, row.names = F)
-# # (2) Simulate effects -----------------------------------------------------
-# set.seed(123)
-# a <- rnorm(p, mean = 0, sd = sqrt(2))
-# set.seed(123)
-# dom_type <- rep(c("complete", "incomplete", "additive"), times = c(500, 300, 200))
-# 
-# d <- numeric(p)
-# 
-# for (i in 1:p) {
-#   if (dom_type[i] == "complete") {
-#     d[i] <- sample(c(1, -1), 1) * a[i]
-#   } else if (dom_type[i] == "incomplete") {
-#     d[i] <- runif(1, 0.2, 0.8) * sample(c(1, -1), 1) * a[i]
-#     } else if (dom_type[i] == "additive"){
-#     d[i] <- 0
-#   }
-# }
-# 
-# # (3) Process chromosomes ---------------------------------------------------
-# total_geno <- NULL
-# ID <- NULL
-# 
-# for(CHR in 1:22) {
-#   cat("Processing chromosome", CHR, "\n")
-#   system(paste(
-#     plink2_path,
-#     "--bfile", paste0(base_dir, "/ukb_chr", CHR, "_filtered"),
-#     "--keep", paste0(results_dir, "/subset_samples.txt"),
-#     "--extract", paste0(results_dir, "/causal_snps.txt"),
-#     "--make-bed",
-#     "--out", paste0(base_dir, "/temp_chr", CHR),
-#     "--memory 8000",
-#     "--threads 8"
-#   ))
-# 
-#   plink_data <- read_plink(paste0(base_dir, "/temp_chr", CHR))
-# 
-#   # Get sample IDs (FID and IID)
-#   if(is.null(ID)) {
-#     ID <- plink_data$fam[, c("fam", "id")]  # Use correct column names from fam file
-#     colnames(ID) <- c("FID", "IID")
-#     total_geno <- data.frame(
-#       FID = ID$FID,
-#       IID = ID$IID,
-#       score = 0
-#     )
-#   }
-# 
-#   geno_matrix <- t(plink_data$X)
-#   colnames(geno_matrix) <- plink_data$bim$id
-# 
-#   chr_snps <- causal_snps[chr == CHR, snp]
-#   geno_matrix <- geno_matrix[, chr_snps, drop = FALSE]
-# 
-#   a_vals <- a[causal_snps[chr == CHR, index]]
-#   d_vals <- d[causal_snps[chr == CHR, index]]
-# 
-#   for (j in 1:ncol(geno_matrix)) {
-#     for (i in 1:nrow(geno_matrix)) {
-#       genotype <- geno_matrix[i, j]
-#       if (is.na(genotype)) next
-# 
-#       if (geno_matrix[i, j] == 0) {
-#         total_geno$score[i] <- total_geno$score[i] - a_vals[j]
-#       } else if (geno_matrix[i, j] == 1) {
-#         total_geno$score[i] <- total_geno$score[i] + d_vals[j]
-#       } else if (geno_matrix[i, j] == 2) {
-#         total_geno$score[i] <- total_geno$score[i] + a_vals[j]
-#       }
-#     }
-#   }
-# 
-#   unlink(paste0(base_dir, "/temp_chr", CHR, c(".bed", ".bim", ".fam", ".log")))
-# }
-# 
-# # (3) Final phenotype calculation --------------------------------------------
-# var_g <- var(total_geno$score)
-# var_e <- (1/h2 - 1) * var_g
-# total_geno$pheno <- total_geno$score + rnorm(nrow(total_geno), 0, sqrt(var_e))
-# pheno <- data.frame(
-#   FID = as.character(total_geno$FID),
-#   IID = as.character(total_geno$IID),
-#   pheno = total_geno$score + rnorm(nrow(total_geno), 0, sqrt((1/h2 - 1) * var(total_geno$score)))
-# )
-# # Save results with IDs
-# write.table(pheno,
-#             paste0(results_dir, "/simulated_pheno_small.txt"),
-#             row.names = FALSE, quote = FALSE, sep = "\t")
-# 
-# write.table(total_geno[, c("FID", "IID", "score")],
-#             paste0(results_dir, "/simulated_geno_small.txt"),
-#             row.names = FALSE, quote = FALSE, sep = "\t")
-# 
-# cat("Success! Results saved to:", results_dir, "\n")
+h2 <- 0.5
+p <- 1000
+n_snps <- 1000
+
+set.seed(123)  # For reproducibility
+full_fam <- fread(
+ paste0(base_dir, "/ukb_chr21_filtered.fam"),
+  col.names = c("FID", "IID", "PID", "MID", "Sex", "Pheno")
+)
+
+sample_indices <- sample(nrow(full_fam), 50000)
+sample_ids <- full_fam[sample_indices, .(FID, IID)]
+# Write sample IDs to keep
+fwrite(sample_ids[, .(FID, IID)],
+       paste0(results_dir, "/subset_samples.txt"),
+       sep = " ", col.names = FALSE)
+
+# (1) Select random causal SNPs genome-wide --------------------------------
+# Combine frequencies across chromosomes
+all_freq <- rbindlist(lapply(1:22, function(chr) {
+  fread(paste0(base_dir, "/ukb_chr", chr, "_filtered.afreq"),
+        select = c(1, 2, 3, 4, 6),  # CHR, SNP ID, REF, ALT, ALT_FREQ
+        col.names = c("chr", "snp", "ref", "alt", "maf"))
+}))
+### 339047 SNPs left
+# Randomly select SNPs
+set.seed(123)
+causal_snps <- all_freq[sample(.N, n_snps)][, index := .I]
+causal_snps_list <- causal_snps %>% select(snp)
+# Write causal SNPs to extract
+write.table(causal_snps_list, file = paste0(results_dir, "/causal_snps.txt"),
+       col.names = FALSE, sep = "\t", quote = F, row.names = F)
+# (2) Simulate effects -----------------------------------------------------
+set.seed(123)
+a <- rnorm(p, mean = 0, sd = sqrt(2))
+set.seed(123)
+dom_type <- rep(c("complete", "incomplete", "additive"), times = c(500, 300, 200))
+
+d <- numeric(p)
+
+for (i in 1:p) {
+  if (dom_type[i] == "complete") {
+    d[i] <- sample(c(1, -1), 1) * a[i]
+  } else if (dom_type[i] == "incomplete") {
+    d[i] <- runif(1, 0.2, 0.8) * sample(c(1, -1), 1) * a[i]
+    } else if (dom_type[i] == "additive"){
+    d[i] <- 0
+  }
+}
+
+# (3) Process chromosomes ---------------------------------------------------
+total_geno <- NULL
+ID <- NULL
+
+for(CHR in 1:22) {
+  cat("Processing chromosome", CHR, "\n")
+  system(paste(
+    plink2_path,
+    "--bfile", paste0(base_dir, "/ukb_chr", CHR, "_filtered"),
+    "--keep", paste0(results_dir, "/subset_samples.txt"),
+    "--extract", paste0(results_dir, "/causal_snps.txt"),
+    "--make-bed",
+    "--out", paste0(base_dir, "/temp_chr", CHR),
+    "--memory 8000",
+    "--threads 8"
+  ))
+
+  plink_data <- read_plink(paste0(base_dir, "/temp_chr", CHR))
+
+  # Get sample IDs (FID and IID)
+  if(is.null(ID)) {
+    ID <- plink_data$fam[, c("fam", "id")]  # Use correct column names from fam file
+    colnames(ID) <- c("FID", "IID")
+    total_geno <- data.frame(
+      FID = ID$FID,
+      IID = ID$IID,
+      score = 0
+    )
+  }
+
+  geno_matrix <- t(plink_data$X)
+  colnames(geno_matrix) <- plink_data$bim$id
+
+  chr_snps <- causal_snps[chr == CHR, snp]
+  geno_matrix <- geno_matrix[, chr_snps, drop = FALSE]
+
+  a_vals <- a[causal_snps[chr == CHR, index]]
+  d_vals <- d[causal_snps[chr == CHR, index]]
+
+  for (j in 1:ncol(geno_matrix)) {
+    for (i in 1:nrow(geno_matrix)) {
+      genotype <- geno_matrix[i, j]
+      if (is.na(genotype)) next
+
+      if (geno_matrix[i, j] == 0) {
+        total_geno$score[i] <- total_geno$score[i] - a_vals[j]
+      } else if (geno_matrix[i, j] == 1) {
+        total_geno$score[i] <- total_geno$score[i] + d_vals[j]
+      } else if (geno_matrix[i, j] == 2) {
+        total_geno$score[i] <- total_geno$score[i] + a_vals[j]
+      }
+    }
+  }
+
+  unlink(paste0(base_dir, "/temp_chr", CHR, c(".bed", ".bim", ".fam", ".log")))
+}
+
+# (3) Final phenotype calculation --------------------------------------------
+var_g <- var(total_geno$score)
+var_e <- (1/h2 - 1) * var_g
+total_geno$pheno <- total_geno$score + rnorm(nrow(total_geno), 0, sqrt(var_e))
+pheno <- data.frame(
+  FID = as.character(total_geno$FID),
+  IID = as.character(total_geno$IID),
+  pheno = total_geno$score + rnorm(nrow(total_geno), 0, sqrt((1/h2 - 1) * var(total_geno$score)))
+)
+# Save results with IDs
+write.table(pheno,
+            paste0(results_dir, "/simulated_pheno_small.txt"),
+            row.names = FALSE, quote = FALSE, sep = "\t")
+
+write.table(total_geno[, c("FID", "IID", "score")],
+            paste0(results_dir, "/simulated_geno_small.txt"),
+            row.names = FALSE, quote = FALSE, sep = "\t")
+
+cat("Success! Results saved to:", results_dir, "\n")
 
 
 ###-----------------------Directly Read in Pheno, All Above can not run-----------------------------------------
@@ -241,12 +241,12 @@ process_geno_files <- function(base_dir, pheno) {
     names(geno_df)[1:2] <- c("FID", "IID")
     
     snp_info <- plink_data$bim %>%
-      dplyr::select(id, chr, pos, allele1, allele2) %>%
+      dplyr::select(id, chr, pos, ref, alt) %>%
       dplyr::rename(SNP = id, 
                     chromosome = chr,
                     position = pos,
-                    ref_allele = allele1,
-                    alt_allele = allele2)
+                    ref_allele = ref,
+                    alt_allele = alt)
     
     # Merge with phenotype data
     full_data <- merge(pheno, geno_df, by = c("FID", "IID"))
@@ -286,8 +286,8 @@ write.table(effect_results, paste0(results_dir, "/effect_size.txt"),
 
 cat("Success! Results saved to:", results_dir, "\n")
   
-# ### 3. Calculate PRS ------
-# 
+### 3. Calculate PRS ------
+
 # calculate_prs <- function(geno_data, effect_results, alpha=0.05, total_loci) {
 #   # 1. Identify SNPs significant for EITHER effect (Bonferroni corrected)
 #   sig_idx <- which(
@@ -347,61 +347,228 @@ cat("Success! Results saved to:", results_dir, "\n")
 #             sep = "\t")
 # 
 # cat("Analysis completed successfully! Results saved to prs_results.csv\n")
-# 
-# 
 
-# # (6) Plots and Matrix ------------------------------------------------------------
+
+
+# (6) Plots ------------------------------------------------------------
+
+### 1. Manhattan Plot
+
+effect_results = fread(paste0(results_dir,"/effect_size.txt"))
+
+causal_d_snps <- causal_snps$snp[dom_type[causal_snps$index] %in% c("complete", "incomplete")]
+causal_a_snps <- causal_snps$snp
+
+library("qqman")
+
+# Prepare data for qqman
+manhattan_data <- effect_results %>%
+  mutate(is_causal = case_when(
+    SNP %in% causal_d_snps ~ "dominant",
+    SNP %in% causal_a_snps & !SNP %in% causal_d_snps ~ "additive",
+    TRUE ~ "non-causal"  # All other SNPs are labeled as non-causal
+  ))
+manhattan_data_a <- manhattan_data %>% 
+  rename(P = p_a) %>%
+  rename(CHR = chr) %>%
+  rename(BP = position)
+# png(file.path(results_dir, "manhattan_additive.png"), width=12, height=6, units="in", res=300)
 # 
-# ### 1. Manhattan Plot
-# 
-# effect_results = fread(paste0(results_dir,"/effect_size.txt"))
-# effect_results = merge(effect_results, all_freq[c("chr", )])
-# library("qqman")
-# 
-# # Identify causal SNPs
-# d_causal_indices <- which(dom_type %in% c("complete", "incomplete"))  # First 800 SNPs (500+300)
-# 
-# manhattan_a <- effect_results[, .(SNP, CHR = chr, BP = pos, P = p_a,
-#                                   is_causal = SNP %in% causal_snps$snp)]
-# 
-# manhattan_d <- effect_results[, .(SNP, CHR = chr, BP = pos, P = p_d,
-#                                   is_causal = .I %in% d_causal_indices)]
-# 
-# output_file <- file.path(results_dir, "manhattan_plots.pdf")
-# 
-# pdf(output_file, width = 12, height = 6)
-# 
-# par(mfrow = c(1, 2))
-# 
-# # Additive effects (all p causal SNPs)
-# manhattan(manhattan_a, main = "Additive Effects",
-#           genomewideline = -log10(0.05/nrow(manhattan_a)),
-#           col = c("#276FBF", "#183059"))
-# points(manhattan_a[is_causal == TRUE, .(BP, P)],
-#        col = "red", pch = 1, cex = 1.2, lwd = 1.5)
-# 
-# # Dominance effects (only complete/incomplete dominance SNPs)
-# manhattan(manhattan_d, main = "Dominance Effects",
-#           genomewideline = -log10(0.05/nrow(manhattan_d)),
-#           col = c("#276FBF", "#183059"))
-# points(manhattan_d[is_causal == TRUE, .(BP, P)],
-#        col = "red", pch = 1, cex = 1.2, lwd = 1.5)
-# 
-# # Add legend
-# legend("topright",
-#        legend = c("Causal SNPs", "Bonferroni Threshold"),
-#        col = c("red", "black"),
-#        pch = c(1, NA),
-#        lty = c(NA, 2))
+# manhattan(
+#   manhattan_data_a,
+#   main = "Additive Effects",
+#   suggestiveline = -log10(1e-5),
+#   genomewideline = -log10(0.05/nrow(manhattan_data)),
+#   highlight = causal_a_snps,
+#   col = c("black", "grey")
+# )
 # dev.off()
-# 
-# message("Manhattan plots saved as 'manhattan_plots.pdf' in your results directory")
-# 
-# output_file <- paste0(results_dir, "/effects_dat.csv")
-# write.table(effect_results,
-#             file = output_file,
-#             row.names = FALSE,
-#             col.names = TRUE,
-#             quote = FALSE,
-#             sep = "\t")
 
+manhattan_data_d <- manhattan_data %>% 
+  rename(P = p_d) %>%
+  rename(CHR = chr) %>%
+  rename(BP = position)
+# png(file.path(results_dir, "manhattan_dominant.png"), width=12, height=6, units="in", res=300)
+
+# manhattan(
+#   manhattan_data_d,
+#   main = "Domiance Effects",
+#   suggestiveline = -log10(1e-5),
+#   genomewideline = -log10(0.05/nrow(manhattan_data)),
+#   highlight = causal_d_snps,
+#   col = c("black", "grey")
+# )
+# dev.off()
+
+library(ggplot2)
+additive_data <- manhattan_data_a %>% 
+  
+  # Compute chromosome size
+  group_by(CHR) %>% 
+  summarise(chr_len=max(BP)) %>% 
+  
+  # Calculate cumulative position of each chromosome
+  mutate(tot=cumsum(as.numeric(chr_len))-as.numeric(chr_len)) %>%
+  select(-chr_len) %>%
+  
+  # Add this info to the initial dataset
+  left_join(manhattan_data_a, ., by=c("CHR"="CHR")) %>%
+  
+  # Add a cumulative position of each SNP
+  arrange(CHR, BP) %>%
+  mutate( BPcum=BP+tot)
+
+axisdf = additive_data %>%
+  group_by(CHR) %>%
+  summarize(center=( max(BPcum) + min(BPcum) ) / 2 )
+
+p_add <- ggplot(additive_data, aes(x=BPcum, y=-log10(P))) +
+  
+  # Show all points
+  geom_point(color = "gray70", alpha = 0.8, size = 2) +
+  
+  # custom X axis:
+  scale_x_continuous( label = axisdf$CHR, breaks= axisdf$center ) +
+  scale_y_continuous(expand = c(0, 0) ) +     # remove space between plot area and x axis
+  
+  # Add highlighted points
+  geom_point(data = subset(additive_data, !is.na(is_causal)),aes(color = is_causal),size = 2) +
+  scale_color_manual( name = "Causal SNPs",
+                      values = c("additive" = "green", "dominant" = "orange")) +
+  # Add Bonferroni correction significant line
+  geom_hline(yintercept = -log10(0.05/nrow(all_freq)), 
+             color = "red", linetype = "dashed") +
+  
+  # Add labs
+  labs(
+    title = "Additive Effects",
+    x = "Chromosome",
+    y = expression(-log[10](p-value))) +
+  # Custom the theme:
+  theme(
+    legend.position = "right", 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(), 
+    axis.line = element_line(colour = "black"),
+    plot.title = element_text(hjust = 0.5)
+  )
+
+ggsave(file.path(results_dir, "manhattan_additive.png"), p_add, width=12, height=6)
+
+
+dominance_data <- manhattan_data_d %>% 
+  
+  # Compute chromosome size
+  group_by(CHR) %>% 
+  summarise(chr_len=max(BP)) %>% 
+  
+  # Calculate cumulative position of each chromosome
+  mutate(tot=cumsum(as.numeric(chr_len))-as.numeric(chr_len)) %>%
+  select(-chr_len) %>%
+  
+  # Add this info to the initial dataset
+  left_join(manhattan_data_d, ., by=c("CHR"="CHR")) %>%
+  
+  # Add a cumulative position of each SNP
+  arrange(CHR, BP) %>%
+  mutate( BPcum=BP+tot)
+
+axisdf = dominance_data %>%
+  group_by(CHR) %>%
+  summarize(center=( max(BPcum) + min(BPcum) ) / 2 )
+
+p_dom <- ggplot(dominance_data, aes(x=BPcum, y=-log10(P))) +
+  
+  # Show all points
+  geom_point(color = "gray70", alpha = 0.8, size = 2) +
+  
+  # custom X axis:
+  scale_x_continuous( label = axisdf$CHR, breaks= axisdf$center ) +
+  scale_y_continuous(expand = c(0, 0) ) +     # remove space between plot area and x axis
+  
+  # Add highlighted points
+  geom_point(data = subset(dominance_data, !is.na(is_causal)),aes(color = is_causal),size = 2) +
+  scale_color_manual( name = "Causal SNPs",
+                      values = c("additive" = "green", "dominant" = "orange")) +
+  # Add Bonferroni correction significant line
+  geom_hline(yintercept = -log10(0.05/nrow(dominance_data)), 
+             color = "red", linetype = "dashed") +
+  
+  # Add labs
+  labs(
+    title = "Dominance Effects",
+    x = "Chromosome",
+    y = expression(-log[10](p-value))) +
+  # Custom the theme:
+  theme(
+    legend.position = "right", 
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(), 
+    axis.line = element_line(colour = "black"),
+    plot.title = element_text(hjust = 0.5)
+  )
+
+ggsave(file.path(results_dir, "manhattan_domiance.png"), p_dom, width=12, height=6)
+
+
+# (7) Matrix ------------------------------------------------------------
+alpha <- 0.05/nrow(all_freq)
+effect_results <- effect_results %>% 
+  mutate(causal_a = ifelse(SNP %in% causal_a_snps, TRUE, FALSE)) %>%
+  mutate(causal_d = ifelse(SNP %in% causal_d_snps, TRUE, FALSE))
+
+TP_a <- sum(effect_results$p_a[effect_results$causal_a] < alpha)       # True causal called significant
+FP_a <- sum(effect_results$p_a[!effect_results$causal_a] < alpha)      # Non-causal called significant
+FN_a <- sum(effect_results$p_a[effect_results$causal_a] >= alpha)      # True causal NOT called significant
+TN_a <- sum(effect_results$p_a[!effect_results$causal_a] >= alpha)     # Non-causal NOT called significant
+
+
+
+TP_d <- sum(effect_results$p_d[effect_results$causal_d] < alpha)       # True causal called significant
+FP_d <- sum(effect_results$p_d[!effect_results$causal_d] < alpha)      # Non-causal called significant
+FN_d <- sum(effect_results$p_d[effect_results$causal_d] >= alpha)      # True causal NOT called significant
+TN_d <- sum(effect_results$p_d[!effect_results$causal_d] >= alpha)     # Non-causal NOT called significant
+
+
+
+calculate_metrics <- function(TP, FP, FN, TN) {
+  data.frame(
+    TPR = TP/(TP + FN),
+    FDR = FP/(TP + FP),
+    TNR = TN/(TN + FP),
+    Precision = TP/(TP + FP),
+    Accuracy = (TP + TN)/(TP + FP + FN + TN),
+    Power = TP/(TP + FN)
+  )
+}
+
+# Create matrices
+additive_matrix <- matrix(c(TP_a, FP_a, FN_a, TN_a), ncol = 2,
+                          dimnames = list(c("Causal", "Non-causal"),
+                                          c("significant", "Not significant")))
+
+dominance_matrix <- matrix(c(TP_d, FP_d, FN_d, TN_d), ncol = 2,
+                           dimnames = list(c("Causal", "Non-causal"),
+                                           c("significant", "Not significant")))
+
+# Calculate metrics
+additive_metrics <- calculate_metrics(TP_a, FP_a, FN_a, TN_a)
+dominance_metrics <- calculate_metrics(TP_d, FP_d, FN_d, TN_d)
+
+cat("\nCombined Results:\n")
+list(
+  Additive = list(
+    Confusion_Matrix = matrix(c(TP_a, FP_a, FN_a, TN_a), ncol = 2,
+                              dimnames = list(c("Causal", "Non-causal"),
+                                              c("Significant", "Not significant"))),
+    Metrics = additive_metrics
+  ),
+  Dominance = list(
+    Confusion_Matrix = matrix(c(TP_d, FP_d, FN_d, TN_d), ncol = 2,
+                              dimnames = list(c("Causal", "Non-causal"),
+                                              c("Significant", "Not significant"))),
+    Metrics = dominance_metrics
+  )
+)

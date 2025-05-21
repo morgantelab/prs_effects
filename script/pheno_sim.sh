@@ -3,7 +3,7 @@
 #SBATCH --job-name=pheno_sim
 #SBATCH --partition=fm-bigmem-2
 #SBATCH --cpus-per-task=3
-#SBATCH --mem=400G
+#SBATCH --mem=100G
 #SBATCH --time=12:00:00
 #SBATCH --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/pheno_sim_%j.out
 #SBATCH --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/pheno_sim_%j.err

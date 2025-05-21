@@ -1,0 +1,14 @@
+PLINK v1.9.0-b.7.7 64-bit (22 Oct 2024)
+Options in effect:
+  --bed /data2/morgante_lab/data/ukbiobank/genotypes/array/ukb22418_c22_b0_v2_s488243.bed
+  --bim /data2/morgante_lab/data/ukbiobank/genotypes/array/ukb22418_c22_b0_v2_s488243.bim
+  --fam /data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024/ukb22418_c22_b0_v2_s487945.fam
+  --keep /data2/morgante_lab/ukbiobank_projects/prs_effects/results/ID_filtered.txt
+
+Hostname: bigmem006
+Working directory: /data2/morgante_lab/ukbiobank_projects/prs_effects/script
+Start time: Mon May 19 14:08:11 2025
+
+Warning: No output requested.  (Did you forget --make-bed?)  Exiting.
+
+End time: Mon May 19 14:08:11 2025
