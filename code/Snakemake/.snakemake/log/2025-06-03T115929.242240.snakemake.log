@@ -1,0 +1,10 @@
+Config file dirs.yaml is extended by additional config specified via the command line.
+Config file cluster_config.yaml is extended by additional config specified via the command line.
+Config file resources.yaml is extended by additional config specified via the command line.
+Building DAG of jobs...
+MissingInputException in rule process_chromosome in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile, line 20:
+Missing input files for rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr1_effects_test.txt
+    wildcards: chr=1
+    affected files:
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/filter/ukb_chr1_filtered

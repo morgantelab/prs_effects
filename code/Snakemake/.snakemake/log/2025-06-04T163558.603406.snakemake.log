@@ -1,0 +1,52 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 1
+Job stats:
+job                   count
+------------------  -------
+all                       1
+combine_results           1
+process_chromosome       22
+total                    24
+
+Select jobs to execute...
+
+[Wed Jun  4 16:35:59 2025]
+rule process_chromosome:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt
+    jobid: 21
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt
+    wildcards: chr=20
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+
+        module load R/4.2.3
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/process_chromosome.R \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large.txt \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/filter/ukb_chr20_filtered \
+            20
+        
+Submitted job 21 with external jobid 'Submitted batch job 1337233'.
+[Wed Jun  4 16:36:08 2025]
+Error in rule process_chromosome:
+    jobid: 21
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt
+    shell:
+        
+        module load R/4.2.3
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/process_chromosome.R \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large.txt \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/filter/ukb_chr20_filtered \
+            20
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337233
+
+Error executing rule process_chromosome on cluster (jobid: 21, external: Submitted batch job 1337233, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/.snakemake/tmp.m2bkke0q/snakejob.process_chromosome.21.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-06-04T163558.603406.snakemake.log

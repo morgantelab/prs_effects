@@ -1,0 +1,26 @@
+### Cluster Configuration
+resources: [cpus=400, mem_mb=800000, jobweight=40, solo=1]
+
+# config.yaml
+__default__:
+    account: "fm-bigmem-2"
+    partition: "fm-bigmem-2"
+    mail-user: "yuxuans@clemson.edu"
+    mail-type: "ALL"
+    time: "12:00:00"
+cluster:
+  "mkdir -p {log_dir}/{rule} &&
+   sbatch
+     --account={resources.account}
+     --partition={resources.partition}
+     --cpus-per-task={threads}
+     --mem={resources.mem_mb}
+     --job-name={rule}_{wildcards}
+     --output={log_dir}/{rule}/%j_{rule}_{wildcards}.out
+     --error={error_dir}/{rule}/%j_{rule}_{wildcards}.err
+     --time={resources.time}
+     --mail-user={resources.mail-user}
+     --mail-type={resources.mail-type}"
+
+latency-wait: 60
+printshellcmds: True

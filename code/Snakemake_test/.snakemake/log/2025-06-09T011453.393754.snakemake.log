@@ -1,0 +1,26 @@
+Building DAG of jobs...
+MissingInputException in rule all in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/Snakefile, line 16:
+Missing input files for rule all:
+    affected files:
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr20_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr1_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr2_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr8_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr4_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr11_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr22_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr14_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr17_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr3_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr16_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr6_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr7_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr10_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr15_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr21_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr13_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr19_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr9_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr12_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr5_effects.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr18_effects.txt

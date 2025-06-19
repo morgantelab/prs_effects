@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 1
+Job stats:
+job                   count
+------------------  -------
+all                       1
+combine_results           1
+process_chromosome       22
+total                    24
+
+Select jobs to execute...
+
+[Tue Jun  3 15:03:41 2025]
+rule process_chromosome:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt
+    log: /data2/morgante_lab/ukbiobank_projects/prs_effects/logs/process_chromosome/chr20.out, /data2/morgante_lab/ukbiobank_projects/prs_effects/errors/process_chromosome/chr20.err
+    jobid: 21
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt
+    wildcards: chr=20
+    threads: 4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 21 with external jobid 'Submitted batch job 1337148'.
+[Tue Jun  3 15:03:51 2025]
+Error in rule process_chromosome:
+    jobid: 21
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr20_effects_test.txt
+    log: /data2/morgante_lab/ukbiobank_projects/prs_effects/logs/process_chromosome/chr20.out, /data2/morgante_lab/ukbiobank_projects/prs_effects/errors/process_chromosome/chr20.err (check log file(s) for error details)
+    cluster_jobid: Submitted batch job 1337148
+
+Error executing rule process_chromosome on cluster (jobid: 21, external: Submitted batch job 1337148, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/.snakemake/tmp.0a94lhi3/snakejob.process_chromosome.21.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-06-03T150340.701883.snakemake.log

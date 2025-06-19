@@ -1,0 +1,9 @@
+Config file dirs.yaml is extended by additional config specified via the command line.
+Config file cluster_config.yaml is extended by additional config specified via the command line.
+Config file resources.yaml is extended by additional config specified via the command line.
+Building DAG of jobs...
+MissingInputException in rule all in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile, line 12:
+Missing input files for rule all:
+    affected files:
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/manhattan_additive_large_test.png
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/manhattan_dominance_large_test.png

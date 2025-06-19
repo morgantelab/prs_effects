@@ -1,0 +1,544 @@
+Config file config.yaml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 22
+Job stats:
+job                   count
+------------------  -------
+all                       1
+combine_results           1
+process_chromosome       22
+total                    24
+
+Select jobs to execute...
+
+[Wed Jun  4 22:51:02 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr6_effects.txt
+    jobid: 7
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr6_effects.txt
+    wildcards: chr=6
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 7 with external jobid 'Submitted batch job 1337318'.
+
+[Wed Jun  4 22:51:02 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr20_effects.txt
+    jobid: 21
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr20_effects.txt
+    wildcards: chr=20
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 21 with external jobid 'Submitted batch job 1337319'.
+
+[Wed Jun  4 22:51:02 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr14_effects.txt
+    jobid: 15
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr14_effects.txt
+    wildcards: chr=14
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 15 with external jobid 'Submitted batch job 1337320'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr1_effects.txt
+    jobid: 2
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr1_effects.txt
+    wildcards: chr=1
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 2 with external jobid 'Submitted batch job 1337321'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr7_effects.txt
+    jobid: 8
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr7_effects.txt
+    wildcards: chr=7
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 8 with external jobid 'Submitted batch job 1337322'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr21_effects.txt
+    jobid: 22
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr21_effects.txt
+    wildcards: chr=21
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 22 with external jobid 'Submitted batch job 1337323'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr15_effects.txt
+    jobid: 16
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr15_effects.txt
+    wildcards: chr=15
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 16 with external jobid 'Submitted batch job 1337324'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr8_effects.txt
+    jobid: 9
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr8_effects.txt
+    wildcards: chr=8
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 9 with external jobid 'Submitted batch job 1337325'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr22_effects.txt
+    jobid: 23
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr22_effects.txt
+    wildcards: chr=22
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 23 with external jobid 'Submitted batch job 1337326'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr2_effects.txt
+    jobid: 3
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr2_effects.txt
+    wildcards: chr=2
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 3 with external jobid 'Submitted batch job 1337327'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr16_effects.txt
+    jobid: 17
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr16_effects.txt
+    wildcards: chr=16
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 17 with external jobid 'Submitted batch job 1337328'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr9_effects.txt
+    jobid: 10
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr9_effects.txt
+    wildcards: chr=9
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 10 with external jobid 'Submitted batch job 1337329'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr3_effects.txt
+    jobid: 4
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr3_effects.txt
+    wildcards: chr=3
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 4 with external jobid 'Submitted batch job 1337330'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr17_effects.txt
+    jobid: 18
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr17_effects.txt
+    wildcards: chr=17
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 18 with external jobid 'Submitted batch job 1337331'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr10_effects.txt
+    jobid: 11
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr10_effects.txt
+    wildcards: chr=10
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 11 with external jobid 'Submitted batch job 1337332'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr4_effects.txt
+    jobid: 5
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr4_effects.txt
+    wildcards: chr=4
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 5 with external jobid 'Submitted batch job 1337333'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr18_effects.txt
+    jobid: 19
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr18_effects.txt
+    wildcards: chr=18
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 19 with external jobid 'Submitted batch job 1337334'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr11_effects.txt
+    jobid: 12
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr11_effects.txt
+    wildcards: chr=11
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 12 with external jobid 'Submitted batch job 1337335'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr5_effects.txt
+    jobid: 6
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr5_effects.txt
+    wildcards: chr=5
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 6 with external jobid 'Submitted batch job 1337336'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr19_effects.txt
+    jobid: 20
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr19_effects.txt
+    wildcards: chr=19
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 20 with external jobid 'Submitted batch job 1337337'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr12_effects.txt
+    jobid: 13
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr12_effects.txt
+    wildcards: chr=12
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 13 with external jobid 'Submitted batch job 1337338'.
+
+[Wed Jun  4 22:51:03 2025]
+rule process_chromosome:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr13_effects.txt
+    jobid: 14
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr13_effects.txt
+    wildcards: chr=13
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+Submitted job 14 with external jobid 'Submitted batch job 1337339'.
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 7
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr6_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337318
+
+Error executing rule process_chromosome on cluster (jobid: 7, external: Submitted batch job 1337318, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.7.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 21
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr20_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337319
+
+Error executing rule process_chromosome on cluster (jobid: 21, external: Submitted batch job 1337319, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.21.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 15
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr14_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337320
+
+Error executing rule process_chromosome on cluster (jobid: 15, external: Submitted batch job 1337320, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.15.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 2
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr1_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337321
+
+Error executing rule process_chromosome on cluster (jobid: 2, external: Submitted batch job 1337321, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.2.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 8
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr7_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337322
+
+Error executing rule process_chromosome on cluster (jobid: 8, external: Submitted batch job 1337322, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.8.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 22
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr21_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337323
+
+Error executing rule process_chromosome on cluster (jobid: 22, external: Submitted batch job 1337323, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.22.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 16
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr15_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337324
+
+Error executing rule process_chromosome on cluster (jobid: 16, external: Submitted batch job 1337324, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.16.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 9
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr8_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337325
+
+Error executing rule process_chromosome on cluster (jobid: 9, external: Submitted batch job 1337325, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.9.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 23
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr22_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337326
+
+Error executing rule process_chromosome on cluster (jobid: 23, external: Submitted batch job 1337326, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.23.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:12 2025]
+Error in rule process_chromosome:
+    jobid: 3
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr2_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337327
+
+Error executing rule process_chromosome on cluster (jobid: 3, external: Submitted batch job 1337327, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.3.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 17
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr16_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337328
+
+Error executing rule process_chromosome on cluster (jobid: 17, external: Submitted batch job 1337328, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.17.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 10
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr9_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337329
+
+Error executing rule process_chromosome on cluster (jobid: 10, external: Submitted batch job 1337329, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.10.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 4
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr3_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337330
+
+Error executing rule process_chromosome on cluster (jobid: 4, external: Submitted batch job 1337330, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.4.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 18
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr17_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337331
+
+Error executing rule process_chromosome on cluster (jobid: 18, external: Submitted batch job 1337331, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.18.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 11
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr10_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337332
+
+Error executing rule process_chromosome on cluster (jobid: 11, external: Submitted batch job 1337332, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.11.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 5
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr4_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337333
+
+Error executing rule process_chromosome on cluster (jobid: 5, external: Submitted batch job 1337333, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.5.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 19
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr18_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337334
+
+Error executing rule process_chromosome on cluster (jobid: 19, external: Submitted batch job 1337334, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.19.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 12
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr11_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337335
+
+Error executing rule process_chromosome on cluster (jobid: 12, external: Submitted batch job 1337335, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.12.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 6
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr5_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337336
+
+Error executing rule process_chromosome on cluster (jobid: 6, external: Submitted batch job 1337336, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.6.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:13 2025]
+Error in rule process_chromosome:
+    jobid: 20
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr19_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337337
+
+Error executing rule process_chromosome on cluster (jobid: 20, external: Submitted batch job 1337337, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.20.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:14 2025]
+Error in rule process_chromosome:
+    jobid: 13
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr12_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337338
+
+Error executing rule process_chromosome on cluster (jobid: 13, external: Submitted batch job 1337338, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.13.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Wed Jun  4 22:51:14 2025]
+Error in rule process_chromosome:
+    jobid: 14
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr13_effects.txt
+    shell:
+        
+        module load R/4.2.3
+        export R_LIBS=/data2/morgante_lab/yuxuans/software/R/x86_64-pc-linux-gnu-library/4.2:/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library:$R_LIBS
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337339
+
+Error executing rule process_chromosome on cluster (jobid: 14, external: Submitted batch job 1337339, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.oqewohjb/snakejob.process_chromosome.14.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-06-04T225102.484133.snakemake.log

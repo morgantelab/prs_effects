@@ -1,0 +1,30 @@
+Config file dirs.yaml is extended by additional config specified via the command line.
+Config file cluster_config.yaml is extended by additional config specified via the command line.
+Config file resources.yaml is extended by additional config specified via the command line.
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 22
+Job stats:
+job                   count
+------------------  -------
+all                       1
+combine_results           1
+generate_plots            1
+process_chromosome       22
+total                    25
+
+Select jobs to execute...
+
+[Mon Jun  2 23:33:09 2025]
+rule process_chromosome:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/filter/ukb_chr6_filtered.bed, /data2/morgante_lab/ukbiobank_projects/prs_effects/filter/ukb_chr6_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/filter/ukb_chr6_filtered.fam, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr6_effects_test.txt
+    jobid: 7
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/temp/chr6_effects_test.txt
+    wildcards: chr=6
+    threads: 4
+    resources: mem_mb=800000, mem_mib=3623, disk_mb=3798, disk_mib=3623, tmpdir=<TBD>, time_min=12:00:00, partition=fm-bigmem-2, mem=800G
+
+RuleException in rule process_chromosome in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile, line 20:
+AttributeError: 'Resources' object has no attribute 'account', when formatting the following:
+sbatch         -A {resources.account}         -p {resources.partition}         -c {threads}         --mem={resources.mem}         -t {resources.time}         -o {resources.output}         -e {resources.error}         --mail-user={resources.mail-user}         --mail-type={resources.mail-type}

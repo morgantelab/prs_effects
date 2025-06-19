@@ -1,0 +1,4 @@
+Config file config.yaml is extended by additional config specified via the command line.
+NameError in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/Snakefile, line 29:
+name 'script_dir' is not defined
+  File "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/Snakefile", line 29, in <module>

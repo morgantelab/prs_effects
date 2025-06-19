@@ -1,0 +1,28 @@
+### Cluster Configuration
+resources: [cpus=4, mem_mb=800000, jobweight=40, solo=1]
+
+cluster:
+  "mkdir -p {log_dir}/{rule} &&
+   sbatch
+     --account={resources.account}
+     --partition={resources.partition}
+     --ntasks-per-core={resources.ntpc}
+     --ntasks={resources.tasks}
+     --cpus-per-task={threads}
+     --mem-per-cpu={resources.mem_mb_per_cpu}
+     --job-name={rule}_{wildcards}
+     --output={log_dir}/{rule}/%j_{rule}_{wildcards}.out
+     --error={error_dir}/{rule}/%j_{rule}_{wildcards}.err
+     --time={resources.time}"
+
+default-resources:
+  - partition='fm-bigmem-1,fm-bigmem-2,fm-bigmem-3,fm-bigmem-4'
+  - time="4-00:00:00"
+  - nodes=4
+  - tasks=1
+  - ntpc=4
+  - mem_mb=800000
+
+### Snakemake Settings
+latency-wait: 60
+printshellcmds: True

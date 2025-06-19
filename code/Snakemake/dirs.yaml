@@ -1,0 +1,9 @@
+### Project Directories
+base_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/filter"
+results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results"
+temp_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/temp"
+log_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/logs"
+code_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code"
+error_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/errors"
+### Software Paths
+plink2_path: "/data2/morgante_lab/yuxuans/software/plink2"

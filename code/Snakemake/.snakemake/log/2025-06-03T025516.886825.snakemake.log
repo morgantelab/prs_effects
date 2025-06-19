@@ -1,0 +1,2 @@
+SyntaxError in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile, line 35:
+Multiple run/shell/script/notebook/wrapper/template_engine/cwl keywords in rule process_chromosome. (Snakefile, line 35)

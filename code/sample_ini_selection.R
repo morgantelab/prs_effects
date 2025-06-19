@@ -1,15 +1,24 @@
-#------------Test For One Chromosome Only-------------------------
+#!/usr/bin/env Rscript
+# Get command-line arguments
+args <- commandArgs(trailingOnly = TRUE)
+fam_file <- args[1]
+output_file <- args[2]
 
 ## Load Packgaes
 library(data.table)
 library(dplyr)
-## Check the phenotypes
-pheno <- fread("/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv")
-gc()
-### Sex 31-0.0 Age 21022-0.0 First 10 PCAs 22009-0.1 - 22009-0.10 Ethnic 22006-0.0
-### Relatedness 22020-0.0 keep only individuals used in PCA
-### Outlier due to heterozygosity and/or rate of missing phenotypes 22027-0.0
 
+pheno_file <- "/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv"
+
+geno_ids <- fread(fam_file, 
+                  header = FALSE, 
+                  col.names = c("FID", "IID", "FatherID", "MotherID", "Sex", "Phenotype"))
+geno_ids <- geno_ids[Sex %in% c(1, 2), .(IID)]
+
+# Read phenotype data
+pheno <- fread(pheno_file)
+
+# Filter phenotype data
 pheno_filtered <- pheno %>%
   select(
     eid,                           # Participant ID
@@ -26,26 +35,30 @@ pheno_filtered <- pheno %>%
     pc9 = "22009-0.9",             # Genetic PC9
     pc10 = "22009-0.10",           # Genetic PC10
     used_in_pca = "22020-0.0",     # 1 = Used in PCA
-    outlier = "22027-0.0",          # 0 = Non-outlier, overlapped with used_in_pca
-    ethnic = "22006-0.0"
+    outlier = "22027-0.0",         # 0 = Non-outlier
+    ethnic = "22006-0.0"           # Ethnic background
   ) %>%
   filter(
-    ethnic == 1,
-    used_in_pca == 1              # Keep only individuals used in PCA
-  ) %>%
-  select(-used_in_pca, -outlier)
+    ethnic == 1,                   # White British
+    used_in_pca == 1,            # Used in PCA analysis
+    eid %in% geno_ids$IID
+  )
 
-### 337464 samples left
-gc()
+# Random sampling
+set.seed(123)
+sample_indices <- sample(nrow(pheno_filtered), 200000)
+sample_ids <- pheno_filtered[sample_indices, .(eid)]
 
-ID = as.data.frame(pheno_filtered$eid)
+# Create ID file
+ID = as.data.frame(sample_ids$eid)
 colnames(ID) = "#FID"
 ID$"IID" = ID$`#FID`
-write.table(ID, "ID_filtered.txt", 
+
+write.table(ID, output_file, 
             quote = FALSE, 
             col.names = TRUE,
             row.names = FALSE, 
             sep = "\t")
 
-fam = fread("/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024/ukb22418_c22_b0_v2_s487945.fam")
-sum(fam$V1%in%ID$`#FID`)
+# Verification: Count unique IDs
+cat("Unique IDs in final file:", nrow(ID), "\n")

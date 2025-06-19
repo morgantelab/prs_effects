@@ -1,0 +1,34 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 22
+Job stats:
+job                count
+---------------  -------
+all                    1
+combine_results        1
+total                  2
+
+Select jobs to execute...
+
+[Mon Jun  9 02:06:58 2025]
+rule combine_results:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr1_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr2_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr3_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr4_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr5_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr6_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr7_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr8_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr9_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr10_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr11_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr12_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr13_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr14_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr15_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr16_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr17_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr18_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr19_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr20_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr21_effects.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr22_effects.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/effect_size_large_test_200k.txt
+    jobid: 1
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/effect_size_large_test_200k.txt
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+
+        module load R/4.2.3
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/combined_results.R \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/effect_size_large_test_200k.txt
+        
+Submitted job 1 with external jobid 'Submitted batch job 1337792'.
+Waiting at most 5 seconds for missing files.
+MissingOutputException in rule combine_results in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/Snakefile, line 34:
+Job 1  completed successfully, but some output files are missing. Missing files after 5 seconds. This might be due to filesystem latency. If that is the case, consider to increase the wait time with --latency-wait:
+/data2/morgante_lab/ukbiobank_projects/prs_effects/results/effect_size_large_test_200k.txt
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-06-09T020657.907902.snakemake.log

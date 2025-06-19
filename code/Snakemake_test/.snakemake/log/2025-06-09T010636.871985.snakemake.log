@@ -1,0 +1,5 @@
+Building DAG of jobs...
+MissingInputException in rule all in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/Snakefile, line 16:
+Missing input files for rule all:
+    affected files:
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/effect_size_large_test_200k.txt

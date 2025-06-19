@@ -1,0 +1,51 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 22
+Job stats:
+job                   count
+------------------  -------
+all                       1
+process_chromosome        1
+total                     2
+
+Select jobs to execute...
+
+[Mon Jun  9 01:28:31 2025]
+rule process_chromosome:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large_200k.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr<built-in function chr>_effects.txt
+    jobid: 1
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr<built-in function chr>_effects.txt
+    wildcards: chr=<built-in function chr>
+    resources: mem_mb=1000, mem_mib=954, disk_mb=1000, disk_mib=954, tmpdir=<TBD>
+
+
+        mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test
+        module load R/4.2.3
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large_200k.txt \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr<built-in function chr>_effects.txt \
+            <built-in function chr>
+        
+Submitted job 1 with external jobid 'Submitted batch job 1337742'.
+[Mon Jun  9 01:28:41 2025]
+Error in rule process_chromosome:
+    jobid: 1
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large_200k.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr<built-in function chr>_effects.txt
+    shell:
+        
+        mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test
+        module load R/4.2.3
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/estimate_effects.R \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/simulated_pheno_large_200k.txt \
+            /data2/morgante_lab/ukbiobank_projects/prs_effects/results/chr_effects_test/chr<built-in function chr>_effects.txt \
+            <built-in function chr>
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: Submitted batch job 1337742
+
+Error executing rule process_chromosome on cluster (jobid: 1, external: Submitted batch job 1337742, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/.snakemake/tmp.lvm2fr87/snakejob.process_chromosome.1.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-06-09T012830.335932.snakemake.log

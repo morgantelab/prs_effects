@@ -1,0 +1,3 @@
+NameError in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/Snakefile, line 18:
+name 'chrom' is not defined
+  File "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake_test/Snakefile", line 18, in <module>

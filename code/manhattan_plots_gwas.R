@@ -7,7 +7,7 @@ results_dir <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/gwas_
 gwas_list <- vector("list", 22)
 
 for (chr in 1:22) {
-  chr_file <- file.path(results_dir, sprintf("chr%d_gwas.pheno.glm.linear", chr))
+  chr_file <- file.path(results_dir, sprintf("chr%d_gwas_large.pheno.glm.linear", chr))
   
   if (file.exists(chr_file)) {
     cat(sprintf("Reading chromosome %d...\n", chr))
@@ -26,7 +26,8 @@ combined_results <- rbindlist(gwas_list, use.names = TRUE, fill = TRUE)
 
 manhattan<- combined_results %>%
   rename(BP = POS) %>%
-  rename(SNP = ID)
+  rename(SNP = ID) %>%
+  mutate(P = as.numeric(P))
 
 manhattan <- manhattan%>% 
   
@@ -89,7 +90,7 @@ p_gwas <- ggplot(manhattan, aes(x=BPcum, y=-log10(P))) +
     plot.title = element_text(hjust = 0.5)
   )
 
-ggsave(file.path(results_dir, "manhattan_gwas.png"), p_gwas, width=12, height=6)
+ggsave(file.path(results_dir, "manhattan_gwas_large.png"), p_gwas, width=12, height=6)
 
 
 # alpha <- 0.05/nrow(combined_results)
@@ -151,4 +152,4 @@ ggsave(file.path(results_dir, "manhattan_gwas.png"), p_gwas, width=12, height=6)
 #   )
 # )
 
-sum(combined_results$P < alpha)
+# sum(combined_results$P < alpha)
