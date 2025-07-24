@@ -18,7 +18,7 @@
 BED_BIM_DIR="/data2/morgante_lab/data/ukbiobank/genotypes/array"
 FAM_DIR="/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024"
 OUTPUT_DIR="/data2/morgante_lab/ukbiobank_projects/prs_effects/filter"
-ID_FILE="/data2/morgante_lab/ukbiobank_projects/prs_effects/results/ID_filtered_150k.txt"
+ID_FILE="/data2/morgante_lab/ukbiobank_projects/prs_effects/results/ID_filtered_200k.txt"
 PLINK2="/data2/morgante_lab/yuxuans/software/plink2"
 
 # --- Initialize ---
@@ -50,15 +50,15 @@ for CHR in {1..22}; do
       --hwe 1e-5 \
       --threads 8 \
       --make-bed \
-      --out "${OUTPUT_DIR}/ukb_chr${CHR}_filtered"
+      --out "${OUTPUT_DIR}/ukb_chr${CHR}_filtered_200k"
 done
 
 # --- Get Allele Frequency ---
 for CHR in {1..22} ; do
     "${PLINK2}" \
-      --bfile "${OUTPUT_DIR}/ukb_chr${CHR}_filtered" \
+      --bfile "${OUTPUT_DIR}/ukb_chr${CHR}_filtered_200k" \
       --freq \
-      --out "${OUTPUT_DIR}/ukb_chr${CHR}_filtered"
+      --out "${OUTPUT_DIR}/ukb_chr${CHR}_filtered_200k"
 done
 
 

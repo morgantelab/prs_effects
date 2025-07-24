@@ -3,12 +3,13 @@
 args <- commandArgs(trailingOnly = TRUE)
 fam_file <- args[1]
 output_file <- args[2]
+num_samples <- as.numeric(args[3])
+seed <- as.numeric(args[4])
+pheno_file <- args[5]
 
 ## Load Packgaes
 library(data.table)
 library(dplyr)
-
-pheno_file <- "/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv"
 
 geno_ids <- fread(fam_file, 
                   header = FALSE, 
@@ -45,8 +46,8 @@ pheno_filtered <- pheno %>%
   )
 
 # Random sampling
-set.seed(123)
-sample_indices <- sample(nrow(pheno_filtered), 200000)
+set.seed(seed)
+sample_indices <- sample(nrow(pheno_filtered), num_samples)
 sample_ids <- pheno_filtered[sample_indices, .(eid)]
 
 # Create ID file

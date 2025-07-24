@@ -1,18 +1,25 @@
 #!/usr/bin/env Rscript
+args <- commandArgs(trailingOnly = TRUE)
+
+# Parse command-line arguments
+rep <- as.integer(args[1])
+chromosomes <- as.integer(unlist(strsplit(args[2], ",")))
+geno_pattern <- args[3] 
+chunk_size <- as.integer(args[4])
+output_effects <- args[5]
+output_train <- args[6]
+output_test <- args[7]
+pheno_file <- args[8]
+seed_val <- as.integer(args[9])
+num_train <- as.integer(args[10])
+num_sample <- as.integer(args[11])
+
+
+# Load required packages
 library(data.table)
 library(dplyr)
 library(genio)
 library(BEDMatrix)
-# Get command-line arguments
-args <- commandArgs(trailingOnly = TRUE)
-pheno_file <- args[1]
-output_file <- args[2]
-chr <- as.numeric(args[3])
-geno_dir <- args[4]
-rep <- args[5]
-
-
-print(.libPaths())
 
 ###----------------------- Effect Calculation Function ------------------------
 calculate_welch <- function(data, snp_cols) {
@@ -74,55 +81,33 @@ calculate_welch <- function(data, snp_cols) {
   return(results)
 }
 
-
-# Read phenotype data
 pheno <- fread(pheno_file, 
-               colClasses = c("character", "character", "numeric"))
+              colClasses = c("FID" = "character", "IID" = "character", "pheno" = "numeric"))
 
-cat("Successfully Read in Phenotype files", "\n")
+cat("Successfully read phenotype files for replicate", rep, "\n")
 
 ###----------------------- Split train and test set --------------------------
-set.seed(1000 + as.integer(rep))
-sample_ids <- pheno_full$IID
-train_ids <- sample(sample_ids, 180000)
+set.seed(sed)
+sample_ids <- pheno$IID
+train_ids <- sample(sample_ids, num_sample)
 test_ids <- setdiff(sample_ids, train_ids)
 
 # Create training dataset
 train_pheno <- pheno[IID %in% train_ids]
 test_pheno <- pheno[IID %in% test_ids]
-trian_pheno_ID <- train_pheno %>% select(FID, IID)
-write.table(train_pheno_ID, 
-            file = paste0(results_dir, "/training_ID_rep", rep, ".txt"),
-            col.names = FALSE, sep = "\t", quote = FALSE, row.names = FALSE)
-test_pheno_ID <- test_pheno %>% select(FID, IID)
-write.table(test_pheno_ID, 
-            file = paste0(results_dir, "/test_ID_rep", rep, ".txt"),
-            col.names = FALSE, sep = "\t", quote = FALSE, row.names = FALSE)
 
-###--------------- Process Single Chromosome using training set ----------------
-# Process chromosome data
-cat("Processing chromosome", chr, "\n")
-plink_file <- paste0(geno_dir, "/ukb_chr", chr, "_filtered_200k")
-cat("PLINK file:", plink_file, "\n")
-bim_file <- paste0(plink_file, ".bim")
-fam_file <- paste0(plink_file, ".fam")
+# Write ID files
+fwrite(train_pheno[, .(FID, IID)], output_train, 
+       col.names = FALSE, sep = "\t", quote = FALSE)
+fwrite(test_pheno[, .(FID, IID)], output_test, 
+       col.names = FALSE, sep = "\t", quote = FALSE)
 
-bim <- fread(bim_file, col.names = c("chr", "SNP", "pos_cM", "pos", "alt", "ref"))
-cat("Successfully read in bim data", "\n")
+cat("Created training/test ID files:\n",
+    "- Training:", output_train, "\n",
+    "- Test:", output_test, "\n")
 
-fam <- fread(fam_file, col.names = c("FID", "IID", "pat", "mat", "sex", "pheno"))
-cat("Successfully read in fam data", "\n")
-
-pheno_vector <- train_pheno$pheno[match(fam$IID, train_pheno$IID)]
-train_indices <- which(fam$IID %in% train_ids)
-
-bed_path <- paste0(plink_file, ".bed")
-bed_matrix <- BEDMatrix(bed_path, simple_names = TRUE)
-
-n_snps <- nrow(bim)
-chunk_size <- 1000  # Process 1000 SNPs per chunk
-n_chunks <- ceiling(n_snps / chunk_size)
-
+###--------------- Process chromosomes using training set ----------------
+# Initialize output file with header
 header <- data.table(
   chromosome = integer(),
   position = integer(),
@@ -134,46 +119,67 @@ header <- data.table(
   p_a = numeric(),
   p_d = numeric()
 )
+fwrite(header, output_effects, sep = "\t")
 
-fwrite(header, output_file , sep = "\t")
-
-for (i in 1:n_chunks) {
-  start_idx <- (i-1)*chunk_size + 1
-  end_idx <- min(i*chunk_size, n_snps)
-  cat("Processing SNPs", start_idx, "to", end_idx, "\n")
+for (chr in chromosomes) {
+  cat("\n========================================")
+  cat("\nProcessing chromosome", chr)
+  cat("\n========================================\n")
   
-  # Extract genotype chunk (all individuals)
-  geno_chunk <- bed_matrix[train_indices, start_idx:end_idx, drop = FALSE]
-  snp_names <- bim$SNP[start_idx:end_idx]
+  plink_file <- sprintf(geno_pattern, chrom = chr)
+  bim_file <- paste0(plink_file, ".bim")
+  fam_file <- paste0(plink_file, ".fam")
   
-  # Create data chunk
-  temp_df <- data.frame(pheno = pheno_vector)
-  temp_df <- cbind(temp_df, as.data.frame(geno_chunk))
-  colnames(temp_df)[-1] <- snp_names
+  bim <- fread(bim_file, col.names = c("chr", "SNP", "pos_cM", "pos", "alt", "ref"))
+  fam <- fread(fam_file, col.names = c("FID", "IID", "pat", "mat", "sex", "pheno"))
   
-  # Calculate effects
-  chunk_results <- calculate_welch(temp_df, snp_names)
+  # Match phenotype data with genotype data
+  train_indices <- which(fam$IID %in% train_ids)
+  pheno_vector <- train_pheno$pheno[match(fam$IID[train_indices], train_pheno$IID)]
   
-  # Prepare output with SNP info (subset rows, not columns!)
-  chunk_bim <- bim[start_idx:end_idx, .(chr, SNP, pos, ref, alt)]
-  output_chunk <- data.table(
-    chromosome = chunk_bim$chr,
-    position = chunk_bim$pos,
-    SNP = chunk_bim$SNP,
-    ref_allele = chunk_bim$ref,
-    alt_allele = chunk_bim$alt,
-    a_hat = chunk_results$a_hat,
-    d_hat = chunk_results$d_hat,
-    p_a = chunk_results$p_a,
-    p_d = chunk_results$p_d
-  )
+  # Initialize BEDMatrix
+  bed_path <- paste0(plink_file, ".bed")
+  bed_matrix <- BEDMatrix(bed_path, simple_names = TRUE)
   
-  # Append to output file
-  fwrite(output_chunk, output_file, sep = "\t", append = TRUE)
+  # Process in chunks
+  n_snps <- nrow(bim)
+  n_chunks <- ceiling(n_snps / chunk_size)
   
-  # Explicit memory management
-  rm(geno_chunk, temp_df, chunk_results, output_chunk)
-  gc()
+  for (i in 1:n_chunks) {
+    start_idx <- (i-1)*chunk_size + 1
+    end_idx <- min(i*chunk_size, n_snps)
+    snp_names <- bim$SNP[start_idx:end_idx]
+    
+    cat("Processing SNPs", start_idx, "to", end_idx, "\n")
+    
+    # Extract genotype chunk
+    geno_chunk <- bed_matrix[train_indices, start_idx:end_idx, drop = FALSE]
+    colnames(geno_chunk) <- snp_names
+    
+    # Create data chunk
+    temp_df <- data.frame(pheno = pheno_vector, as.data.frame(geno_chunk))
+    
+    # Calculate effects
+    chunk_results <- calculate_welch(temp_df, snp_names)
+    
+    # Prepare output
+    output_chunk <- data.table(
+      chromosome = bim$chr[start_idx:end_idx],
+      position = bim$pos[start_idx:end_idx],
+      SNP = bim$SNP[start_idx:end_idx],
+      ref_allele = bim$ref[start_idx:end_idx],
+      alt_allele = bim$alt[start_idx:end_idx],
+      a_hat = chunk_results$a_hat,
+      d_hat = chunk_results$d_hat,
+      p_a = chunk_results$p_a,
+      p_d = chunk_results$p_d
+    )
+    
+    # Append to output file
+    fwrite(output_chunk, output_effects, sep = "\t", append = TRUE)
+  }
+  cat("Finished processing chromosome", chr, "\n")
 }
 
-cat("Finished processing chromosome", chr, "for replicate", rep, "\n")
+cat("\nCompleted all chromosomes for replicate", rep, "\n")
+cat("Output file:", output_effects, "\n")

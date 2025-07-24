@@ -1,0 +1,74 @@
+configfile: "config.yaml"
+
+# Define directories from config
+results_dir = config["results_dir"]
+geno_dir = config["geno_dir"]
+gwas_dir = config["gwas_dir"]
+temp_dir = os.path.join(gwas_dir, "temp_prs")
+plink2_path = config["plink2_path"]
+
+# Parameters
+ld_thresholds = config["ld_thresholds"]
+p_threshold = config["p_threshold"]
+n_reps = config["n_reps"]
+
+# Create directories
+os.makedirs(gwas_dir, exist_ok=True)
+os.makedirs(temp_dir, exist_ok=True)
+
+# Define final outputs
+rule all:
+    input:
+        expand(os.path.join(gwas_dir, "prs_results_beta_rep{rep}.txt"), rep=range(1, n_reps+1))
+
+# Rule to run GWAS per chromosome
+rule GWAS:
+    input:
+        bfile = os.path.join(geno_dir, "ukb_chr{chr}_filtered"),
+        pheno = os.path.join(results_dir, "simulated_pheno_rep{rep}.txt"),
+        train_ids = os.path.join(results_dir, "training_ID_rep{rep}.txt")
+    output:
+        gwas_out = os.path.join(gwas_dir, "gwas_rep{rep}_chr{chr}.pheno.glm.linear")
+    params:
+        out_prefix = os.path.join(gwas_dir, "gwas_rep{rep}_chr{chr}"),
+        plink2 = plink2_path
+    script:
+        "scripts/run_gwas.R"
+
+# Rule to perform clumping per chromosome and LD threshold
+rule clumping:
+    input:
+        bfile = os.path.join(geno_dir, "ukb_chr{chr}_filtered"),
+        gwas = os.path.join(gwas_dir, "gwas_rep{rep}_chr{chr}.pheno.glm.linear"),
+        train_ids = os.path.join(results_dir, "training_ID_rep{rep}.txt")
+    output:
+        clump_out = os.path.join(gwas_dir, "gwas_clump_rep{rep}_chr{chr}_ld{ld_thresh}.clumps"),
+        snplist = os.path.join(gwas_dir, "gwas_clump_rep{rep}_chr{chr}_ld{ld_thresh}.snplist")
+    params:
+        out_prefix = os.path.join(gwas_dir, "gwas_clump_rep{rep}_chr{chr}_ld{ld_thresh}"),
+        plink2 = plink2_path,
+        p_threshold = p_threshold,
+        ld_thresh = "{ld_thresh}"
+    script:
+        "scripts/run_clumping.R"
+
+# Rule to calculate PRS for test set
+rule calculate_prs_test:
+    input:
+        # Dynamic input for all chromosomes and LD thresholds
+        gwas = expand(os.path.join(gwas_dir, "gwas_rep{{rep}}_chr{chr}.pheno.glm.linear"), chr=range(1, 23)),
+        clump = expand(os.path.join(gwas_dir, "gwas_clump_rep{{rep}}_chr{chr}_ld{ld_thresh}.snplist"), 
+                      chr=range(1, 23), ld_thresh=ld_thresholds),
+        test_ids = os.path.join(results_dir, "test_ID_rep{rep}.txt")
+    output:
+        prs_out = os.path.join(gwas_dir, "prs_results_beta_rep{rep}.txt")
+    params:
+        results_dir = results_dir,
+        geno_dir = geno_dir,
+        gwas_dir = gwas_dir,
+        temp_dir = temp_dir,
+        plink2 = plink2_path,
+        ld_thresholds = ",".join(map(str, ld_thresholds)),
+        rep = "{rep}"
+    script:
+        "scripts/calculate_prs.R"

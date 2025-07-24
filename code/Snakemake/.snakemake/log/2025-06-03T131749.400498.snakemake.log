@@ -1,6 +1,0 @@
-Config file dirs.yaml is extended by additional config specified via the command line.
-Config file cluster_config.yaml is extended by additional config specified via the command line.
-Config file resources.yaml is extended by additional config specified via the command line.
-KeyError in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile, line 47:
-'time_min'
-  File "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile", line 47, in <module>

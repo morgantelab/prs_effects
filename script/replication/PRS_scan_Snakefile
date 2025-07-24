@@ -1,0 +1,233 @@
+configfile: "config.yaml"
+
+wildcard_constraints:
+    CHR = "|".join(map(str, config["CHR"])),
+    REP = "|".join(map(str, config["REP"]))
+
+rule all:
+    input:
+        expand("results_dir/ID_filtered.txt",
+                results_dir=config["results_dir"]),
+        expand("{results_dir}/simulated_pheno_rep{rep}.txt", 
+               results_dir=config["results_dir"], REP = config["REP"]),
+        expand("{results_dir}/simulated_geno_rep{rep}.txt", 
+               results_dir=config["results_dir"], REP = config["REP"]),
+        expand("{results_dir}/causal_snps{rep}.txt", 
+               results_dir=config["results_dir"], REP = config["REP"])
+
+rule sample_selection:
+  input:
+    pheno = "/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv"
+    fam = config["fam_dir"]+"/"+"ukb22418_c1_b0_v2_s487945.fam"
+  output:
+    sample = config[results_dir]+"/"+"ID_filtered.txt"
+  params:
+		CODE=config["code_dir"]+"/"+"sample_ini_selection.R",
+		CPU="4",
+    NUM_SAMPLE = config["NUM_SAMPLE"]
+    SAMPLE_SEED = config["SAMPLE_SEED"]
+  shell:
+    r"""
+    source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+		module load R/4.2.3
+		export MKL_NUM_THREADS=1
+		export OMP_NUM_THREADS={params.CPU}
+
+    Rscript {params.CODE} \
+              {input.fam} \
+              {output.sample} \
+              {params.NUM_SAMPLE} \
+              {params.SAMPLE_SEED} \
+              {input.pheno}
+
+    module unload R/4.2.3
+    """
+
+rule filter:
+    input:
+        id_file = config["results_dir"] + "/" + "ID_filtered.txt",
+        bed = lambda wildcards: f"{config['bed_bim_dir']}/ukb22418_c{wildcards.CHR}_b0_v2_s488243.bed",
+        bim = lambda wildcards: f"{config['bed_bim_dir']}/ukb22418_c{wildcards.CHR}_b0_v2_s488243.bim",
+        fam = lambda wildcards: f"{config['fam_dir']}/ukb22418_c{wildcards.CHR}_b0_v2_s487945.fam"
+    output:
+        bed = config["geno_dir"] + "/ukb_chr{CHR}_filtered.bed",
+        bim = config["geno_dir"] + "/ukb_chr{CHR}_filtered.bim",
+        fam = config["geno_dir"] + "/ukb_chr{CHR}_filtered.fam"
+    params:
+        plink2 = config["plink2_path"],
+        output_prefix = lambda wildcards, output: output.bed.replace('.bed', ''),
+        maf = config["maf"],
+        mac = config["mac"],
+        geno = config["geno"],
+        hwe = config["hwe"]
+    threads: 8
+    resources:
+        mem_mb = 16000
+    shell:
+        """
+        {params.plink2} \
+          --bed {input.bed} \
+          --bim {input.bim} \
+          --fam {input.fam} \
+          --keep {input.id_file} \
+          --rm-dup exclude-all \
+          --snps-only just-acgt \
+          --maf {params.maf} \
+          --mac {params.mac} \
+          --geno {params.geno} \
+          --hwe {params.hwe} \
+          --threads {threads} \
+          --make-bed \
+          --out {params.output_prefix}
+        """
+
+rule pheno_simulation:
+  input:
+   bim_files = expand("{geno_dir}/ukb_chr{CHR}_filtered.bim", 
+                        geno_dir=config["geno_dir"], CHR=config["CHR"])   
+  output:
+    causal_snps = config["results_dir"] + "/" + "causal_snps{{REP}}.txt",
+    pheno = config["results_dir"] + "/" + "simulated_pheno_rep{{REP}}.txt",
+    geno = config["results_dir"] + "/" + "simulated_geno_rep{{REP}}.txt"
+  params:
+      REP = "{REP}",  # Wildcard for replicate number，
+      seed = lambda wildcards: 1000 + int(wildcards.REP),  # Unique seed per replicate
+      h2 = config["h2"],
+      NUM_LOCI = config[N_LOCI],
+      plink2 = config["plink2_path"],
+      NUM_ADD = config["NUM_ADDITIVE"],
+      NUM_INCOM_DOM = config["NUM_INCOM_DOM"],
+      NUM_COM_DOM = config["NUM_COM_DOM"],
+      CPU = 40,
+      CODE = config["code_dir"] + "/" + "pheno_simulation_part1.R"
+  resources:
+      mem_mb = 600000,
+      CPU = 40,
+      time = "12:00:00"
+  shell:
+    """
+      module load R/4.2.3
+		  export MKL_NUM_THREADS=40
+		  export OMP_NUM_THREADS={params.CPU}
+
+      Rscript {params.CODE} \
+              {input.bim}
+              {params.REP} \
+              {params.seed} \
+              {geno_dir} \
+              {results_dir} \
+              {params.h2} \
+              {params.NUM_LOCI} \
+              {params.plink2} \
+              {output.causal_snps} \
+              {output.pheno} \
+              {output.geno} \
+              {params.NUM_ADD} \
+              {params.NUM_INCOM_DOM} \
+              {params.NUM_COM_DOM}
+    
+      module unload R/4.2.3
+    """
+          
+
+rule estimate_effects:
+    input:
+        pheno = config["results_dir"] + "/simulated_pheno_rep{REP}.txt",
+        geno_files = expand(
+            "{geno_dir}/ukb_chr{{CHR}}_filtered.{ext}",
+            geno_dir=config["geno_dir"],
+            CHR=config["CHR"],
+            ext=["bed", "bim", "fam"]
+        )
+    output:
+        effects = config["results_dir"] + "/" + "effects_rep{REP}.txt",
+        train_ids = config["results_dir"] + "/" + "training_ID_rep{REP}.txt",
+        test_ids = config["results_dir"] + "/" + "test_ID_rep{REP}.txt"
+    params:
+        rep = "{REP}",
+        CHR = config["CHR"]
+        GENO_PATTERN = config["geno_dir"] + "/ukb_chr{CHR}_filtered",
+        CHUNK_SIZE = config["CHUNK_SIZE"],
+        CPU = 40,
+        CODE = config["code_dir"] + "/" + "estimate_effects.R"
+        seed = lambda wildcards: 1000 + int(wildcards.REP),
+        NUM_TRAIN = config["NUM_TRAIN"],
+        NUM_SAMPLE = config["NUM_SAMPLE"]
+    threads: 40
+    resources:
+        mem_mb = 600000,
+        time = "48:00:00",
+        CPU = 48
+    shell:
+      """
+      module load R/4.2.3
+		  export MKL_NUM_THREADS=40
+		  export OMP_NUM_THREADS={params.CPU}
+      
+      Rscript {params.CODE} \
+              {params.rep} \
+              {params.CHR} \
+              {params.GENO_PATTERN} \
+              {params.CHUNK_SIZE} \
+              {output.effects} \
+              {output.train_ids} \
+              {output.test_ids} \
+              {input.pheno} \
+              {params.seed} \
+              {params.NUM_TRAIN} \
+              {params.NUM_sAMPLE}
+
+      module unload R/4.2.3
+      """
+
+rule clumping_thresholding:
+    input:
+        effects = config["results_dir"] + "/effects_rep{REP}.txt",
+        train_ids = config["results_dir"] + "/training_ID_rep{REP}.txt",
+        geno_files = expand(
+            "{geno_dir}/ukb_chr{{CHR}}_filtered.{ext}",
+            geno_dir=config["geno_dir"],
+            CHR=config["CHR"],
+            ext=["bed", "bim", "fam"]
+        )
+    output:
+        clumped_snps = expand(
+            "{results_dir}/clumped_snps_rep{{REP}}_r2_{r2}.txt",
+            results_dir=config["results_dir"],
+            r2=[format(x, nsmall=1) for x in config["ld_thresholds"]]
+        )
+    params:
+        rep = "{REP}",
+        GENO_PATTERN = config["geno_dir"] + "/ukb_chr{CHR}_filtered",
+        plink2 = config["plink2_path"],
+        CHR = ",".join(map(str, config["CHR"])),
+        ld_thresholds = ",".join([format(x, nsmall=1) for x in config["LD_THRESHOLDS"]]),
+        clump_p = config["P_THRESHOLDS"],
+        clump_kb = config["CLUMPING_KB"],
+        CODE = config["code_dir"] + "/" + "thresholding_clumping.R"
+    threads: 40
+    resources:
+        mem_mb = 16000,
+        time = "24:00:00"
+    shell:
+      """
+      module load R/4.2.3
+		  export MKL_NUM_THREADS=40
+      
+      Rscript {params.CODE} \
+              {params.rep} \
+              {input.effects} \
+              {params.GENO_PATTERN} \
+              {input.train_ids} \
+              {params.plink2} \
+              {params.CHR} \
+              {params.ld_thresholds} \
+              {params.clump_p} \
+              (params.clump_kb) \
+              {output.clump_snps}
+
+      module unload R/4.2.3
+      """
+
+
+

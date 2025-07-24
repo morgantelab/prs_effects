@@ -1,5 +1,0 @@
-Config file dirs.yaml is extended by additional config specified via the command line.
-Config file config.yaml is extended by additional config specified via the command line.
-KeyError in file /data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile, line 34:
-'partition'
-  File "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/Snakemake/Snakefile", line 34, in <module>
