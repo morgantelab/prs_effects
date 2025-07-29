@@ -1,0 +1,416 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 10
+Job stats:
+job                      count
+---------------------  -------
+all                          1
+clumping_thresholding       20
+estimate_effects            20
+pheno_simulation            10
+total                       51
+
+Select jobs to execute...
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep1.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep1.txt
+    jobid: 44
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep1.txt
+    wildcards: REP=1
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 1                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep1.txt                 1001                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 44 with external jobid '1345191'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep16.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep16.txt
+    jobid: 59
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt
+    wildcards: REP=16
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 16                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep16.txt                 1016                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 59 with external jobid '1345192'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep5.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep5.txt
+    jobid: 48
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt
+    wildcards: REP=5
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 5                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep5.txt                 1005                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 48 with external jobid '1345193'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep7.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep7.txt
+    jobid: 50
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt
+    wildcards: REP=7
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 7                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep7.txt                 1007                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 50 with external jobid '1345194'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep9.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep9.txt
+    jobid: 52
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt
+    wildcards: REP=9
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 9                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep9.txt                 1009                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 52 with external jobid '1345195'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep13.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep13.txt
+    jobid: 56
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt
+    wildcards: REP=13
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 13                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep13.txt                 1013                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 56 with external jobid '1345196'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep15.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep15.txt
+    jobid: 58
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep15.txt
+    wildcards: REP=15
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 15                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep15.txt                 1015                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 58 with external jobid '1345197'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep2.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep2.txt
+    jobid: 45
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt
+    wildcards: REP=2
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep2.txt                 1002                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 45 with external jobid '1345198'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep17.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep17.txt
+    jobid: 60
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt
+    wildcards: REP=17
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 17                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep17.txt                 1017                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 60 with external jobid '1345199'.
+
+[Fri Jul 25 16:50:28 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep8.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep8.txt
+    jobid: 51
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt
+    wildcards: REP=8
+    threads: 40
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 8                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep8.txt                 1008                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 51 with external jobid '1345200'.
+[Fri Jul 25 16:50:37 2025]
+Error in rule estimate_effects:
+    jobid: 44
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep1.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep1.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 1                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep1.txt                 1001                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345191
+
+Error executing rule estimate_effects on cluster (jobid: 44, external: 1345191, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.44.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:50:37 2025]
+Error in rule estimate_effects:
+    jobid: 59
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep16.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep16.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 16                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep16.txt                 1016                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345192
+
+Error executing rule estimate_effects on cluster (jobid: 59, external: 1345192, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.59.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 48
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep5.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 5                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep5.txt                 1005                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345193
+
+Error executing rule estimate_effects on cluster (jobid: 48, external: 1345193, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.48.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 50
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep7.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep7.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 7                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep7.txt                 1007                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345194
+
+Error executing rule estimate_effects on cluster (jobid: 50, external: 1345194, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.50.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 52
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep9.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep9.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 9                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep9.txt                 1009                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345195
+
+Error executing rule estimate_effects on cluster (jobid: 52, external: 1345195, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.52.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 56
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep13.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep13.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 13                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep13.txt                 1013                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345196
+
+Error executing rule estimate_effects on cluster (jobid: 56, external: 1345196, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.56.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 58
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep15.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep15.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 15                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep15.txt                 1015                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345197
+
+Error executing rule estimate_effects on cluster (jobid: 58, external: 1345197, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.58.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 45
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep2.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep2.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep2.txt                 1002                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345198
+
+Error executing rule estimate_effects on cluster (jobid: 45, external: 1345198, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.45.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 60
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep17.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep17.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 17                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep17.txt                 1017                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345199
+
+Error executing rule estimate_effects on cluster (jobid: 60, external: 1345199, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.60.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Fri Jul 25 16:51:07 2025]
+Error in rule estimate_effects:
+    jobid: 51
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep8.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep8.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 8                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep8.txt                 1008                 180000                 200000
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345200
+
+Error executing rule estimate_effects on cluster (jobid: 51, external: 1345200, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.yuy6x8h0/snakejob.estimate_effects.51.sh). For error details see the cluster log and the log files of the involved rule(s).
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-07-25T165026.190704.snakemake.log

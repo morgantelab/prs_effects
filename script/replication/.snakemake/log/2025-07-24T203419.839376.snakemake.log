@@ -1,0 +1,37 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 10
+Job stats:
+job                      count
+---------------------  -------
+all                          1
+clumping_thresholding       20
+estimate_effects            20
+filter                      22
+pheno_simulation            20
+sample_selection             1
+total                       84
+
+Select jobs to execute...
+
+[Thu Jul 24 20:34:20 2025]
+rule sample_selection:
+    input: /data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv, /data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024/ukb22418_c1_b0_v2_s487945.fam
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/ID_filtered.txt
+    jobid: 1
+    reason: Forced execution
+    resources: mem_mb=100000, mem_mib=95368, disk_mb=800000, disk_mib=762940, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=24:00:00, threads=12
+
+
+        source /opt/intel/oneapi/mkl/2023.0.0/env/vars.sh intel64
+        module load R/4.2.3
+        export MKL_NUM_THREADS=12
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/sample_ini_selection.R                 /data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024/ukb22418_c1_b0_v2_s487945.fam                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/ID_filtered.txt                 200000                 123                 /data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv
+
+        module unload R/4.2.3
+        
+Error submitting jobscript (exit code 1):
+
+Shutting down, this might take some time.
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-07-24T203419.839376.snakemake.log

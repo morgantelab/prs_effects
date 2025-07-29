@@ -1,40 +1,12 @@
-resources:
-  cpus: 40
-  mem_mb: 100000
-  jobweight: 40
-  solo: 1
-  
 # Directory paths
-results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication"
-geno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication/filter"
-gwas_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication/gwas_results"
+results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3"
+geno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno"
 plink2_path: "/data2/morgante_lab/yuxuans/software/plink2"
+code_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/GWAS"
+gwas_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/GWAS"
 
 # Analysis parameters
-ld_thresholds: [0.1, 0.2, 0.3, 0.4, 0.5]
-p_threshold: 1e-5
-n_reps: 20
-
-# 全局默认资源 (使用正确的 YAML 字典格式)
-default-resources:
-  partition: 'fm-bigmem-3'
-  time: "4-00:00:00"
-  mem_mb: 100000
-
-# 集群提交命令模板 (修正多行格式和变量引用)
-cluster: |
-  mkdir -p {log_dir}/{rule} &&
-  mkdir -p {error_dir}/{rule} &&
-  sbatch \
-    --account={resources.account} \
-    --partition={resources.partition} \
-    --cpus-per-task={threads} \
-    --mem={resources.mem_mb} \
-    --job-name={rule}_{wildcards} \
-    --output={log_dir}/{rule}/%j_{rule}_{wildcards}.out \
-    --error={error_dir}/{rule}/%j_{rule}_{wildcards}.err \
-    --time={resources.time}
-
-# Snakemake 配置
-latency-wait: 60
-printshellcmds: true
+LD_THRESHOLDS: [0.1, 0.3, 0.5]
+P_THRESHOLD: "10E-3"
+CHR: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22']
+REP: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']

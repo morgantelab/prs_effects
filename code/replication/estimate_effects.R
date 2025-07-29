@@ -3,16 +3,27 @@ args <- commandArgs(trailingOnly = TRUE)
 
 # Parse command-line arguments
 rep <- as.integer(args[1])
-chromosomes <- as.integer(unlist(strsplit(args[2], ",")))
-geno_pattern <- args[3] 
-chunk_size <- as.integer(args[4])
-output_effects <- args[5]
-output_train <- args[6]
-output_test <- args[7]
-pheno_file <- args[8]
-seed_val <- as.integer(args[9])
-num_train <- as.integer(args[10])
-num_sample <- as.integer(args[11])
+geno_pattern <- args[2] 
+chunk_size <- as.integer(args[3])
+output_effects <- args[4]
+output_train <- args[5]
+output_test <- args[6]
+pheno_file <- args[7]
+seed_val <- as.integer(args[8])
+num_train <- as.integer(args[9])
+num_sample <- as.integer(args[10])
+
+cat("\nConverted values:\n")
+cat("Geno file pattern:", geno_pattern, "\n")
+cat("rep:", rep, "\n")
+cat("seed_val:", seed_val, "\n")
+cat("chunk_size:", chunk_size, "\n")
+cat("output_effects:", output_effects, "\n")
+cat("output_train:", output_train, "\n")
+cat("output_test:", output_test, "\n")
+cat("pheno_file:", pheno_file, "\n")
+cat("Number of Training set:", num_train, "\n")
+cat("Number of Total Sample size:", num_sample, "\n")
 
 
 # Load required packages
@@ -87,9 +98,9 @@ pheno <- fread(pheno_file,
 cat("Successfully read phenotype files for replicate", rep, "\n")
 
 ###----------------------- Split train and test set --------------------------
-set.seed(sed)
+set.seed(seed_val)
 sample_ids <- pheno$IID
-train_ids <- sample(sample_ids, num_sample)
+train_ids <- sample(sample_ids, num_train)
 test_ids <- setdiff(sample_ids, train_ids)
 
 # Create training dataset
@@ -121,12 +132,12 @@ header <- data.table(
 )
 fwrite(header, output_effects, sep = "\t")
 
-for (chr in chromosomes) {
+for (chr in 1:22) {
   cat("\n========================================")
   cat("\nProcessing chromosome", chr)
   cat("\n========================================\n")
   
-  plink_file <- sprintf(geno_pattern, chrom = chr)
+  plink_file <- paste0(geno_pattern, chr, "_filtered" )
   bim_file <- paste0(plink_file, ".bim")
   fam_file <- paste0(plink_file, ".fam")
   
@@ -181,5 +192,4 @@ for (chr in chromosomes) {
   cat("Finished processing chromosome", chr, "\n")
 }
 
-cat("\nCompleted all chromosomes for replicate", rep, "\n")
 cat("Output file:", output_effects, "\n")

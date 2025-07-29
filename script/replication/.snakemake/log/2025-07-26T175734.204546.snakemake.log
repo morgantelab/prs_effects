@@ -1,0 +1,1374 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 20
+Job stats:
+job                      count
+---------------------  -------
+all                          1
+clumping_thresholding       20
+estimate_effects            20
+pheno_simulation             5
+total                       46
+
+Select jobs to execute...
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep1.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep1.txt
+    jobid: 44
+    reason: Code has changed since last execution
+    wildcards: REP=1
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 1                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep1.txt                 1001                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 44 with external jobid '1345328'.
+
+[Sat Jul 26 17:57:36 2025]
+rule pheno_simulation:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr1_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr2_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr3_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr4_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr5_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr6_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr7_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr8_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr9_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr10_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr11_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr12_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr13_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr14_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr15_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr16_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr17_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr18_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr19_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr20_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr21_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr22_filtered.bim
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep6.txt
+    jobid: 29
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps6.txt
+    wildcards: REP=6
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, threads=48, time=12:00:00
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/pheno_simulation_part1.R                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 6                 1006                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3                 0.5                 1000                 /data2/morgante_lab/yuxuans/software/plink2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps6.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep6.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep6.txt                 1000                 0                 0
+    
+        module unload R/4.2.3
+        
+Submitted job 29 with external jobid '1345329'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep16.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep16.txt
+    jobid: 59
+    reason: Code has changed since last execution
+    wildcards: REP=16
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 16                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep16.txt                 1016                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 59 with external jobid '1345330'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep9.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep9.txt
+    jobid: 52
+    reason: Code has changed since last execution
+    wildcards: REP=9
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 9                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep9.txt                 1009                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 52 with external jobid '1345331'.
+
+[Sat Jul 26 17:57:36 2025]
+rule pheno_simulation:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr1_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr2_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr3_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr4_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr5_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr6_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr7_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr8_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr9_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr10_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr11_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr12_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr13_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr14_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr15_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr16_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr17_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr18_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr19_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr20_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr21_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr22_filtered.bim
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep14.txt
+    jobid: 37
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep14.txt
+    wildcards: REP=14
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, threads=48, time=12:00:00
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/pheno_simulation_part1.R                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 14                 1014                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3                 0.5                 1000                 /data2/morgante_lab/yuxuans/software/plink2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps14.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep14.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep14.txt                 1000                 0                 0
+    
+        module unload R/4.2.3
+        
+Submitted job 37 with external jobid '1345332'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep2.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep2.txt
+    jobid: 45
+    reason: Code has changed since last execution
+    wildcards: REP=2
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep2.txt                 1002                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 45 with external jobid '1345333'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep17.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep17.txt
+    jobid: 60
+    reason: Code has changed since last execution
+    wildcards: REP=17
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 17                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep17.txt                 1017                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 60 with external jobid '1345334'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep10.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep10.txt
+    jobid: 53
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep10.txt
+    wildcards: REP=10
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 10                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep10.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep10.txt                 1010                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 53 with external jobid '1345335'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep3.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep3.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep3.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep3.txt
+    jobid: 46
+    reason: Code has changed since last execution
+    wildcards: REP=3
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 3                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep3.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep3.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep3.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep3.txt                 1003                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 46 with external jobid '1345336'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep11.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep11.txt
+    jobid: 54
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep11.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt
+    wildcards: REP=11
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 11                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep11.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep11.txt                 1011                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 54 with external jobid '1345337'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep19.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep19.txt
+    jobid: 62
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep19.txt
+    wildcards: REP=19
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 19                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep19.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep19.txt                 1019                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 62 with external jobid '1345338'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep5.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep5.txt
+    jobid: 48
+    reason: Code has changed since last execution
+    wildcards: REP=5
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 5                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep5.txt                 1005                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 48 with external jobid '1345339'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep20.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep20.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep20.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep20.txt
+    jobid: 63
+    reason: Code has changed since last execution
+    wildcards: REP=20
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 20                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep20.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep20.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep20.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep20.txt                 1020                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 63 with external jobid '1345340'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep13.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep13.txt
+    jobid: 56
+    reason: Code has changed since last execution
+    wildcards: REP=13
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 13                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep13.txt                 1013                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 56 with external jobid '1345341'.
+
+[Sat Jul 26 17:57:36 2025]
+rule pheno_simulation:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr1_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr2_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr3_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr4_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr5_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr6_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr7_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr8_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr9_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr10_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr11_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr12_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr13_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr14_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr15_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr16_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr17_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr18_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr19_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr20_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr21_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr22_filtered.bim
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep18.txt
+    jobid: 41
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep18.txt
+    wildcards: REP=18
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, threads=48, time=12:00:00
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/pheno_simulation_part1.R                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 18                 1018                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3                 0.5                 1000                 /data2/morgante_lab/yuxuans/software/plink2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps18.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep18.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep18.txt                 1000                 0                 0
+    
+        module unload R/4.2.3
+        
+Submitted job 41 with external jobid '1345342'.
+
+[Sat Jul 26 17:57:36 2025]
+rule pheno_simulation:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr1_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr2_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr3_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr4_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr5_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr6_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr7_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr8_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr9_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr10_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr11_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr12_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr13_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr14_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr15_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr16_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr17_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr18_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr19_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr20_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr21_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr22_filtered.bim
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep4.txt
+    jobid: 27
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep4.txt
+    wildcards: REP=4
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, threads=48, time=12:00:00
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/pheno_simulation_part1.R                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 4                 1004                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3                 0.5                 1000                 /data2/morgante_lab/yuxuans/software/plink2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep4.txt                 1000                 0                 0
+    
+        module unload R/4.2.3
+        
+Submitted job 27 with external jobid '1345343'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep7.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep7.txt
+    jobid: 50
+    reason: Code has changed since last execution
+    wildcards: REP=7
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 7                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep7.txt                 1007                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 50 with external jobid '1345344'.
+
+[Sat Jul 26 17:57:36 2025]
+rule pheno_simulation:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr1_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr2_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr3_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr4_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr5_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr6_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr7_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr8_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr9_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr10_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr11_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr12_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr13_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr14_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr15_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr16_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr17_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr18_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr19_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr20_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr21_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr22_filtered.bim
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep12.txt
+    jobid: 35
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep12.txt
+    wildcards: REP=12
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, threads=48, time=12:00:00
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+        export OMP_NUM_THREADS=40
+
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/pheno_simulation_part1.R                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 12                 1012                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3                 0.5                 1000                 /data2/morgante_lab/yuxuans/software/plink2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/causal_snps12.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep12.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_geno_rep12.txt                 1000                 0                 0
+    
+        module unload R/4.2.3
+        
+Submitted job 35 with external jobid '1345345'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep15.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep15.txt
+    jobid: 58
+    reason: Code has changed since last execution
+    wildcards: REP=15
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 15                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep15.txt                 1015                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 58 with external jobid '1345346'.
+
+[Sat Jul 26 17:57:36 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep8.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep8.txt
+    jobid: 51
+    reason: Code has changed since last execution
+    wildcards: REP=8
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 8                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep8.txt                 1008                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 51 with external jobid '1345347'.
+[Sat Jul 26 17:59:24 2025]
+Finished job 29.
+1 of 46 steps (2%) done
+Select jobs to execute...
+
+[Sat Jul 26 17:59:24 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep6.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep6.txt
+    jobid: 49
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep6.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep6.txt
+    wildcards: REP=6
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 6                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep6.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep6.txt                 1006                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 49 with external jobid '1345348'.
+[Sat Jul 26 17:59:24 2025]
+Finished job 37.
+2 of 46 steps (4%) done
+Select jobs to execute...
+
+[Sat Jul 26 17:59:24 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep14.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep14.txt
+    jobid: 57
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep14.txt
+    wildcards: REP=14
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 14                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep14.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep14.txt                 1014                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 57 with external jobid '1345349'.
+[Sat Jul 26 19:19:25 2025]
+Finished job 44.
+3 of 46 steps (7%) done
+Select jobs to execute...
+
+[Sat Jul 26 19:19:25 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.5.txt
+    jobid: 64
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt
+    wildcards: REP=1
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 1                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 64 with external jobid '1345351'.
+[Sat Jul 26 19:19:25 2025]
+Finished job 59.
+4 of 46 steps (9%) done
+Select jobs to execute...
+
+[Sat Jul 26 19:19:25 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.5.txt
+    jobid: 79
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt
+    wildcards: REP=16
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 16                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 79 with external jobid '1345352'.
+[Sat Jul 26 20:40:32 2025]
+Finished job 52.
+5 of 46 steps (11%) done
+Select jobs to execute...
+
+[Sat Jul 26 20:40:32 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.5.txt
+    jobid: 72
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt
+    wildcards: REP=9
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 9                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 72 with external jobid '1345353'.
+[Sat Jul 26 20:41:16 2025]
+Finished job 45.
+6 of 46 steps (13%) done
+Select jobs to execute...
+
+[Sat Jul 26 20:41:16 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.5.txt
+    jobid: 65
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt
+    wildcards: REP=2
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 65 with external jobid '1345354'.
+[Sat Jul 26 22:02:23 2025]
+Finished job 60.
+7 of 46 steps (15%) done
+Select jobs to execute...
+
+[Sat Jul 26 22:02:23 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.5.txt
+    jobid: 80
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt
+    wildcards: REP=17
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 17                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 80 with external jobid '1345355'.
+[Sat Jul 26 22:04:13 2025]
+Finished job 53.
+8 of 46 steps (17%) done
+Select jobs to execute...
+
+[Sat Jul 26 22:04:13 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.5.txt
+    jobid: 73
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt
+    wildcards: REP=10
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 10                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 73 with external jobid '1345356'.
+[Sat Jul 26 23:24:14 2025]
+Finished job 46.
+9 of 46 steps (20%) done
+Select jobs to execute...
+
+[Sat Jul 26 23:24:14 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep3.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep3.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.5.txt
+    jobid: 66
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep3.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep3.txt
+    wildcards: REP=3
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 3                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep3.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep3.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 66 with external jobid '1345357'.
+[Sat Jul 26 23:24:58 2025]
+Finished job 54.
+10 of 46 steps (22%) done
+Select jobs to execute...
+
+[Sat Jul 26 23:24:58 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.5.txt
+    jobid: 74
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.1.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt
+    wildcards: REP=11
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 11                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 74 with external jobid '1345358'.
+[Sun Jul 27 00:45:00 2025]
+Finished job 62.
+11 of 46 steps (24%) done
+Select jobs to execute...
+
+[Sun Jul 27 00:45:00 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.5.txt
+    jobid: 82
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt
+    wildcards: REP=19
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 19                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 82 with external jobid '1345359'.
+[Sun Jul 27 00:46:50 2025]
+Finished job 48.
+12 of 46 steps (26%) done
+Select jobs to execute...
+
+[Sun Jul 27 00:46:50 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.5.txt
+    jobid: 68
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt
+    wildcards: REP=5
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 5                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 68 with external jobid '1345360'.
+[Sun Jul 27 00:46:50 2025]
+Finished job 41.
+13 of 46 steps (28%) done
+[Sun Jul 27 00:46:50 2025]
+Finished job 27.
+14 of 46 steps (30%) done
+Select jobs to execute...
+
+[Sun Jul 27 00:46:50 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep4.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep4.txt
+    jobid: 47
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep4.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep4.txt
+    wildcards: REP=4
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 4                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep4.txt                 1004                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 47 with external jobid '1345361'.
+
+[Sun Jul 27 00:46:50 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep18.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep18.txt
+    jobid: 61
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep18.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep18.txt
+    wildcards: REP=18
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 18                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep18.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep18.txt                 1018                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 61 with external jobid '1345362'.
+[Sun Jul 27 00:47:34 2025]
+Finished job 35.
+15 of 46 steps (33%) done
+Select jobs to execute...
+
+[Sun Jul 27 00:47:34 2025]
+rule estimate_effects:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep12.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep12.txt
+    jobid: 55
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep12.txt
+    wildcards: REP=12
+    threads: 48
+    resources: mem_mb=600000, mem_mib=572205, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        export OMP_NUM_THREADS=48
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/estimate_effects.R                 12                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr                 1000                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/test_ID_rep12.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/simulated_pheno_rep12.txt                 1012                 180000                 200000
+
+        module unload R/4.2.3
+        
+Submitted job 55 with external jobid '1345363'.
+[Sun Jul 27 02:06:29 2025]
+Finished job 63.
+16 of 46 steps (35%) done
+Select jobs to execute...
+
+[Sun Jul 27 02:06:29 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep20.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep20.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.5.txt
+    jobid: 83
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.1.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep20.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep20.txt
+    wildcards: REP=20
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 20                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep20.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep20.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 83 with external jobid '1345365'.
+[Sun Jul 27 02:08:19 2025]
+Finished job 56.
+17 of 46 steps (37%) done
+Select jobs to execute...
+
+[Sun Jul 27 02:08:19 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.5.txt
+    jobid: 76
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt
+    wildcards: REP=13
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 13                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 76 with external jobid '1345366'.
+[Sun Jul 27 03:28:20 2025]
+Finished job 50.
+18 of 46 steps (39%) done
+Select jobs to execute...
+
+[Sun Jul 27 03:28:20 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.5.txt
+    jobid: 70
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt
+    wildcards: REP=7
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 7                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 70 with external jobid '1345368'.
+[Sun Jul 27 03:30:10 2025]
+Finished job 58.
+19 of 46 steps (41%) done
+Select jobs to execute...
+
+[Sun Jul 27 03:30:10 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.5.txt
+    jobid: 78
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt
+    wildcards: REP=15
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 15                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 78 with external jobid '1345369'.
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 74
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 11                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep11.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep11.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep11_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345358
+
+Error executing rule clumping_thresholding on cluster (jobid: 74, external: 1345358, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.74.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 66
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep3.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep3.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 3                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep3.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep3.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep3_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345357
+
+Error executing rule clumping_thresholding on cluster (jobid: 66, external: 1345357, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.66.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 73
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 10                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep10.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep10.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep10_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345356
+
+Error executing rule clumping_thresholding on cluster (jobid: 73, external: 1345356, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.73.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 80
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 17                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep17.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep17.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep17_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345355
+
+Error executing rule clumping_thresholding on cluster (jobid: 80, external: 1345355, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.80.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 65
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 2                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep2.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep2.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep2_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345354
+
+Error executing rule clumping_thresholding on cluster (jobid: 65, external: 1345354, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.65.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 72
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 9                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep9.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep9.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep9_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345353
+
+Error executing rule clumping_thresholding on cluster (jobid: 72, external: 1345353, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.72.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 64
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 1                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep1.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep1.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep1_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345351
+
+Error executing rule clumping_thresholding on cluster (jobid: 64, external: 1345351, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.64.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:30:53 2025]
+Error in rule clumping_thresholding:
+    jobid: 79
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 16                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep16.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep16.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep16_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345352
+
+Error executing rule clumping_thresholding on cluster (jobid: 79, external: 1345352, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.79.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:31:26 2025]
+Error in rule clumping_thresholding:
+    jobid: 82
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 19                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep19.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep19.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep19_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345359
+
+Error executing rule clumping_thresholding on cluster (jobid: 82, external: 1345359, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.82.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 03:31:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 68
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 5                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep5.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep5.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep5_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345360
+
+Error executing rule clumping_thresholding on cluster (jobid: 68, external: 1345360, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.68.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 04:50:02 2025]
+Finished job 51.
+20 of 46 steps (43%) done
+Select jobs to execute...
+
+[Sun Jul 27 04:50:02 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.5.txt
+    jobid: 71
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt
+    wildcards: REP=8
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 8                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 71 with external jobid '1345370'.
+[Sun Jul 27 04:52:42 2025]
+Finished job 49.
+21 of 46 steps (46%) done
+Select jobs to execute...
+
+[Sun Jul 27 04:52:42 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.5.txt
+    jobid: 69
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.2.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt
+    wildcards: REP=6
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 6                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 69 with external jobid '1345371'.
+[Sun Jul 27 06:11:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 83
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep20.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep20.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 20                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep20.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep20.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep20_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345365
+
+Error executing rule clumping_thresholding on cluster (jobid: 83, external: 1345365, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.83.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 06:11:27 2025]
+Finished job 57.
+22 of 46 steps (48%) done
+Select jobs to execute...
+
+[Sun Jul 27 06:11:27 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.5.txt
+    jobid: 77
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.1.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt
+    wildcards: REP=14
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 14                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+[Sun Jul 27 06:11:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 76
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 13                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep13.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep13.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep13_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345366
+
+Error executing rule clumping_thresholding on cluster (jobid: 76, external: 1345366, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.76.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 06:11:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 70
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 7                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep7.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep7.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep7_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345368
+
+Error executing rule clumping_thresholding on cluster (jobid: 70, external: 1345368, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.70.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 06:11:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 78
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 15                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep15.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep15.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep15_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345369
+
+Error executing rule clumping_thresholding on cluster (jobid: 78, external: 1345369, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.78.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 06:11:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 71
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 8                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep8.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep8.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep8_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345370
+
+Error executing rule clumping_thresholding on cluster (jobid: 71, external: 1345370, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.71.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 06:11:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 69
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 6                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep6.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep6.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep6_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345371
+
+Error executing rule clumping_thresholding on cluster (jobid: 69, external: 1345371, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.69.sh). For error details see the cluster log and the log files of the involved rule(s).
+Submitted job 77 with external jobid '1345372'.
+[Sun Jul 27 06:11:37 2025]
+Error in rule clumping_thresholding:
+    jobid: 77
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 14                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep14.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep14.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep14_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345372
+
+Error executing rule clumping_thresholding on cluster (jobid: 77, external: 1345372, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.77.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 06:15:17 2025]
+Finished job 47.
+23 of 46 steps (50%) done
+Select jobs to execute...
+
+[Sun Jul 27 06:15:17 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.5.txt
+    jobid: 67
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt
+    wildcards: REP=4
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 4                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 67 with external jobid '1345373'.
+[Sun Jul 27 06:15:27 2025]
+Error in rule clumping_thresholding:
+    jobid: 67
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 4                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep4.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep4_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345373
+
+Error executing rule clumping_thresholding on cluster (jobid: 67, external: 1345373, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.67.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 07:33:12 2025]
+Finished job 61.
+24 of 46 steps (52%) done
+Select jobs to execute...
+
+[Sun Jul 27 07:33:12 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.5.txt
+    jobid: 81
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.1.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt
+    wildcards: REP=18
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 18                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 81 with external jobid '1345375'.
+[Sun Jul 27 07:33:22 2025]
+Error in rule clumping_thresholding:
+    jobid: 81
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 18                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep18.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep18.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep18_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345375
+
+Error executing rule clumping_thresholding on cluster (jobid: 81, external: 1345375, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.81.sh). For error details see the cluster log and the log files of the involved rule(s).
+[Sun Jul 27 07:37:02 2025]
+Finished job 55.
+25 of 46 steps (54%) done
+Select jobs to execute...
+
+[Sun Jul 27 07:37:02 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.5.txt
+    jobid: 75
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.5.txt; Input files updated by another job: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt
+    wildcards: REP=12
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-2, account=yuxuans, time_min=1440, time=48:00:00, threads=48
+
+
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 12                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+Submitted job 75 with external jobid '1345376'.
+[Sun Jul 27 07:37:12 2025]
+Error in rule clumping_thresholding:
+    jobid: 75
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.2.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_0.5.txt
+    shell:
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=40
+      
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 12                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/effects_rep12.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno/ukb_chr{CHR}_filtered                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/training_ID_rep12.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.2,0.5                 10E-3                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/clumped_snps_rep12_r2_                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3
+
+        module unload R/4.2.3
+        
+        (one of the commands exited with non-zero exit code; note that snakemake uses bash strict mode!)
+    cluster_jobid: 1345376
+
+Error executing rule clumping_thresholding on cluster (jobid: 75, external: 1345376, jobscript: /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/.snakemake/tmp.vhw8t8e4/snakejob.clumping_thresholding.75.sh). For error details see the cluster log and the log files of the involved rule(s).
+Exiting because a job execution failed. Look above for error message
+Complete log: .snakemake/log/2025-07-26T175734.204546.snakemake.log

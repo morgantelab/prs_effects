@@ -3,12 +3,15 @@
 # Parse command-line arguments
 args <- commandArgs(trailingOnly = TRUE)
 
-bim_files <- unlist(strsplit(args[1], " "))
+cat("Received arguments:\n")
+print(args)
+
+bim_pattern <- args[1]  # Get the space-separated BIM file paths
 rep <- as.integer(args[2])
 seed_val <- as.integer(args[3])
 geno_dir <- args[4]
 results_dir <- args[5]
-h2 <- as.integer(args[6])
+h2 <- as.numeric(args[6])
 num_loci <- as.integer(args[7])
 plink2_path <- args[8]
 output_causal_snps <- args[9]
@@ -18,6 +21,15 @@ num_additive <- as.integer(args[12])
 num_incom_dom <- as.integer(args[13])
 num_com_dom <- as.integer(args[14])
 
+cat("\nConverted values:\n")
+cat("BIM file pattern:", bim_pattern, "\n")
+cat("rep:", rep, "\n")
+cat("seed_val:", seed_val, "\n")
+cat("h2:", h2, "\n")
+cat("num_loci:", num_loci, "\n")
+cat("num_additive:", num_additive, "\n")
+cat("num_incom_dom:", num_incom_dom, "\n")
+cat("num_com_dom:", num_com_dom, "\n")
 
 library(data.table)
 library(dplyr)
@@ -26,16 +38,23 @@ library(genio)
 
 # (1) Select random causal SNPs genome-wide --------------------------------
 # Combine frequencies across chromosomes
+bim_files <- paste0(bim_pattern, 1:22, "_filtered.bim")
+cat("\nBIM files:\n")
+print(bim_files)
+
 all_snp <- unlist(lapply(bim_files, function(bim_file) {
   fread(bim_file, select = 2, header = FALSE)[[1]]
 }))
 
 # Randomly select SNPs
 set.seed(seed_val)
-causal_snps <- all_snp[sample(.N, n_snps)][, index := .I]
-causal_snps_list <- causal_snps %>% select(snp)
+selected_indices <- sample(length(all_snp), num_loci)
+
+causal_snps <- data.frame(
+  snp = all_snp[selected_indices])
+
 # Write causal SNPs to extract
-write.table(causal_snps_list, 
+write.table(causal_snps, 
             file = output_causal_snps,
             col.names = FALSE, sep = "\t", quote = FALSE, row.names = FALSE)
 
@@ -97,7 +116,7 @@ for(CHR in 1:22) {
   bim <- fread(bim_file, col.names = c("chr", "snp", "pos_cM", "pos", "alt", "ref"))
   cat("Loading BIM file \n")
   
-  causal_snps <- fread(output_causal_snps), 
+  causal_snps <- fread(output_causal_snps, 
                        header = FALSE, col.names = "snp")
   # Get effect sizes for each SNP in this chromosome
   match_idx <- match(bim$snp, causal_snps$snp)

@@ -1,8 +1,6 @@
 # Directory setting
-results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication"
-geno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication/filter"
-log_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/replication_snakemake"
-error_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/replication_snakemake"
+results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3"
+geno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno"
 code_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication"
 fam_dir: "/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024"
 bed_bim_dir: "/data2/morgante_lab/data/ukbiobank/genotypes/array"
@@ -17,7 +15,7 @@ CHR: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17
 REP: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20']
 h2: "0.5"
 N_LOCI: "1000"
-N_sample: "200000"
+N_SAMPLE: "200000"
 SAMPLE_SEED: "123"
 maf: "0.01"
 mac: "5"
@@ -28,7 +26,6 @@ NUM_INCOM_DOM: "0"
 NUM_COM_DOM: "0"
 CHUNK_SIZE: "1000"
 NUM_TRAIN: "180000"
-LD_THRESHLDS: [0.1, 0.2, 0.5]
+LD_THRESHOLDS: [0.1, 0.3, 0.5]
 CLUMPING_KB: "250"
-P_THRESHOLDS: 1E-4
-
+P_THRESHOLDS: "10E-3"
