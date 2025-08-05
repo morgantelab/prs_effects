@@ -1,4 +1,0 @@
-Config file GWAS_config.yaml is extended by additional config specified via the command line.
-WildcardError in file /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/GWAS_Snakefile, line 114:
-No values given for wildcard 'REP'.
-  File "/data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/GWAS_Snakefile", line 114, in <module>
