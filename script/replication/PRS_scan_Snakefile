@@ -1,47 +1,66 @@
-configfile: "config.yaml"
-
 wildcard_constraints:
     CHR = "|".join(map(str, config["CHR"])),
-    REP = "|".join(map(str, config["REP"]))
+    REP = "|".join(map(str, config["REP"])),
+    r2 = "|".join([f"{x:.1f}" for x in config["LD_THRESHOLDS"]]),
+    p = "|".join(config["P_THRESHOLDS"])
 
 rule all:
     input:
-        # Initial sample selection
-        expand("{results_dir}/ID_filtered.txt",
-               results_dir=config["results_dir"]),
+        # Pheno directory outputs
+        expand("{pheno_dir}/ID_filtered.txt",
+               pheno_dir=config["pheno_dir"]),
+        expand("{pheno_dir}/simulated_pheno_rep{rep}.txt", 
+               pheno_dir=config["pheno_dir"], rep=config["REP"]),
+        expand("{pheno_dir}/simulated_geno_rep{rep}.txt",
+               pheno_dir=config["pheno_dir"], rep=config["REP"]),
+        expand("{pheno_dir}/causal_snps{rep}.txt",
+               pheno_dir=config["pheno_dir"], rep=config["REP"]),
+        expand("{pheno_dir}/effects_rep{rep}.txt",
+               pheno_dir=config["pheno_dir"], rep=config["REP"]),
+        expand("{pheno_dir}/training_ID_rep{rep}.txt",
+               pheno_dir=config["pheno_dir"], rep=config["REP"]),
+        expand("{pheno_dir}/test_ID_rep{rep}.txt",
+               pheno_dir=config["pheno_dir"], rep=config["REP"]),
         
-        # Simulation outputs (per replicate)
-        expand("{results_dir}/simulated_pheno_rep{rep}.txt", 
-               results_dir=config["results_dir"], rep=config["REP"]),
-        expand("{results_dir}/simulated_geno_rep{rep}.txt",
-               results_dir=config["results_dir"], rep=config["REP"]),
-        expand("{results_dir}/causal_snps{rep}.txt",
-               results_dir=config["results_dir"], rep=config["REP"]),
-        
-        # Analysis outputs (per replicate)
-        expand("{results_dir}/effects_rep{rep}.txt",
-               results_dir=config["results_dir"], rep=config["REP"]),
-        expand("{results_dir}/training_ID_rep{rep}.txt",
-               results_dir=config["results_dir"], rep=config["REP"]),
-        expand("{results_dir}/test_ID_rep{rep}.txt",
-               results_dir=config["results_dir"], rep=config["REP"]),
-        
-        # Clumping results (per replicate and R2 threshold)
-        expand("{results_dir}/clumped_snps_rep{rep}_r2_{r2}.txt",
+        # P-threshold specific outputs
+        expand("{results_dir}/{p}/clumped_snps_rep{rep}_r2_{r2}.txt",
                results_dir=config["results_dir"],
+               p=config["P_THRESHOLDS"],
                rep=config["REP"],
                r2=[f"{x:.1f}" for x in config["LD_THRESHOLDS"]]),
+        expand("{results_dir}/{p}/test_prs_scan_rep{rep}.txt",
+               results_dir=config["results_dir"],
+               p=config["P_THRESHOLDS"],
+               rep=config["REP"]),
         
-        # Test prediction results (per replicate)
-        expand("{results_dir}/test_prs_scan_rep{rep}.txt",
-               results_dir=config["results_dir"], rep=config["REP"])        
+        # GWAS results per chromosome and replicate
+        expand("{results_dir}/gwas/gwas_rep{REP}_chr{CHR}.pheno.glm.linear",
+               results_dir=config["results_dir"],
+               REP=config["REP"],
+               CHR=config["CHR"]),
+
+        # Clumping results per replicate, chromosome, LD threshold and p-threshold
+        expand("{results_dir}/clumping/{p}/gwas_clump_rep{REP}_chr{CHR}_r2_{r2}.snplist",
+               results_dir=config["results_dir"],
+               p=config["P_THRESHOLDS"],
+               REP=config["REP"],
+               CHR=config["CHR"],
+               r2=[f"{x:.1f}" for x in config["LD_THRESHOLDS"]]),
         
+        # Final PRS results per replicate and p-threshold
+        expand("{results_dir}/{p}/test_prs_gwas_rep{REP}.txt",
+               results_dir=config["results_dir"],
+               p=config["P_THRESHOLDS"],
+               REP=config["REP"])
+
+
+# Selection samples
 rule sample_selection:
     input:
         pheno = "/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv",
         fam = config["fam_dir"]+"/"+"ukb22418_c1_b0_v2_s487945.fam"
     output:
-        sample = config["results_dir"]+"/"+"ID_filtered.txt"
+        sample = config["pheno_dir"] + "/ID_filtered.txt"
     params:
         CODE=config["code_dir"]+"/"+"sample_ini_selection.R",
         N_SAMPLE = config["N_SAMPLE"],
@@ -67,14 +86,14 @@ rule sample_selection:
 
 rule filter:
     input:
-        id_file = config["results_dir"] + "/" + "ID_filtered.txt",
+        id_file = config["pheno_dir"] + "/ID_filtered.txt",
         bed = lambda wildcards: f"{config['bed_bim_dir']}/ukb22418_c{wildcards.CHR}_b0_v2_s488243.bed",
         bim = lambda wildcards: f"{config['bed_bim_dir']}/ukb22418_c{wildcards.CHR}_b0_v2_s488243.bim",
         fam = lambda wildcards: f"{config['fam_dir']}/ukb22418_c{wildcards.CHR}_b0_v2_s487945.fam"
     output:
-        bed = config["geno_dir"] + "/ukb_chr{CHR}_filtered.bed",
-        bim = config["geno_dir"] + "/ukb_chr{CHR}_filtered.bim",
-        fam = config["geno_dir"] + "/ukb_chr{CHR}_filtered.fam"
+        bed = config["pheno_dir"] + "/ukb_chr{CHR}_filtered.bed",
+        bim = config["pheno_dir"] + "/ukb_chr{CHR}_filtered.bim",
+        fam = config["pheno_dir"] + "/ukb_chr{CHR}_filtered.fam"
     params:
         plink2 = config["plink2_path"],
         output_prefix = lambda wildcards, output: output.bed.replace('.bed', ''),
@@ -105,14 +124,15 @@ rule filter:
         --out {params.output_prefix}
         """
 
+
 rule pheno_simulation:
     input:
-        bim_files = expand("{geno_dir}/ukb_chr{CHR}_filtered.bim", 
-                           geno_dir=config["geno_dir"], CHR=config["CHR"])   
+        bim_files = expand("{pheno_dir}/ukb_chr{CHR}_filtered.bim", 
+                           pheno_dir=config["pheno_dir"], CHR=config["CHR"])   
     output:
-        causal_snps = config["results_dir"] + "/" + "causal_snps{REP}.txt",
-        pheno = config["results_dir"] + "/" + "simulated_pheno_rep{REP}.txt",
-        geno = config["results_dir"] + "/" + "simulated_geno_rep{REP}.txt"
+        causal_snps = config["pheno_dir"] + "/causal_snps{REP}.txt",
+        pheno = config["pheno_dir"] + "/simulated_pheno_rep{REP}.txt",
+        geno = config["pheno_dir"] + "/simulated_geno_rep{REP}.txt"
     params:
         REP = "{REP}",  # Wildcard for replicate number,
         seed = lambda wildcards: 1000 + int(wildcards.REP),  # Unique seed per replicate
@@ -124,13 +144,14 @@ rule pheno_simulation:
         NUM_COM_DOM = config["NUM_COM_DOM"],
         threads = "40",
         CODE = config["code_dir"] + "/" + "pheno_simulation_part1.R",
-        geno_dir = config["geno_dir"],
+        pheno_dir = config["pheno_dir"],
         results_dir = config["results_dir"],
-        bim_pattern = config["geno_dir"] + "/" + "ukb_chr"
+        bim_pattern = config["pheno_dir"] + "/" + "ukb_chr"
     resources:
         mem_mb = 600000,
         threads = 48,
-        time = "12:00:00"
+        time = "12:00:00",
+        partition = "fm-bigmem-4"
     shell:
         """
         module load R/4.2.3
@@ -141,7 +162,7 @@ rule pheno_simulation:
                 {params.bim_pattern} \
                 {params.REP} \
                 {params.seed} \
-                {params.geno_dir} \
+                {params.pheno_dir} \
                 {params.results_dir} \
                 {params.h2} \
                 {params.NUM_LOCI} \
@@ -158,15 +179,15 @@ rule pheno_simulation:
 
 rule estimate_effects:
     input:
-        pheno = config["results_dir"] + "/simulated_pheno_rep{REP}.txt"
+        pheno = config["pheno_dir"] + "/simulated_pheno_rep{REP}.txt"
     output:
-        effects = config["results_dir"] + "/" + "effects_rep{REP}.txt",
-        train_ids = config["results_dir"] + "/" + "training_ID_rep{REP}.txt",
-        test_ids = config["results_dir"] + "/" + "test_ID_rep{REP}.txt"
+        effects = config["pheno_dir"] + "/effects_rep{REP}.txt",
+        train_ids = config["pheno_dir"] + "/training_ID_rep{REP}.txt",
+        test_ids = config["pheno_dir"] + "/test_ID_rep{REP}.txt"
     params:
         rep = "{REP}",
         CHR = config["CHR"],
-        GENO_PATTERN = config["geno_dir"] + "/"+ "ukb_chr",
+        GENO_PATTERN = config["pheno_dir"] + "/"+ "ukb_chr",
         CHUNK_SIZE = config["CHUNK_SIZE"],
         CODE = config["code_dir"] + "/" + "estimate_effects.R",
         seed = lambda wildcards: 1000 + int(wildcards.REP),
@@ -174,9 +195,9 @@ rule estimate_effects:
         NUM_SAMPLE = config["N_SAMPLE"]
     threads: 48
     resources:
-        mem_mb = 600000,
-        time = "48:00:00",
-        threads = 48
+        mem_mb = 10000,
+        time = "03:00:00",
+        partition = "fm-bigmem-4"
     shell:
         """
         module load R/4.2.3
@@ -200,91 +221,221 @@ rule estimate_effects:
 
 rule clumping_thresholding:
     input:
-        effects = config["results_dir"] + "/effects_rep{REP}.txt",
-        train_ids = config["results_dir"] + "/training_ID_rep{REP}.txt"
+        effects = config["pheno_dir"] + "/effects_rep{REP}.txt",
+        train_ids = config["pheno_dir"] + "/training_ID_rep{REP}.txt"
     output:
-        clumped_snps = expand(
-            "{results_dir}/clumped_snps_rep{{REP}}_r2_{r2}.txt",
-            results_dir=config["results_dir"],
-            r2=[f"{x:.1f}" for x in config["LD_THRESHOLDS"]]
-        )
+        clumped_snps = [f"{{results_dir}}/{{p}}/clumped_snps_rep{{REP}}_r2_{r2}.txt" for r2 in [f"{x:.1f}" for x in config["LD_THRESHOLDS"]]]
     params:
-        rep = "{REP}",
-        GENO_PATTERN = config["geno_dir"] + "/"+ "ukb_chr",
+        outdir = lambda wildcards: f"{config['results_dir']}/{wildcards.p}",
         plink2 = config["plink2_path"],
-        CHR = "|".join(map(str, config["CHR"])),
-        LD_THRESHOLDS = ",".join([f"{x:.1f}" for x in config["LD_THRESHOLDS"]]),
-        clump_p = config["P_THRESHOLDS"],
         clump_kb = config["CLUMPING_KB"],
         CODE = config["code_dir"] + "/" + "thresholding_clumping.R",
-        output_pattern = config["results_dir"] + "/clumped_snps_rep{REP}_r2_",
-        results_dir = config["results_dir"]
+        GENO_PATTERN = config["pheno_dir"] + "/ukb_chr",
+        LD_THRESHOLDS = ",".join([f"{x:.1f}" for x in config["LD_THRESHOLDS"]])
+    wildcard_constraints:
+        p="|".join(config["P_THRESHOLDS"]),  # Define p wildcard
+        REP="|".join(config["REP"])
+    threads: 4
     resources:
         mem_mb = 16000,
         time = "48:00:00",
-        threads = 48
+        partition ='fm-bigmem-2'
     shell:
         """
+        mkdir -p {params.outdir}
+        
         module load R/4.2.3
         export MKL_NUM_THREADS=48
-      
         Rscript {params.CODE} \
-                {params.rep} \
+                {wildcards.REP} \
                 {input.effects} \
                 {params.GENO_PATTERN} \
                 {input.train_ids} \
                 {params.plink2} \
                 {params.LD_THRESHOLDS} \
-                {params.clump_p} \
+                {wildcards.p} \
                 {params.clump_kb} \
-                {params.output_pattern} \
-                {params.results_dir}
-
-        module unload R/4.2.3
+                {params.outdir}
+                
+        module unload R/4.2.3                
         """
 
+# Update test prediction to use p wildcard
 rule test_prediction:
     input:
-        effects = rules.estimate_effects.output.effects,
-        test_ids = config["results_dir"] + "/test_ID_rep{REP}.txt",
-        clumped_snps = expand(
-            "{results_dir}/clumped_snps_rep{{REP}}_r2_{r2}.txt",
-            results_dir=config["results_dir"],
-            r2=[f"{x:.1f}" for x in config["LD_THRESHOLDS"]]
-        ),
-        geno_files = expand("{geno_dir}/ukb_chr{chr}_filtered.{ext}",
-                          geno_dir=config["geno_dir"],
-                          chr=config["CHR"],
-                          ext=["bed", "bim", "fam"])
+        effects = config["pheno_dir"] + "/effects_rep{REP}.txt",
+        test_ids = config["pheno_dir"] + "/test_ID_rep{REP}.txt",
+        clumped_snps = lambda wildcards: [
+            f"{config['results_dir']}/{wildcards.p}/clumped_snps_rep{wildcards.REP}_r2_{r2}.txt"
+            for r2 in [f"{x:.1f}" for x in config["LD_THRESHOLDS"]]
+        ]
     output:
-        prs_scan = config["results_dir"] + "/" + "test_prs_scan_rep{REP}.txt"
+        prs_scan = config["results_dir"] + "/{p}/test_prs_scan_rep{REP}.txt"
     params:
-        results_dir = config["results_dir"],
-        ld_thresholds = ",".join([f"{x:.1f}" for x in config["LD_THRESHOLDS"]]),
+        outdir = lambda wildcards: f"{config['results_dir']}/{wildcards.p}",
         CODE = config["code_dir"] + "/test_prediction.R",
-        rep = "{REP}",
-        GENO_PATTERN = config["geno_dir"] + "/"+ "ukb_chr",
+        ld_thresholds = ",".join([f"{x:.1f}" for x in config["LD_THRESHOLDS"]]),
+        GENO_PATTERN = config["pheno_dir"] + "/ukb_chr",
         plink2 = config["plink2_path"]
-    threads: 48
+    threads: 20
     resources:
         mem_mb = 200000,
-        time = "24:00:00",
-        threads = 48
+        time = "48:00:00"
     shell:
         """
+        mkdir -p {params.outdir}
+        
         module load R/4.2.3
         export MKL_NUM_THREADS={threads}
         
         Rscript {params.CODE} \
-                {params.rep} \
-                {params.results_dir} \
+                {wildcards.REP} \
+                {params.outdir} \
                 {params.ld_thresholds} \
                 {input.test_ids} \
                 {input.effects} \
-                {input.clumped_snps} \
                 {params.GENO_PATTERN} \
                 {params.plink2} \
-                {output.prs_scan}
+                {wildcards.p}
             
+        module unload R/4.2.3
+        """
+
+rule GWAS:
+    input:
+        bed = config["pheno_dir"] + "/ukb_chr{CHR}_filtered.bed",
+        bim = config["pheno_dir"] + "/ukb_chr{CHR}_filtered.bim",
+        fam = config["pheno_dir"] + "/ukb_chr{CHR}_filtered.fam",
+        pheno = config["pheno_dir"] + "/simulated_pheno_rep{REP}.txt",  # Fixed typo in "simulated"
+        train_ids = config["pheno_dir"] + "/training_ID_rep{REP}.txt"
+    output:
+        gwas_out = config["results_dir"] + "/gwas/gwas_rep{REP}_chr{CHR}.pheno.glm.linear"
+    params:
+        out_prefix = lambda wildcards: config["results_dir"] + f"/gwas/gwas_rep{wildcards.REP}_chr{wildcards.CHR}",
+        plink2 = config["plink2_path"],
+        geno_prefix = lambda wildcards: config["pheno_dir"] + f"/ukb_chr{wildcards.CHR}_filtered",
+        train_pheno = lambda wildcards: config["results_dir"] + f"/gwas/train_pheno_rep{wildcards.REP}.txt",
+        gwas_dir = config["results_dir"] + "/gwas"
+    threads: 20
+    resources:
+        mem_mb = 100000,
+        time = "24:00:00"
+    shell:
+        """
+        # Create GWAS directory if needed
+        mkdir -p {params.gwas_dir}
+        
+        # Create training phenotype file for rep {wildcards.REP}
+        echo "Creating training phenotype file"
+        awk 'BEGIN {{OFS="\\t"}} NR==FNR {{ids[$1]=1; next}} FNR==1 {{print "FID","IID","pheno"}} $2 in ids {{print $1,$2,$3}}' \
+            {input.train_ids} {input.pheno} > {params.train_pheno}
+        
+        # Run PLINK2 for GWAS on chromosome {wildcards.CHR}
+        {params.plink2} \
+            --bfile {params.geno_prefix} \
+            --pheno {params.train_pheno} \
+            --keep {input.train_ids} \
+            --glm no-x-sex allow-no-covars \
+            --no-input-missing-phenotype \
+            --pheno-name pheno \
+            --out {params.out_prefix} \
+            --threads {threads}
+        """
+
+
+rule clumping:
+    input:
+        bfile = lambda wildcards: [
+            f"{config['pheno_dir']}/ukb_chr{wildcards.CHR}_filtered.{ext}" 
+            for ext in ["bed", "bim", "fam"]
+        ],
+        gwas = "{results_dir}/gwas/gwas_rep{REP}_chr{CHR}.pheno.glm.linear",
+        train_ids = "{results_dir}/pheno/training_ID_rep{REP}.txt"
+    output:
+        clump_out = "{results_dir}/clumping/{p}/gwas_clump_rep{REP}_chr{CHR}_r2_{r2}.clumps",
+        snplist = "{results_dir}/clumping/{p}/gwas_clump_rep{REP}_chr{CHR}_r2_{r2}.snplist"
+    params:
+        out_prefix = "{results_dir}/clumping/{p}/gwas_clump_rep{REP}_chr{CHR}_r2_{r2}",
+        plink2 = config["plink2_path"],
+        p_threshold = lambda wildcards: float(wildcards.p),  # e.g., "1e-3" → 0.001
+        clump_kb = config["CLUMPING_KB"],
+        clump_dir = config["results_dir"] + "/clumping/{p}"
+    threads: 10
+    resources:
+        mem_mb = 100000,
+        time = "24:00:00",
+        partition = 'fm-bigmem-3'
+    shell:
+        """
+        # Create output directory
+        mkdir -p {params.clump_dir}
+        
+        # Run PLINK2 clumping
+        {params.plink2} \\
+            --bfile $(echo {input.bfile[0]} | sed 's/\\.bed$//') \\
+            --clump {input.gwas} \\
+            --clump-p1 {params.p_threshold} \\
+            --clump-r2 {wildcards.r2} \\
+            --clump-kb {params.clump_kb} \\
+            --keep {input.train_ids} \\
+            --out {params.out_prefix}
+        
+        # Extract SNP list from clumps file
+        if [ -f "{params.out_prefix}.clumps" ]; then
+            awk 'NR > 1 {{print $3}}' "{params.out_prefix}.clumps" > "{output.snplist}"
+        else
+            echo "No clumped SNPs found" > "{output.snplist}"
+        fi
+        """
+
+# Update calculate_prs_gwas rule with correct paths
+rule calculate_prs_gwas:
+    input:
+        bfile = expand("{pheno_dir}/ukb_chr{CHR}_filtered.{ext}",
+                     pheno_dir=config["pheno_dir"],
+                     CHR=config["CHR"],
+                     ext=["bed", "bim", "fam"]),
+        test_ids = config["pheno_dir"] + "/test_ID_rep{REP}.txt",
+        # Input clumped SNPs for all chromosomes and current p-threshold
+        clump_snps = lambda wildcards: [
+            config["results_dir"] + f"/clumping/{wildcards.p}/gwas_clump_rep{wildcards.REP}_chr{chr}_r2_{r2}.snplist"
+            for chr in config["CHR"]
+            for r2 in [f"{x:.1f}" for x in config["LD_THRESHOLDS"]]
+        ]
+    output:
+        prs_out = config["results_dir"] + "/{p}/test_prs_gwas_rep{REP}.txt"
+    params:
+        plink2 = config["plink2_path"],
+        CODE = config["code_dir"] + "/calculate_prs_gwas.R",
+        geno_pattern = config["pheno_dir"] + "/ukb_chr",
+        gwas_pattern = config["results_dir"] + "/gwas/gwas_rep{REP}_chr",
+        clump_pattern = config["results_dir"] + "/clumping/{p}/gwas_clump_rep{REP}_chr",
+        results_dir = config["results_dir"],
+        rep = "{REP}",
+        outdir = lambda wildcards: f"{config['results_dir']}/{wildcards.p}",
+        ld_thresholds = ",".join([f"{x:.1f}" for x in config["LD_THRESHOLDS"]])
+    threads: 40
+    resources:
+        mem_mb = 100000,
+        time = "24:00:00"
+    shell:
+        """
+        mkdir -p {params.outdir}  # Create p-threshold directory
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS={threads}
+        
+        Rscript {params.CODE} \
+                "{params.geno_pattern}" \
+                "{params.gwas_pattern}" \
+                "{params.clump_pattern}" \
+                "{input.test_ids}" \
+                "{params.plink2}" \
+                "{params.ld_thresholds}" \
+                "{params.outdir}" \
+                "{wildcards.REP}" \
+                "{wildcards.p}" \
+                "{output.prs_out}"
+                
         module unload R/4.2.3
         """

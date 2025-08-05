@@ -1,0 +1,42 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 100
+Job stats:
+job                      count
+---------------------  -------
+GWAS                       440
+all                          1
+calculate_prs_gwas          60
+clumping                  3960
+clumping_thresholding       60
+estimate_effects             6
+test_prediction             60
+total                     4587
+
+Select jobs to execute...
+
+[Mon Aug  4 00:32:27 2025]
+rule GWAS:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr22_filtered.bed, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr22_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr22_filtered.fam, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/simulated_pheno_rep12.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/training_ID_rep12.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas/gwas_rep12_chr22.pheno.glm.linear
+    jobid: 447
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas/gwas_rep12_chr22.pheno.glm.linear
+    wildcards: REP=12, CHR=22
+    threads: 40
+    resources: mem_mb=100000, mem_mib=95368, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, account=yuxuans, time_min=1440, time=24:00:00
+
+
+        # Create GWAS directory if needed
+        mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas
+        # Create training phenotype file for rep 12
+        echo "Creating training phenotype file"
+        awk 'BEGIN {OFS="\t"} NR==FNR {ids[$1]=1; next} FNR==1 {print "FID","IID","pheno"} $2 in ids {print $1,$2,$3}'             /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/training_ID_rep12.txt /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/simulated_pheno_rep12.txt > /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas/train_pheno_rep12.txt
+        # Run PLINK2 for GWAS on chromosome 22
+        /data2/morgante_lab/yuxuans/software/plink2         --bfile /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr22_filtered         --pheno /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas/train_pheno_rep12.txt         --keep /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/training_ID_rep12.txt         --glm no-x-sex allow-no-covars         --no-input-missing-phenotype         --pheno-name pheno         --out /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas/gwas_rep12_chr22         --threads 40
+        # Cleanup temporary file
+        rm /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas/train_pheno_rep12.txt
+        
+RuleException in rule GWAS in file /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/PRS_scan_Snakefile, line 305:
+NameError: The name 'PARTITION' is unknown in this context. Please make sure that you defined that variable. Also note that braces not used for variable access have to be escaped by repeating them, i.e. {{print $1}}, when formatting the following:
+mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/logs/slurm/{rule} && PARTITION=(fm-bigmem-4 fm-bigmem-4 fm-bigmem-4 fm-bigmem-2 fm-bigmem-3) && # fm-bigmem-4 appears 3x → 60% chance; others 20% total SELECTED=${PARTITION[$RANDOM % ${#PARTITION[@]}]} && sbatch --partition=$SELECTED --account={resources.account} --cpus-per-task={threads} --mem={resources.mem_mb} --job-name=smk_{rule} --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/slurm/{rule}/{rule}_%j.out --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/slurm/{rule}/{rule}_%j.err --time={resources.time_min} --parsable
+

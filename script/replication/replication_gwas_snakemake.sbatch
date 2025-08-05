@@ -26,14 +26,19 @@ export R_LIB2="/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library"
 # --- Activate Snakemake environment ---
 echo "Activating conda environment..."
 mamba activate snakemake-7.32
-cd /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/GWAS
+cd /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication
 
-snakemake -n -p \
+# snakemake -p \
+#  -s GWAS_Snakefile \
+#  --configfile GWAS_config.yaml \
+#  --profile /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/profiles/slurm \
+#  --unlock
+
+snakemake -p \
   -s GWAS_Snakefile \
   --configfile GWAS_config.yaml \
   --profile /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/profiles/slurm \
   --latency-wait 120
-# --unlock
 
 # --- Deactivate environment ---    
 mamba deactivate

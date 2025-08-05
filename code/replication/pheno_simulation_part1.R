@@ -9,7 +9,7 @@ print(args)
 bim_pattern <- args[1]  # Get the space-separated BIM file paths
 rep <- as.integer(args[2])
 seed_val <- as.integer(args[3])
-geno_dir <- args[4]
+pheno_dir <- args[4]
 results_dir <- args[5]
 h2 <- as.numeric(args[6])
 num_loci <- as.integer(args[7])
@@ -80,6 +80,9 @@ d[incomplete_idx] <- a[incomplete_idx] *
 additive_idx <- which(dom_type == "additive")
 d[additive_idx] <- 0
 
+true_effects <- data.table(rsid = causal_snps[[1]], a = a, d = d)
+true_effects_file <- paste0(pheno_dir, "/true_effects_rep", rep, ".txt")
+fwrite(true_effects, true_effects_file, sep = "\t")
 # (3) Process chromosomes ---------------------------------------------------
 total_geno <- NULL
 
@@ -87,13 +90,13 @@ for(CHR in 1:22) {
   cat("Processing chromosome", CHR, "\n")
   system(paste(
     plink2_path,
-    "--bfile", paste0(geno_dir, "/ukb_chr", CHR, "_filtered"),
+    "--bfile", paste0(pheno_dir, "/ukb_chr", CHR, "_filtered"),
     "--extract", output_causal_snps,
     "--make-bed",
-    "--out", paste0(geno_dir, "/temp_chr", CHR, "_", rep)
+    "--out", paste0(pheno_dir, "/temp_chr", CHR, "_", rep)
   ))
   
-  plink_file <- paste0(geno_dir, "/temp_chr", CHR, "_", rep)
+  plink_file <- paste0(pheno_dir, "/temp_chr", CHR, "_", rep)
   bim_file <- paste0(plink_file, ".bim")
   fam_file <- paste0(plink_file, ".fam")
   
@@ -129,16 +132,16 @@ for(CHR in 1:22) {
     
     # Calculate contributions using vectorization
     contrib <- case_when(
-      g == 0 ~ -a_vals[j],
+      g == 0 ~ a_vals[j],
       g == 1 ~ d_vals[j],
-      g == 2 ~ a_vals[j],
+      g == 2 ~ -a_vals[j],
       TRUE ~ 0
     )
     
     total_geno$score <- total_geno$score + contrib
   }
   
-  unlink(paste0(geno_dir, "/temp_chr", CHR, "_", rep, c(".bed", ".bim", ".fam", ".log")))
+  unlink(paste0(pheno_dir, "/temp_chr", CHR, "_", rep, c(".bed", ".bim", ".fam", ".log")))
 }
 
 

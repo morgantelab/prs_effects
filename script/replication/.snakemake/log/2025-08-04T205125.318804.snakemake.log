@@ -1,0 +1,46 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 100
+Job stats:
+job                   count
+------------------  -------
+all                       1
+calculate_prs_gwas       60
+clumping               3960
+total                  4021
+
+Select jobs to execute...
+
+[Mon Aug  4 20:51:33 2025]
+rule clumping:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr12_filtered.bed, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr12_filtered.bim, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr12_filtered.fam, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/gwas/gwas_rep1_chr12.pheno.glm.linear, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/training_ID_rep1.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/clumping/10E-3/gwas_clump_rep1_chr12_r2_0.1.clumps, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/clumping/10E-3/gwas_clump_rep1_chr12_r2_0.1.snplist
+    jobid: 657
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/clumping/10E-3/gwas_clump_rep1_chr12_r2_0.1.snplist
+    wildcards: results_dir=/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m, p=10E-3, REP=1, CHR=12, r2=0.1
+    threads: 10
+    resources: mem_mb=100000, mem_mib=95368, disk_mb=2612, disk_mib=2491, tmpdir=<TBD>, partition=fm-bigmem-3, account=yuxuans, time_min=1440, time=24:00:00
+
+RuleException in rule clumping in file /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/PRS_scan_Snakefile, line 346:
+AttributeError: 'Params' object has no attribute 'clump_dir', when formatting the following:
+
+        # Create output directory
+        mkdir -p {params.clump_dir}
+        
+        # Run PLINK2 clumping
+        {params.plink2} \
+            --bfile $(echo {input.bfile[0]} | sed 's/\.bed$//') \
+            --clump {input.gwas} \
+            --clump-p1 {params.p_threshold} \
+            --clump-r2 {wildcards.r2} \
+            --clump-kb {params.clump_kb} \
+            --keep {input.train_ids} \
+            --out {params.out_prefix}
+        
+        # Extract SNP list from clumps file
+        if [ -f "{params.out_prefix}.clumps" ]; then
+            awk 'NR > 1 {{print $2}}' "{params.out_prefix}.clumps" > "{output.snplist}"
+        else
+            echo "No clumped SNPs found" > "{output.snplist}"
+        fi
+        

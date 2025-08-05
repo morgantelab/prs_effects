@@ -1,6 +1,6 @@
 # Directory setting
-results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3"
-geno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-3/geno"
+pheno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario1/pheno"
+results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario1"
 code_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication"
 fam_dir: "/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024"
 bed_bim_dir: "/data2/morgante_lab/data/ukbiobank/genotypes/array"
@@ -21,11 +21,11 @@ maf: "0.01"
 mac: "5"
 geno: "0.1"
 hwe: "1E-5"
-NUM_ADDITIVE: "1000"
-NUM_INCOM_DOM: "0"
+NUM_ADDITIVE: "800"
+NUM_INCOM_DOM: "200"
 NUM_COM_DOM: "0"
 CHUNK_SIZE: "1000"
 NUM_TRAIN: "180000"
 LD_THRESHOLDS: [0.1, 0.3, 0.5]
 CLUMPING_KB: "250"
-P_THRESHOLDS: "10E-3"
+P_THRESHOLDS: ["10E-3", "10E-5", "10E-8"]

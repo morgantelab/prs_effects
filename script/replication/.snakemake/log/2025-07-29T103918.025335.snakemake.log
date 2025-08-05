@@ -1,0 +1,18 @@
+Building DAG of jobs...
+MissingInputException in rule all in file /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/PRS_scan_Snakefile, line 8:
+Missing input files for rule all:
+    affected files:
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps1.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps11.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps3.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps19.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps10.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps12.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps18.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps17.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps15.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps2.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps9.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps4.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps16.txt
+        /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_p_10E-5/causal_snps8.txt

@@ -1,0 +1,25 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 100
+Job stats:
+job          count
+---------  -------
+make_dirs        1
+total            1
+
+Select jobs to execute...
+
+[Mon Aug  4 22:26:07 2025]
+rule make_dirs:
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/pheno, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/gwas, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/clumping
+    jobid: 0
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/gwas, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/clumping, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/pheno
+    resources: mem_mb=200000, mem_mib=190735, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, partition=fm-bigmem-4, account=yuxuans, time_min=1440
+
+mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/pheno /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/gwas /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario2/clumping
+Submitted job 0 with external jobid '1365987'.
+Waiting at most 60 seconds for missing files.
+[Mon Aug  4 22:27:07 2025]
+Finished job 0.
+1 of 1 steps (100%) done
+Complete log: .snakemake/log/2025-08-04T222606.974572.snakemake.log

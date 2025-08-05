@@ -1,0 +1,36 @@
+Building DAG of jobs...
+Using shell: /usr/bin/bash
+Provided cluster nodes: 100
+Job stats:
+job                      count
+---------------------  -------
+GWAS                       440
+all                          1
+calculate_prs_gwas          60
+clumping                  3960
+clumping_thresholding       60
+estimate_effects             6
+test_prediction             60
+total                     4587
+
+Select jobs to execute...
+
+[Mon Aug  4 01:05:42 2025]
+rule clumping_thresholding:
+    input: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/effects_rep4.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/training_ID_rep4.txt
+    output: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5/clumped_snps_rep4_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5/clumped_snps_rep4_r2_0.3.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5/clumped_snps_rep4_r2_0.5.txt
+    jobid: 87
+    reason: Missing output files: /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5/clumped_snps_rep4_r2_0.1.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5/clumped_snps_rep4_r2_0.5.txt, /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5/clumped_snps_rep4_r2_0.3.txt
+    wildcards: results_dir=/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m, p=10E-5, REP=4
+    threads: 52
+    resources: mem_mb=16000, mem_mib=15259, disk_mb=1000, disk_mib=954, tmpdir=<TBD>, account=yuxuans, time_min=180, partition=fm-bigmem-4, time=48:00:00
+
+
+        mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5
+        
+        module load R/4.2.3
+        export MKL_NUM_THREADS=48
+        Rscript /data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication/thresholding_clumping.R                 4                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/effects_rep4.txt                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/ukb_chr                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/pheno/training_ID_rep4.txt                 /data2/morgante_lab/yuxuans/software/plink2                 0.1,0.3,0.5                 10E-5                 250                 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_m/10E-5
+                
+        module unload R/4.2.3                
+        

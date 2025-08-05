@@ -2,12 +2,12 @@
 cluster: "mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/logs/slurm/{rule} && sbatch --partition={resources.partition} --account={resources.account} --cpus-per-task={threads} --mem={resources.mem_mb} --job-name=smk_{rule} --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/slurm/{rule}/{rule}_%j.out --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/slurm/{rule}/{rule}_%j.err --time={resources.time_min} --parsable"
 
 default-resources:
-  - partition='fm-bigmem-2'
+  - partition='fm-bigmem-4'
   - account=yuxuans
-  - mem_mb=800000
+  - mem_mb=200000
   - time_min=1440
 
-jobs: 20
+jobs: 100
 latency-wait: 120
 use-envmodules: true
 printshellcmds: true

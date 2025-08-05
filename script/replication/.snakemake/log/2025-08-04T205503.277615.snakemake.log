@@ -1,0 +1,2 @@
+SyntaxError in file /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/PRS_scan_Snakefile, line 361:
+invalid character '，' (U+FF0C)

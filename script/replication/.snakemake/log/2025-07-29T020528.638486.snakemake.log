@@ -1,0 +1,5 @@
+Config file GWAS_config.yaml is extended by additional config specified via the command line.
+Building DAG of jobs...
+WildcardError in rule calculate_prs_test in file /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication/GWAS_Snakefile, line 108:
+Wildcards in input files cannot be determined from output files:
+'CHR'
