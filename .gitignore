@@ -11,4 +11,4 @@ results/*
 code/original_simulation/*
 code/.snakemake/*
 code/replication/.snakemake/*
-
+**/.snakemake/
