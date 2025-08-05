@@ -1,6 +1,6 @@
 # Directory setting
-pheno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario1/pheno"
-results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario1"
+pheno_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario3/pheno"
+results_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/replication_scenario3"
 code_dir: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/replication"
 fam_dir: "/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024"
 bed_bim_dir: "/data2/morgante_lab/data/ukbiobank/genotypes/array"
