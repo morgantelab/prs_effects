@@ -12,3 +12,4 @@ code/original_simulation/*
 code/.snakemake/*
 code/replication/.snakemake/*
 **/.snakemake/
+script/replication/.snakemake/*
