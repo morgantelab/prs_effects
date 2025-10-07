@@ -132,9 +132,9 @@ for(CHR in 1:22) {
     
     # Calculate contributions using vectorization
     contrib <- case_when(
-      g == 0 ~ a_vals[j],
+      g == 0 ~ -a_vals[j],
       g == 1 ~ d_vals[j],
-      g == 2 ~ -a_vals[j],
+      g == 2 ~ a_vals[j],
       TRUE ~ 0
     )
     
