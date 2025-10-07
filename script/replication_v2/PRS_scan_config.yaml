@@ -1,0 +1,50 @@
+# ==============================
+# 📁 config.yaml (example)
+# ==============================
+# Save as: config.yaml
+
+OUT_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/100causal_test2"
+CODE_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/test_method2"
+PHENO_CSV: "/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv"
+BED_BIM_DIR: "/data2/morgante_lab/data/ukbiobank/genotypes/array"
+FAM_DIR: "/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024"
+PLINK2: "/data2/morgante_lab/yuxuans/software/plink2"
+
+# Sampling / phenotyping
+N_SAMPLE: 200000
+SAMPLE_SEED: 1729
+EFFECT_SEED: 1266
+H2: 0.5
+
+# Variant QC
+MAF: 0.01
+MAC: 5
+GENO: 0.1
+HWE: 1e-4
+
+# Threads
+THREADS_PLINK: 20
+THREADS_R: 20
+
+# GWAS / clumping
+PHENO_NAME: "pheno"
+CLUMP_P1: 1e-4
+CLUMP_R2: 0.3
+CLUMP_KB: 250
+DOM_PTHRESH: 0.01
+
+# Scenarios & reps
+SCENARIOS:
+  comdom100:
+    N_ADD: 0
+    N_COMDOM: 100
+  add100:
+    N_ADD: 100
+    N_COMDOM: 0
+  mix50_50:
+    N_ADD: 50
+    N_COMDOM: 50
+N_REPS: 10
+
+# Chromosomes
+CHRS: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]

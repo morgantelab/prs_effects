@@ -32,12 +32,12 @@ snakemake \
   --profile profiles/slurm \
   --unlock
 
-# Run the pipeline
-snakemake -p \
+snakemake \
+  -p \
   -s PRS_scan_Snakefile \
   --configfile PRS_scan_config.yaml \
   --profile profiles/slurm \
-  --latency-wait 60 \
+  --latency-wait 120 \
   --rerun-incomplete
 
 
