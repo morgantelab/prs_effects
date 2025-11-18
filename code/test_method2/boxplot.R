@@ -4,7 +4,7 @@ suppressPackageStartupMessages({
   library(stringr)
 })
 
-base_dir <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/1000causal"
+base_dir <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/1000causal_V3"
 
 # helper
 read_corr_value <- function(path) {

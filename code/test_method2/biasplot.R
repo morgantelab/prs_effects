@@ -4,7 +4,7 @@ suppressPackageStartupMessages({
   library(stringr)
 })
 
-OUT_DIR <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/1000causal"
+OUT_DIR <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/1000causal_centered"
 
 # ---- find PRS prediction files ----
 beta_files <- list.files(
@@ -135,7 +135,7 @@ bias_res <- rbindlist(lapply(seq_len(nrow(all_pred_files)), function(i) {
 }), fill=TRUE)
 
 # ---- tidy labels ----
-bias_res[, P := factor(P, levels=c("10E-3","10E-5","10E-8"))]
+bias_res[, P := factor(P, levels=c("10E-5","10E-8"))]
 bias_res[, R2_num := suppressWarnings(as.numeric(R2))]
 bias_res[, R2 := factor(R2, levels=unique(R2[order(R2_num)]))]
 bias_res[, R2_num := NULL]
@@ -159,6 +159,7 @@ p_intercept <- ggplot(bias_res[!is.na(Intercept)],
   labs(title="Regression intercept (true ~ predicted)",
        x="P-value threshold • R²", y="Intercept", fill="PRS type") +
   theme_bw() + theme(axis.text.x=element_text(angle=45, hjust=1))
+p_intercept
 
 ggsave(file.path(plot_dir,"PRS_bias_intercept.png"), p_intercept,
        width=14, height=8, dpi=300)
@@ -182,7 +183,7 @@ p_intercept <- ggplot(bias_res[!is.na(Intercept)],
     axis.text.x = element_text(angle = 45, hjust = 1),
     plot.title  = element_text(face = "bold")
   )
-
+p_intercept
 ggsave(file.path(plot_dir, "PRS_bias_intercept_faceted_freeY.png"),
        p_intercept, width = 14, height = 8, dpi = 300)
 
@@ -198,3 +199,51 @@ p_slope <- ggplot(bias_res[!is.na(Slope)],
 
 ggsave(file.path(plot_dir,"PRS_bias_slope.png"), p_slope,
        width=14, height=8, dpi=300)
+
+
+# --- filter for plotting only ---
+bias_res_plot <- copy(bias_res)[R2 == 0.1 & P %in% c(1e-04, 1e-07)]
+
+# label P as "10E-5" and "10E-8"
+bias_res_plot[, P_lab := fifelse(abs(P - 1e-04) < .Machine$double.eps^0.5, "10E-5",
+                                 fifelse(abs(P - 1e-07) < .Machine$double.eps^0.5, "10E-8", as.character(P)))]
+bias_res_plot[, P_lab := factor(P_lab, levels = c("10E-5","10E-8"))]
+
+# ensure red (PRS_a_d) is left and legend matches
+bias_res_plot[, Type := factor(Type, levels = c("PRS_a_d","PRS_beta"))]
+
+# use P on x since R2 is fixed at 0.1
+# -------- Intercept --------
+p_intercept <- ggplot(bias_res_plot[!is.na(Intercept)],
+                      aes(x = P_lab, y = Intercept, fill = Type)) +
+  geom_boxplot(position = position_dodge(width = 0.8), outlier.shape = NA) +
+  facet_wrap(~ Scenario, scales = "free_y") +
+  scale_fill_manual(values = c("PRS_a_d" = "#e41a1c", "PRS_beta" = "#377eb8"),
+                    name = "PRS type") +
+  labs(title = "Regression intercept: true ~ predicted (P ∈ {10E-5, 10E-8}, R² = 0.1)",
+       x = "P-value threshold", y = "Intercept") +
+  theme_bw() +
+  theme(axis.text.x = element_text(hjust = 0.5), plot.title = element_text(face = "bold"))
+
+p_intercept
+
+ggsave(file.path(plot_dir, "PRS_bias_intercept_P10E-5_10E-8_R0.1.png"),
+       p_intercept, width = 12, height = 7, dpi = 300)
+
+# -------- Slope --------
+p_slope <- ggplot(bias_res_plot[!is.na(Slope)],
+                  aes(x = P_lab, y = Slope, fill = Type)) +
+  geom_boxplot(position = position_dodge(width = 0.8), outlier.shape = NA) +
+  facet_wrap(~ Scenario, scales = "free_y") +
+  scale_fill_manual(values = c("PRS_a_d" = "#e41a1c", "PRS_beta" = "#377eb8"),
+                    name = "PRS type") +
+  labs(title = "Regression slope: true ~ predicted (P ∈ {10E-5, 10E-8}, R² = 0.1)",
+       x = "P-value threshold", y = "Slope") +
+  theme_bw() +
+  theme(axis.text.x = element_text(hjust = 0.5), plot.title = element_text(face = "bold"))
+
+
+p_slope
+
+ggsave(file.path(plot_dir, "PRS_bias_slope_P10E-5_10E-8_R0.1.png"),
+       p_slope, width = 12, height = 7, dpi = 300)
