@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-#SBATCH --job-name=replication_p
-#SBATCH --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/replication_centered/replication_p_%j.out
-#SBATCH --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/replication_centered/replication_p_%j.err
+#SBATCH --job-name=BCT
+#SBATCH --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/Blood_cell_traits/Blood_cell_traitsp_%j.out
+#SBATCH --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/Blood_cell_traits/Blood_cell_traits_%j.err
 #SBATCH --time=7-00:00:00       
 #SBATCH --mem=2G 
 #SBATCH --partition=fm-bigmem-4            
@@ -24,7 +24,7 @@ export R_LIB2="/opt/ohpc/pub/Software/R-4.2.3/lib64/R/library"
 # --- Activate Snakemake environment ---
 echo "Activating conda environment..."
 mamba activate snakemake-7.32
-cd /data2/morgante_lab/ukbiobank_projects/prs_effects/script/replication_centered
+cd /data2/morgante_lab/ukbiobank_projects/prs_effects/script/Blood_cell_traits
 
 # Unlock first (safe to run even if not locked)
 snakemake \

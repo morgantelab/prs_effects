@@ -5,98 +5,64 @@ configfile: "PRS_scan_config.yaml"
 
 OUT_DIR      = config["OUT_DIR"]
 CODE_DIR     = config["CODE_DIR"]
+ID_LIST      = config["ID_list"]
 PHENO_CSV    = config["PHENO_CSV"]
+COVAR_FILE   = config["COVARIATES"]
+PLINK2       = config["PLINK2"]
+LDAK         = config["LDAK"]
+
 BED_BIM_DIR  = config["BED_BIM_DIR"]
 FAM_DIR      = config["FAM_DIR"]
-PLINK2       = config["PLINK2"]
-CHRS         = list(map(int, config.get("CHRS", list(range(1,23)))))
-THREADS_PLK  = int(config["THREADS_PLINK"])  # shorthand
-KB      = int(config["CLUMP_KB"])
+TRAITS       = config["PHENO_NAMES"]
 
-SCENARIOS  = list(config["SCENARIOS"].keys())
-N_REPS     = int(config["N_REPS"])
-GRID_PREFIX = f"{OUT_DIR}/{{scen}}/rep{{rep}}/grid/p{{p}}_r{{r2}}"
+MAF          = config["MAF"]
+MAC          = config["MAC"]
+GENO         = config["GENO"]
+HWE          = config["HWE"]
 
-# ---- fixed knobs for 20k GWAS panel (do NOT touch config) ----
-PANEL_SIZE = 20000
-PANEL_SEED = 20251105
-PANEL_PROP_BY_CHR = True
+PHENO_NAMES  = config["PHENO_NAMES"]
+THREADS_PLK  = int(config["THREADS_PLINK"])
+THREADS_R    = int(config["THREADS_R"])
 
-# ---- helpers ----
-
-def scen_dir(s):
-    return f"{OUT_DIR}/{s}"
-
-def rep_dir(s, r):
-    return f"{OUT_DIR}/{s}/rep{r}"
-
-def _to_str_list(x):
-    return [str(v) for v in x]
-
-
-P_LIST  = _to_str_list(config["CLUMP_P1_LIST"])
-R2_LIST = _to_str_list(config["CLUMP_R2_LIST"])
+DOM_PTHRESH  = float(config["DOM_PTHRESH"])
+CHRS         = list(map(int, config["CHRS"]))
 
 # ========= TARGETS =========
 rule all:
     input:
-        # PRS_beta + PRS_a_d for all grid combos
-        [f"{OUT_DIR}/{s}/rep{r}/grid/p{p}_r{r2}/score/testing_prs_beta_clumped.txt"
-         for s in SCENARIOS for r in range(1, N_REPS+1) for p in P_LIST for r2 in R2_LIST] +
-        [f"{OUT_DIR}/{s}/rep{r}/grid/p{p}_r{r2}/score/testing_prs_a_d_method2.txt"
-         for s in SCENARIOS for r in range(1, N_REPS+1) for p in P_LIST for r2 in R2_LIST]
-
-# ========= 0) Sample selection (single, shared across scenarios) =========
-rule sample_selection:
-    input:
-        pheno_csv = PHENO_CSV,
-        fam_c1    = f"{FAM_DIR}/ukb22418_c1_b0_v2_s487945.fam"
-    output:
-        ids_200k  = f"{OUT_DIR}/ID_filtered.txt"
-    params:
-        N_SAMPLE   = config["N_SAMPLE"],
-        SAMPLE_SEED= config["SAMPLE_SEED"],
-        CODE       = f"{CODE_DIR}/sample_selection.R"
-    threads: config["THREADS_R"]
-    shell:
-        r"""
-        module load R/4.2.3
-        Rscript {params.CODE} \
-            {input.fam_c1} \
-            {input.pheno_csv} \
-            {output.ids_200k} \
-            {params.N_SAMPLE} \
-            {params.SAMPLE_SEED}
-        module unload R/4.2.3
-        """
-
-# ========= 1) Filter bfiles per chromosome (shared for all scenarios) =========
+        expand(
+            f"{OUT_DIR}/gwas/{{trait}}/chr{{chr}}.{{trait}}.assoc.singlesnp",
+            trait = TRAITS,
+            chr   = CHRS
+        )
+# ========= 1) Filter bfiles per chromosome =========
 rule filter_chr:
     input:
-        bed = lambda wild: f"{BED_BIM_DIR}/ukb22418_c{wild.chr}_b0_v2_s488243.bed",
-        bim = lambda wild: f"{BED_BIM_DIR}/ukb22418_c{wild.chr}_b0_v2_s488243.bim",
-        fam = lambda wild: f"{FAM_DIR}/ukb22418_c{wild.chr}_b0_v2_s487945.fam",
-        keep = f"{OUT_DIR}/ID_filtered.txt"
+        bed = lambda w: f"{BED_BIM_DIR}/ukb22418_c{w.chr}_b0_v2_s488243.bed",
+        bim = lambda w: f"{BED_BIM_DIR}/ukb22418_c{w.chr}_b0_v2_s488243.bim",
+        fam = lambda w: f"{FAM_DIR}/ukb22418_c{w.chr}_b0_v2_s487945.fam",
+        keep = ID_LIST
     output:
         bed = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bed",
         bim = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bim",
         fam = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.fam"
-    params:
-        maf = config["MAF"],
-        mac = config["MAC"],
-        geno= config["GENO"],
-        hwe = config["HWE"],
-        threads = THREADS_PLK
     threads: THREADS_PLK
+    params:
+        maf = MAF,
+        mac = MAC,
+        geno = GENO,
+        hwe = HWE
     shell:
         r"""
+        mkdir -p {OUT_DIR}/filtered
+
         {PLINK2} \
           --bed {input.bed} \
           --bim {input.bim} \
           --fam {input.fam} \
           --keep {input.keep} \
-          --rm-dup exclude-all \
           --snps-only just-acgt \
+          --rm-dup exclude-all \
           --maf {params.maf} \
           --mac {params.mac} \
           --geno {params.geno} \
@@ -106,453 +72,101 @@ rule filter_chr:
           --out {OUT_DIR}/filtered/ukb_chr{wildcards.chr}_filtered
         """
 
-# convenience aggregate
-rule filter_all:
+rule merge_chromosomes:
     input:
-        expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.bed", c=CHRS),
-        expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.bim", c=CHRS),
-        expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.fam", c=CHRS)
-
-
-# ========= 2) Scenario/rep: select causal SNPs + simulate effects =========
-rule select_causal_and_effects:
-    input:
-        bim_list = expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.bim", c=CHRS)
+        bed = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bed", chr=CHRS),
+        bim = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bim", chr=CHRS),
+        fam = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.fam", chr=CHRS)
     output:
-        causal_table = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/causal_snps.txt",
-        causal_ids   = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/causal_snps_IDs.txt",
-        true_effects = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/true_effects.txt"
-    threads: THREADS_PLK
-    run:
-        scen = str(wildcards.scen); rep = int(wildcards.rep)
-        seed = 1000 + rep
-        n_add     = int(config["SCENARIOS"][scen]["N_ADD"])
-        n_comdom  = int(config["SCENARIOS"][scen]["N_COMDOM"])
-        n_incom   = int(config["SCENARIOS"][scen]["N_INCOMDOM"])
-        code = f"{CODE_DIR}/causal_loci_selection.R"
-        os.makedirs(os.path.dirname(output.causal_table), exist_ok=True)
-        shell(r"""
-            module load R/4.2.3
-            Rscript {code} \
-              {OUT_DIR}/filtered \
-              {output.causal_table} \
-              {output.causal_ids} \
-              {output.true_effects} \
-              {seed} \
-              {n_add} \
-              {n_comdom} \
-              {n_incom}
-            module unload R/4.2.3
-        """)
-
-# ========== Build 20k panel (causals + background) ==========
-rule build_gwas_panel:
-    input:
-        causal_ids = lambda w: f"{OUT_DIR}/{w.scen}/rep{w.rep}/pheno/causal_snps_IDs.txt",
-        bims       = expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.bim", c=CHRS)
-    output:
-        panel = f"{OUT_DIR}/{{scen}}/rep{{rep}}/gwas/gwas_panel_{PANEL_SIZE}.snplist"
-    params:
-        panel_size = PANEL_SIZE,
-        panel_seed = PANEL_SEED,
-        prop_by_chr= PANEL_PROP_BY_CHR
-    run:
-        import pandas as pd, numpy as np, os
-        os.makedirs(os.path.dirname(output.panel), exist_ok=True)
-
-        caus = pd.read_csv(input.causal_ids, header=None, names=["ID"], sep=r"\s+")
-        causal_set = set(caus["ID"].astype(str))
-
-        rows = []
-        for bim_fp in input.bims:
-            b = pd.read_csv(bim_fp, sep=r"\s+", header=None,
-                            names=["CHR","ID","CM","POS","A1","A2"])
-            rows.append(b[["CHR","ID"]])
-        all_snps = pd.concat(rows, ignore_index=True)
-        all_snps["ID"] = all_snps["ID"].astype(str)
-
-        missing = sorted(causal_set - set(all_snps["ID"]))
-        assert not missing, f"{len(missing)} causal IDs not found in filtered BIMs."
-
-        bg = all_snps[~all_snps["ID"].isin(causal_set)].copy()
-        need_bg = max(0, params.panel_size - len(causal_set))
-        assert need_bg > 0, "PANEL_SIZE must exceed number of causal SNPs."
-
-        rng = np.random.default_rng(params.panel_seed)
-        if params.prop_by_chr:
-            counts = bg["CHR"].value_counts().sort_index()
-            alloc = (counts / counts.sum() * need_bg).astype(int)
-            while alloc.sum() < need_bg:
-                rema = (counts / counts.sum() * need_bg) - alloc
-                alloc.loc[rema.idxmax()] += 1
-            picks = []
-            for c, k in alloc.items():
-                pool = bg.loc[bg["CHR"] == c, "ID"].to_numpy()
-                if k > 0:
-                    k = min(k, len(pool))
-                    picks.append(rng.choice(pool, size=k, replace=False))
-            picked = np.concatenate(picks) if picks else np.array([], dtype=str)
-        else:
-            pool = bg["ID"].to_numpy()
-            picked = rng.choice(pool, size=need_bg, replace=False)
-
-        panel_ids = pd.Series(sorted(set(list(causal_set) + list(picked))))
-        panel_ids.to_csv(output.panel, index=False, header=False)
-
-rule panel_bfile_chr:
-    input:
-        panel      = lambda w: f"{OUT_DIR}/{w.scen}/rep{w.rep}/gwas/gwas_panel_{PANEL_SIZE}.snplist",
-        bed        = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.bed",
-        bim        = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.bim",
-        fam        = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.fam",
-    output:
-        bed = f"{OUT_DIR}/{{scen}}/rep{{rep}}/gwas/panel_bfiles/ukb_chr{{chr}}_filtered.bed",
-        bim = f"{OUT_DIR}/{{scen}}/rep{{rep}}/gwas/panel_bfiles/ukb_chr{{chr}}_filtered.bim",
-        fam = f"{OUT_DIR}/{{scen}}/rep{{rep}}/gwas/panel_bfiles/ukb_chr{{chr}}_filtered.fam"
-    params:
-        outpref = f"{OUT_DIR}/{{scen}}/rep{{rep}}/gwas/panel_bfiles/ukb_chr{{chr}}_filtered",
-        plink2  = PLINK2
-    threads: 4
-    run:
-        import pandas as pd, os, tempfile
-        os.makedirs(os.path.dirname(params.outpref), exist_ok=True)
-
-        # 交集：全局 20k IDs ∩ 本染色体 BIM
-        panel_ids = pd.read_csv(input.panel, header=None, names=["ID"])["ID"].astype(str)
-        bim = pd.read_csv(input.bim, sep=r"\s+", header=None,
-                          names=["CHR","ID","CM","POS","A1","A2"])[["ID"]]
-        keep = sorted(set(panel_ids).intersection(set(bim["ID"].astype(str))))
-
-        # 写入临时 snplist，然后立刻用 plink2 提取面板 bfile
-        if len(keep) == 0:
-            # 允许某条染色体恰好没有位点（极少见），写空 snplist 让 plink2 生成空集
-            keep_df = pd.Series([], dtype=str)
-        else:
-            keep_df = pd.Series(keep, dtype=str)
-
-        with tempfile.TemporaryDirectory() as td:
-            snpfile = os.path.join(td, "keep.snplist")
-            keep_df.to_csv(snpfile, index=False, header=False)
-
-            from snakemake.shell import shell
-            shell(r"""
-                {params.plink2} \
-                  --bfile {OUT_DIR}/filtered/ukb_chr{wildcards.chr}_filtered \
-                  --extract {snpfile} \
-                  --make-bed \
-                  --threads {threads} \
-                  --out {params.outpref}
-            """)
-
-
-# ========= 3) Simulate phenotype (genome-wide, uses BEDMatrix per chr) =========
-rule simulate_pheno:
-    input:
-        ids_200k    = f"{OUT_DIR}/ID_filtered.txt",
-        true_effects= f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/true_effects.txt",
-        causal_ids  = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/causal_snps_IDs.txt",
-        bfiles      = expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.bed", c=CHRS)
-    output:
-        pheno      = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/simulated_pheno.txt",
-        geno_score = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/simulated_geno.txt"
-    params:
-        H2          = config["H2"],
-        EFFECT_SEED = lambda w: 1000 + int(w.rep),
-        CODE        = f"{CODE_DIR}/simulate_pheno_centered.R",
-        FILTER_DIR  = f"{OUT_DIR}/filtered",
-        PLINK2      = PLINK2              # 👈 pass path from config
-    threads: config["THREADS_R"]
+        bed = f"{OUT_DIR}/merged/ukb_merged.bed",
+        bim = f"{OUT_DIR}/merged/ukb_merged.bim",
+        fam = f"{OUT_DIR}/merged/ukb_merged.fam"
+    threads: THREADS
     shell:
         r"""
-        module load R/4.2.3
-        Rscript {params.CODE} \
-          {input.ids_200k} \
-          {params.FILTER_DIR} \
-          {input.causal_ids} \
-          {input.true_effects} \
-          {output.pheno} \
-          {output.geno_score} \
-          {params.H2} \
-          {params.EFFECT_SEED} \
-          {params.PLINK2}
-        module unload R/4.2.3
-        """
+        mkdir -p {OUT_DIR}/merged
 
-# ========= 4) Split train/test =========
-rule split_train_test:
-    input:
-        ids_200k = f"{OUT_DIR}/ID_filtered.txt",
-        pheno    = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/simulated_pheno.txt"
-    output:
-        train_ids   = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/training_IDs.txt",
-        test_ids    = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/testing_IDs.txt",
-        train_pheno = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/training_pheno.txt",
-        test_pheno  = f"{OUT_DIR}/{{scen}}/rep{{rep}}/pheno/testing_pheno.txt"
-    run:
-        rep  = int(wildcards.rep)
-        seed = 1000 + rep
-        code = f"{CODE_DIR}/split_train_test.R"
-        shell(r"""
-            module load R/4.2.3
-            Rscript {code} \
-              {input.ids_200k} \
-              {input.pheno} \
-              {output.train_ids} \
-              {output.test_ids} \
-              {output.train_pheno} \
-              {output.test_pheno} \
-              {seed}
-            module unload R/4.2.3
-        """)
+        # prepare merge list file
+        MERGE_LIST={OUT_DIR}/merged/merge_list.txt
+        rm -f $MERGE_LIST
+        # skip chr1 (base), add chr2–22 to merge list
+        for c in {",".join(map(str, CHRS[1:]))}; do
+            echo "{OUT_DIR}/filtered/ukb_chr$c_filtered" >> $MERGE_LIST
+        done
 
-
-# ========= 5) GWAS per chr on training =========
-rule gwas_chr:
-    input:
-        bed         = lambda w: f"{OUT_DIR}/{w.scen}/rep{w.rep}/gwas/panel_bfiles/ukb_chr{w.chr}_filtered.bed",
-        bim         = lambda w: f"{OUT_DIR}/{w.scen}/rep{w.rep}/gwas/panel_bfiles/ukb_chr{w.chr}_filtered.bim",
-        fam         = lambda w: f"{OUT_DIR}/{w.scen}/rep{w.rep}/gwas/panel_bfiles/ukb_chr{w.chr}_filtered.fam",
-        train_pheno = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/training_pheno.txt",
-        train_ids   = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/training_IDs.txt",
-        panel       = lambda w: f"{OUT_DIR}/{w.scen}/rep{w.rep}/gwas/gwas_panel_{PANEL_SIZE}.snplist"
-    output:
-        gwas = f"{OUT_DIR}/{{scen}}/rep{{rep}}/gwas/gwas_chr{{chr}}.{config['PHENO_NAME']}.glm.linear"
-    params:
-        # point prefix to the panel bfiles dir
-        filtered_prefix = f"{OUT_DIR}/{{scen}}/rep{{rep}}/gwas/panel_bfiles/ukb_chr",
-        pheno_name      = config['PHENO_NAME'],
-        code            = f"{CODE_DIR}/gwas_centered_lm.R",
-        chunk_size      = 2000
-    threads: 1
-    shell:
-        r"""
-        mkdir -p $(dirname {output.gwas})
-        module load R/4.2.3
-        Rscript {params.code} \
-          {params.filtered_prefix} \
-          {wildcards.chr} \
-          {input.train_ids} \
-          {input.train_pheno} \
-          {params.pheno_name} \
-          {output.gwas} \
-          {params.chunk_size}
-        module unload R/4.2.3
-        """
-
-rule gwas_merge:
-    input:
-        # all per-chr GWAS files across scenarios × reps
-        [f"{rep_dir(s, r)}/gwas/gwas_chr{c}.{config['PHENO_NAME']}.glm.linear"
-         for s in SCENARIOS for r in range(1, N_REPS + 1) for c in CHRS]
-    output:
-        # one merged file per scenario × rep
-        [f"{rep_dir(s, r)}/gwas/gwas_merged.linear"
-         for s in SCENARIOS for r in range(1, N_REPS + 1)]
-    run:
-        import os, pandas as pd
-        for s in SCENARIOS:
-            for r in range(1, N_REPS + 1):
-                out = f"{rep_dir(s, r)}/gwas/gwas_merged.linear"
-                os.makedirs(os.path.dirname(out), exist_ok=True)
-                files = [f"{rep_dir(s, r)}/gwas/gwas_chr{c}.{config['PHENO_NAME']}.glm.linear" for c in CHRS]
-                files = [f for f in files if os.path.exists(f)]
-                assert files, f"No GWAS files for {s} rep{r}"
-                with open(out, "w") as fout:
-                    first = True
-                    for f in files:
-                        with open(f) as fin:
-                            hdr = fin.readline()
-                            if first:
-                                fout.write(hdr); first = False
-                            for line in fin:
-                                fout.write(line)
-
-# ========= 6) Clumping =========
-wildcard_constraints:
-    p=".+", r2=".+"
-
-rule clump_chr:
-    input:
-        bed        = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.bed",
-        bim        = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.bim",
-        fam        = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.fam",
-        train_ids  = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/training_IDs.txt",
-        gwas_merge = lambda w: f"{rep_dir(w.scen,w.rep)}/gwas/gwas_merged.linear"
-    output:
-        clumps = f"{GRID_PREFIX}/clump/clump_chr{{chr}}.clumps"
-    params:
-        bfile_pref = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered",
-        clump_dir  = f"{GRID_PREFIX}/clump",
-        sumfile    = f"{GRID_PREFIX}/clump/gwas_for_clump_chr{{chr}}.txt",
-        outprefix  = f"{GRID_PREFIX}/clump/clump_chr{{chr}}",
-        KB = KB
-    threads: 4
-    shell:
-        r"""
-        set -euo pipefail
-        mkdir -p "{params.clump_dir}"
-
-        # Build 'ID\tP' for this chr, only TEST=='ADD' (columns from lm-based .glm.linear)
-        awk -v c={wildcards.chr} 'BEGIN{{OFS="\t"; print "ID","P"}} NR>1 && $1==c && $7=="ADD" {{print $3,$12}}' \
-            {input.gwas_merge} > "{params.sumfile}"
-
+        # merge with plink2
         {PLINK2} \
-          --bfile {params.bfile_pref} \
-          --keep {input.train_ids} \
-          --clump {params.sumfile} \
-          --clump-snp-field ID --clump-field P \
-          --clump-p1 {wildcards.p} --clump-r2 {wildcards.r2} --clump-kb {params.KB} \
-          --out {params.outprefix}
-
-        [ -f "{output.clumps}" ] || : > "{output.clumps}"
+            --bfile {OUT_DIR}/filtered/ukb_chr1_filtered \
+            --merge-list $MERGE_LIST \
+            --make-bed \
+            --out {OUT_DIR}/merged/ukb_merged
         """
 
-rule clump_merge:
+# ========= 2) GWAS  =========
+rule kvik_step1:
     input:
-        clumps = lambda w: [f"{OUT_DIR}/{w.scen}/rep{w.rep}/grid/p{w.p}_r{w.r2}/clump/clump_chr{c}.clumps" for c in CHRS]
+        bed   = f"{OUT_DIR}/merged/ukb_merged.bed",
+        bim   = f"{OUT_DIR}/merged/ukb_merged.bim",
+        fam   = f"{OUT_DIR}/merged/ukb_merged.fam",
+        pheno = PHENO_CSV,
+        covar = COVAR_FILE
     output:
-        snplist = f"{GRID_PREFIX}/clump/clumped_snps.snplist"
+        kvik = directory(f"{OUT_DIR}/kvik/ukb_merged.kvik")
+    threads: 24
+    shell:
+        r"""
+        mkdir -p {OUT_DIR}/kvik
+
+        {LDAK} \
+            --kvik-step1 {output.kvik} \
+            --bfile {OUT_DIR}/merged/ukb_merged \
+            --pheno {input.pheno} \
+            --covar {input.covar} \
+            --covar-names ALL \
+            --mpheno ALL \
+            --max-threads {threads}
+        """
+
+rule kvik_step2_raw:
+    input:
+        kvik  = f"{OUT_DIR}/kvik/ukb_merged.kvik",
+        pheno = PHENO_FILE,
+        covar = COVAR_FILE,
+        keep  = ID_LIST
+    output:
+        expand(
+            f"{OUT_DIR}/gwas_raw/assoc.singlesnp.pheno{{i}}",
+            i = range(1, len(TRAITS)+1)
+        )
+    threads: THREADS
+    shell:
+        r"""
+        mkdir -p {OUT_DIR}/gwas_raw
+
+        {LDAK} \
+            --kvik-step2 {input.kvik} \
+            --pheno {input.pheno} \
+            --mpheno ALL \
+            --covar {input.covar} \
+            --covar-names ALL \
+            --keep {input.keep} \
+            --max-threads {threads} \
+            --out {OUT_DIR}/gwas_raw/assoc.singlesnp
+        """
+
+ rule rename_step2_outputs:
+    input:
+        expand(f"{OUT_DIR}/gwas_raw/assoc.singlesnp.pheno{{i}}",
+               i = range(1, len(TRAITS)+1))
+    output:
+        expand(f"{OUT_DIR}/gwas/{{trait}}/{{trait}}.assoc.singlesnp",
+               trait = TRAITS)
     run:
         import os
-        os.makedirs(os.path.dirname(output.snplist), exist_ok=True)
-        ids = []
-        for c in CHRS:
-            f = f"{OUT_DIR}/{wildcards.scen}/rep{wildcards.rep}/grid/p{wildcards.p}_r{wildcards.r2}/clump/clump_chr{c}.clumps"
-            if os.path.exists(f) and os.path.getsize(f) > 0:
-                with open(f) as fin:
-                    next(fin, None)
-                    for line in fin:
-                        if line.strip():
-                            ids.append(line.split()[2])
-        with open(output.snplist, "w") as fout:
-            for x in sorted(set(ids)):
-                fout.write(x + "\n")
 
-
-# ========= 7) PRS_beta on testing =========
-rule make_beta_weights:
-    input:
-        gwas_merge = lambda w: f"{rep_dir(w.scen,w.rep)}/gwas/gwas_merged.linear",
-        snplist    = lambda w: f"{GRID_PREFIX}/clump/clumped_snps.snplist"
-    output:
-        weights = f"{GRID_PREFIX}/score/beta_for_score.clumped.txt"
-    run:
-        import pandas as pd, os
-        os.makedirs(os.path.dirname(output.weights), exist_ok=True)
-        g = pd.read_csv(input.gwas_merge, sep='\t')
-        if '#CHROM' in g.columns: g = g.rename(columns={'#CHROM':'CHR'})
-        if 'TEST' in g.columns:   g = g[g['TEST']=='ADD']
-        idx = set(pd.read_csv(input.snplist, header=None)[0])
-        g = g[g['ID'].isin(idx)][['ID','A1','BETA']]
-        g.to_csv(output.weights, sep='\t', index=False)
-
-
-
-rule score_beta_chr:
-    input:
-        bed      = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.bed",
-        bim      = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.bim",
-        fam      = lambda w: f"{OUT_DIR}/filtered/ukb_chr{w.chr}_filtered.fam",
-        test_ids = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/testing_IDs.txt",
-        weights  = lambda w: f"{GRID_PREFIX}/score/beta_for_score.clumped.txt"
-    output:
-        sscore   = f"{GRID_PREFIX}/score/score_clumped_chr{{chr}}.sscore"
-    params:
-        bfile_pref  = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered",
-        outprefix   = f"{GRID_PREFIX}/score/score_clumped_chr{{chr}}",
-        weights_chr = f"{GRID_PREFIX}/score/beta_for_score.clumped.chr{{chr}}.txt"
-    threads: 4
-    shell:
-        r"""
-        set -euo pipefail
-        mkdir -p "$(dirname {params.outprefix})"
-
-        awk 'NR==FNR{{ids[$2]=1; next}} FNR==1 || ($1 in ids)' \
-            {input.bim} {input.weights} > "{params.weights_chr}"
-
-        if [ "$(wc -l < "{params.weights_chr}")" -le 1 ]; then
-          awk 'BEGIN{{OFS="\t"; print "IID","BETA_SUM"}} {{print $2,0}}' {input.test_ids} > "{output.sscore}"
-        else
-          {PLINK2} \
-            --bfile {params.bfile_pref} \
-            --keep {input.test_ids} \
-            --score {params.weights_chr} 1 2 3 header-read cols=+scoresums \
-            --out {params.outprefix}
-        fi
-        """
-
-rule merge_prs_beta_and_corr:
-    input:
-        sscores    = lambda w: [f"{OUT_DIR}/{w.scen}/rep{w.rep}/grid/p{w.p}_r{w.r2}/score/score_clumped_chr{c}.sscore" for c in CHRS],
-        test_pheno = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/testing_pheno.txt"
-    output:
-        prs  = f"{GRID_PREFIX}/score/testing_prs_beta_clumped.txt",
-        corr = f"{GRID_PREFIX}/metrics/corr_beta.txt"
-    params:
-        CODE        = f"{CODE_DIR}/merge_prs_and_corr.R",
-        score_dir   = f"{GRID_PREFIX}/score",
-        metrics_dir = f"{GRID_PREFIX}/metrics"
-    threads: 1
-    shell:
-        r"""
-        set -euo pipefail
-        mkdir -p "{params.score_dir}" "{params.metrics_dir}"
-        module load R/4.2.3
-        Rscript "{params.CODE}" "{params.score_dir}" "{output.prs}" "{input.test_pheno}" "{output.corr}"
-        module unload R/4.2.3
-        """
-
-
-
-# ========= 8) Estimate a,d on TRAINING (Welch) =========
-rule effects_and_prs_ad:
-    input:
-        snplist   = lambda w: f"{GRID_PREFIX}/clump/clumped_snps.snplist",
-        train_ids = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/training_IDs.txt",
-        test_ids  = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/testing_IDs.txt",
-        train_ph  = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/training_pheno.txt",
-        test_ph   = lambda w: f"{rep_dir(w.scen,w.rep)}/pheno/testing_pheno.txt",
-        beds = expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.bed", c=CHRS),
-        bims = expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.bim", c=CHRS),
-        fams = expand(f"{OUT_DIR}/filtered/ukb_chr{{c}}_filtered.fam", c=CHRS)
-    output:
-        effects = f"{GRID_PREFIX}/effects/effects_training_method2.txt",
-        prs_ad  = f"{GRID_PREFIX}/score/testing_prs_a_d_method2.txt",
-        corr    = f"{GRID_PREFIX}/metrics/corr_ad.txt"
-    params:
-        CODE            = f"{CODE_DIR}/estimate_effects.R",
-        PHENO_DIR       = GRID_PREFIX,
-        FILTERED_PREFIX = f"{OUT_DIR}/filtered/ukb_chr",
-        PLINK2          = PLINK2,
-        DOM_PTHRESH     = config["DOM_PTHRESH"],
-        CHUNK_SIZE      = config.get("WELCH_CHUNK_SIZE", 5000),
-        THREADS_P2      = THREADS_PLK,
-        NCHR            = len(CHRS)
-    threads: config["THREADS_R"]
-    shell:
-        r"""
-        mkdir -p $(dirname {output.effects}) $(dirname {output.prs_ad}) $(dirname {output.corr})
-        module load R/4.2.3
-        Rscript {params.CODE} \
-          {params.PHENO_DIR} \
-          {params.PLINK2} \
-          {params.FILTERED_PREFIX} \
-          {input.train_ids} \
-          {input.test_ids}  \
-          {input.train_ph}  \
-          {input.test_ph}   \
-          {params.DOM_PTHRESH} \
-          {params.CHUNK_SIZE} \
-          {params.THREADS_P2} \
-          {params.NCHR}
-        module unload R/4.2.3
-        """
-
-# ========= EXPANSIONS for scenarios x reps =========
-rule scenario_rep_bundle:
-    input:
-        # all filtered BEDs (shared across scenarios/reps; de-duplicated by Snakemake)
-        [f"{OUT_DIR}/filtered/ukb_chr{c}_filtered.bed" for c in CHRS],
-        # all per-scenario/rep phenotypes
-        [f"{rep_dir(s, r)}/pheno/simulated_pheno.txt"
-         for s in SCENARIOS for r in range(1, N_REPS + 1)]
+        for i, trait in enumerate(TRAITS, start=1):
+            src = f"{OUT_DIR}/gwas_raw/assoc.singlesnp.pheno{i}"
+            dst_dir = f"{OUT_DIR}/gwas/{trait}"
+            os.makedirs(dst_dir, exist_ok=True)
+            dst = f"{dst_dir}/{trait}.assoc.singlesnp"
+            os.rename(src, dst)

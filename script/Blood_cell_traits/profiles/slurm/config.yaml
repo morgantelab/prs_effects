@@ -1,5 +1,5 @@
 # profiles/slurm/config.yaml
-cluster: "mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/logs/replication_centered/{rule} && sbatch --partition={resources.partition} --account={resources.account} --cpus-per-task={threads} --mem={resources.mem_mb} --job-name=smk_{rule} --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/replication_centered/{rule}/{rule}_%j.out --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/replication_centered/{rule}/{rule}_%j.err --time={resources.time_min} --parsable"
+cluster: "mkdir -p /data2/morgante_lab/ukbiobank_projects/prs_effects/logs/Blood_cell_traits/{rule} && sbatch --partition={resources.partition} --account={resources.account} --cpus-per-task={threads} --mem={resources.mem_mb} --job-name=smk_{rule} --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/Blood_cell_traits/{rule}/{rule}_%j.out --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/Blood_cell_traits/{rule}/{rule}_%j.err --time={resources.time_min} --parsable"
 
 default-resources:
   - partition='fm-bigmem-4'

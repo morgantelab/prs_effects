@@ -2,9 +2,11 @@ OUT_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_
 CODE_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/Blood_cell_traits"
 ID_list: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_final_keep.txt"
 PHENO_CSV: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_16traits_quantnorm.txt"
+COVARIATES: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates.txt"
 BED_BIM_DIR: "/data2/morgante_lab/data/ukbiobank/genotypes/array"
 FAM_DIR: "/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024"
 PLINK2: "/data2/morgante_lab/yuxuans/software/plink2"
+LDAK: "/data2/morgante_lab/yuxuans/software/ldak6.1.linux"
 
 # Variant QC
 MAF: 0.01
@@ -13,11 +15,26 @@ GENO: 0.1
 HWE: 1e-4
 
 # Threads
-THREADS_PLINK: 20
+THREADS_PLINK: 24
 THREADS_R: 20
-
 # GWAS phenotype column
-PHENO_NAME: "pheno"
+PHENO_NAMES:
+  - WBC_count
+  - RBC_count
+  - Haemoglobin
+  - MCV
+  - RDW
+  - Platelet_count
+  - Plateletcrit
+  - PDW
+  - Lymphocyte_perc
+  - Monocyte_perc
+  - Neutrophill_perc
+  - Eosinophill_perc
+  - Basophill_perc
+  - Reticulocyte_perc
+  - MSCV
+  - HLR_perc
 
 # Clumping sweep (3 x 3 = 9)
 CLUMP_P1_LIST: [10e-5, 10e-8]
@@ -25,7 +42,7 @@ CLUMP_R2_LIST: [0.1]
 CLUMP_KB: 250
 
 # Welch dominance gating for PRS_{a+d}
-DOM_PTHRESH: 0.01
+DOM_PTHRESH: 5E-8
 
 # Chromosomes
 CHRS: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
