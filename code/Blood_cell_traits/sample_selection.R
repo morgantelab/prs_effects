@@ -342,44 +342,104 @@ fwrite(pheno_out, out_pheno, sep = "\t")
 
 cat("Wrote phenotype file to:", out_pheno, "\n")
 
-## --------- 13. Build covariate file for PLINK2 (your style) ---------
+## --------- 13. Build covariate file for PLINK2  ---------
 
+
+# dat <- samples[keep == TRUE,
+#                .(id = IID,
+#                  sex,
+#                  age = as.numeric(age_raw),
+#                  assessment_centre = factor(assessment_ctr),
+#                  genotype_measurement_batch = factor(geno_batch),
+#                  pc_genetic1, pc_genetic2, pc_genetic3, pc_genetic4, pc_genetic5,
+#                  pc_genetic6, pc_genetic7, pc_genetic8, pc_genetic9, pc_genetic10)]
+# 
+# dat[, age2 := age^2]
+# 
+# Z <- model.matrix(
+#   ~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+#     pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
+#     pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10,
+#   data = dat
+# )
+# 
+# Z <- Z[, -1, drop = FALSE]
+# 
+# cols <- which(colnames(Z) %in% c("age", paste0("pc_genetic", 1:10)))
+# Z[, cols] <- scale(Z[, cols])
+# 
+# Z[, "age2"] <- Z[, "age"]^2
+# 
+# IID <- dat$id
+# FID <- dat$id
+# cov.table <- cbind(FID, IID, Z)
+# 
+# out_covar <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates_plink.txt"
+# write.table(cov.table,
+#             file      = out_covar,
+#             quote     = FALSE,
+#             row.names = FALSE)
+# 
+# cat("Wrote covariate file to:", out_covar, "\n")
+
+
+### Based on LDAK paper, now covariates are changed to first 10PCs, age, age^2, sex, age*sex
+### Also all missing values (-9) were set to NA
 dat <- samples[keep == TRUE,
                .(id = IID,
                  sex,
                  age = as.numeric(age_raw),
-                 assessment_centre = factor(assessment_ctr),
-                 genotype_measurement_batch = factor(geno_batch),
                  pc_genetic1, pc_genetic2, pc_genetic3, pc_genetic4, pc_genetic5,
                  pc_genetic6, pc_genetic7, pc_genetic8, pc_genetic9, pc_genetic10)]
 
-dat[, age2 := age^2]
+# replace UKB missing values
+for (col in names(dat)) {
+  dat[get(col) %in% c("", ".", "-9", -9), (col) := NA]
+}
 
+# derived covariates
+dat[, age2 := age^2]
+dat[, age_sex := age * sex]
+
+# model matrix
 Z <- model.matrix(
-  ~ sex + age + age2 + assessment_centre + genotype_measurement_batch +
+  ~ sex + age + age2 + age:sex +
     pc_genetic1 + pc_genetic2 + pc_genetic3 + pc_genetic4 + pc_genetic5 +
     pc_genetic6 + pc_genetic7 + pc_genetic8 + pc_genetic9 + pc_genetic10,
   data = dat
 )
 
+# remove intercept
 Z <- Z[, -1, drop = FALSE]
 
+# fix missing inside matrix
+Z[Z %in% c("", ".", "-9")] <- NA
+
+# scale numeric covariates
 cols <- which(colnames(Z) %in% c("age", paste0("pc_genetic", 1:10)))
 Z[, cols] <- scale(Z[, cols])
 
+# recompute age2 after scaling
 Z[, "age2"] <- Z[, "age"]^2
 
-IID <- dat$id
-FID <- dat$id
+# build covariate table
+FID <- as.character(dat$id)
+IID <- as.character(dat$id)
 cov.table <- cbind(FID, IID, Z)
 
-out_covar <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates_plink.txt"
+# convert NA to "NA" string for LDAK
+cov.table[is.na(cov.table)] <- "NA"
+
+# write covariate file
+out_covar <- "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates.txt"
+
 write.table(cov.table,
             file      = out_covar,
             quote     = FALSE,
             row.names = FALSE)
 
 cat("Wrote covariate file to:", out_covar, "\n")
+
 
 ## --------- 14. Save step-wise exclusion summary ---------
 

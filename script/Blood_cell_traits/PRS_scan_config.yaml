@@ -15,7 +15,7 @@ GENO: 0.1
 HWE: 1e-4
 
 # Threads
-THREADS_PLINK: 24
+THREADS_PLINK: 32
 THREADS_R: 20
 # GWAS phenotype column
 PHENO_NAMES:

@@ -1,37 +1,35 @@
 #!/bin/bash
-#
-#SBATCH --job-name=BCT
-#SBATCH --output=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/Blood_cell_traits/Blood_cell_traitsp_%j.out
-#SBATCH --error=/data2/morgante_lab/ukbiobank_projects/prs_effects/logs/Blood_cell_traits/Blood_cell_traits_%j.err
-#SBATCH --time=7-00:00:00       
-#SBATCH --mem=200G 
-#SBATCH --partition=fm-bigmem-4            
-#SBATCH --mail-user=yuxuans@clemson.edu
-#SBATCH --mail-type=FAIL
-#SBATCH --cpus-per-task=24
+#SBATCH --job-name=kvik_step2_test
+#SBATCH --output=kvik_step2_test.out
+#SBATCH --error=kvik_step2_test.err
+#SBATCH --partition=fm-bigmem-4
+#SBATCH --account=yuxuans
+#SBATCH --time=12:00:00
+#SBATCH --cpus-per-task=32
+#SBATCH --mem=200G
 
 
-/data2/morgante_lab/yuxuans/software/plink2 \
-  --bfile /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/filtered/ukb_chr7_filtered \
-  --pheno /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_16traits_clean.txt \
-  --pheno-name WBC_count \
-  --covar /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates_plink.txt \
-  --covar-col-nums 3-140 \
-  --no-input-missing-phenotype \
-  --vif 100 \
-  --glm hide-covar omit-ref allow-no-covars \
-  --threads 24 \
-  --out test_WBC
+echo "==== LDAK KVIK Step1 Test ===="
 
-/data2/morgante_lab/yuxuans/software/plink2 \
-  --bfile /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/filtered/ukb_chr7_filtered \
-  --pheno /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_16traits_clean.txt \
-  --pheno-name Monocyte_perc \
-  --covar /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates_plink.txt \
-  --covar-col-nums 3-140 \
-  --no-input-missing-phenotype \
-  --vif 100 \
-  --glm hide-covar omit-ref allow-no-covars \
-  --threads 24 \
-  --out test_MONO
+LDAK="/data2/morgante_lab/yuxuans/software/ldak6.1.linux"
+OUT_DIR="/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits"
+MERGED="${OUT_DIR}/merged/ukb_merged"
+PHENO="${OUT_DIR}/ukb_bloodcell_16traits_quantnorm.txt"
+COVAR="${OUT_DIR}/ukb_bloodcell_covariates.txt"
+KEEP="${OUT_DIR}/ukb_bloodcell_final_keep.txt"
 
+mkdir -p ${OUT_DIR}/kvik_test
+
+${LDAK} \
+  --kvik-step2 ${OUT_DIR}/kvik_test/kvik_output \
+  --bfile ${MERGED} \
+  --pheno ${PHENO} \
+  --covar ${COVAR} \
+  --mpheno ALL \
+  --max-threads 32
+
+echo "==== Test Completed ===="
+echo "Output directory:"
+echo "    ${OUT_DIR}/kvik_test/"
+echo "List files:"
+ls -lh ${OUT_DIR}/kvik_test/

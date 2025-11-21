@@ -1,0 +1,248 @@
+==== LDAK KVIK Step1 Test ====
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+LDAK - Software for obtaining Linkage Disequilibrium Adjusted Kinships and Loads More
+Version 6 - Help pages at www.dougspeed.com
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+There are 6 pairs of arguments:
+--kvik-step2 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output
+--bfile /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/merged/ukb_merged
+--pheno /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_16traits_quantnorm.txt
+--covar /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates.txt
+--mpheno ALL
+--max-threads 32
+
+Note that "--kvik-step2 /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output" is equivalent to using either "--linear /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step2" or "--logistic /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step2" with "--PRS /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1"
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+Performing linear regression including LOCO PRS as an offset for 16 phenotypes
+
+Will only adjust the most significant predictors for covariates (use "--adjust-predictors YES" to adjust all predictors, or use "--adjust-predictors NO" to not adjust predictors)
+
+Will compute standard test statistics; use "--spa-test YES" to switch to a saddlepoint approximation, 
+
+To perform quality control of predictors use "--min-maf", "--max-maf", "--min-var" and/or "--min-obs"
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+Reading IDs for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/merged/ukb_merged.fam
+
+Checking responses for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_16traits_quantnorm.txt
+
+Reading details for 558480 predictors from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/merged/ukb_merged.bim
+
+Data contain 265131 samples and 558480 predictors (will be using 265131 and 558480)
+
+Reading phenotypes for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_16traits_quantnorm.txt
+
+Reading 14 covariates for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/ukb_bloodcell_covariates.txt
+
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno1.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno2.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno3.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno4.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno5.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno6.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno7.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno8.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno9.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno10.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno11.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno12.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno13.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno14.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno15.loco.prs
+Reading LOCO PRS for 265131 samples from /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step1.pheno16.loco.prs
+Warning, to process the data requires 2.0 Gb; if this is too high, you can reduce using "--bit-size" (currently 1000)
+
+Performing linear regression for Chunk 1 of 567 (Chromosome 1)
+Performing linear regression for Chunk 11 of 567 (Chromosome 1)
+Performing linear regression for Chunk 21 of 567 (Chromosome 1)
+Performing linear regression for Chunk 31 of 567 (Chromosome 1)
+Performing linear regression for Chunk 41 of 567 (Chromosome 1)
+Performing linear regression for Chunk 51 of 567 (Chromosome 2)
+Performing linear regression for Chunk 61 of 567 (Chromosome 2)
+Performing linear regression for Chunk 71 of 567 (Chromosome 2)
+Performing linear regression for Chunk 81 of 567 (Chromosome 2)
+Performing linear regression for Chunk 91 of 567 (Chromosome 3)
+Performing linear regression for Chunk 101 of 567 (Chromosome 3)
+Performing linear regression for Chunk 111 of 567 (Chromosome 3)
+Performing linear regression for Chunk 121 of 567 (Chromosome 3)
+Performing linear regression for Chunk 131 of 567 (Chromosome 4)
+Performing linear regression for Chunk 141 of 567 (Chromosome 4)
+Performing linear regression for Chunk 151 of 567 (Chromosome 4)
+Performing linear regression for Chunk 161 of 567 (Chromosome 4)
+Performing linear regression for Chunk 171 of 567 (Chromosome 5)
+Performing linear regression for Chunk 181 of 567 (Chromosome 5)
+Performing linear regression for Chunk 191 of 567 (Chromosome 5)
+Performing linear regression for Chunk 201 of 567 (Chromosome 6)
+Performing linear regression for Chunk 211 of 567 (Chromosome 6)
+Performing linear regression for Chunk 221 of 567 (Chromosome 6)
+Performing linear regression for Chunk 231 of 567 (Chromosome 6)
+Performing linear regression for Chunk 241 of 567 (Chromosome 7)
+Performing linear regression for Chunk 251 of 567 (Chromosome 7)
+Performing linear regression for Chunk 261 of 567 (Chromosome 7)
+Performing linear regression for Chunk 271 of 567 (Chromosome 8)
+Performing linear regression for Chunk 281 of 567 (Chromosome 8)
+Performing linear regression for Chunk 291 of 567 (Chromosome 8)
+Performing linear regression for Chunk 301 of 567 (Chromosome 9)
+Performing linear regression for Chunk 311 of 567 (Chromosome 9)
+Performing linear regression for Chunk 321 of 567 (Chromosome 9)
+Performing linear regression for Chunk 331 of 567 (Chromosome 10)
+Performing linear regression for Chunk 341 of 567 (Chromosome 10)
+Performing linear regression for Chunk 351 of 567 (Chromosome 10)
+Performing linear regression for Chunk 361 of 567 (Chromosome 11)
+Performing linear regression for Chunk 371 of 567 (Chromosome 11)
+Performing linear regression for Chunk 381 of 567 (Chromosome 12)
+Performing linear regression for Chunk 391 of 567 (Chromosome 12)
+Performing linear regression for Chunk 401 of 567 (Chromosome 12)
+Performing linear regression for Chunk 411 of 567 (Chromosome 13)
+Performing linear regression for Chunk 421 of 567 (Chromosome 13)
+Performing linear regression for Chunk 431 of 567 (Chromosome 14)
+Performing linear regression for Chunk 441 of 567 (Chromosome 14)
+Performing linear regression for Chunk 451 of 567 (Chromosome 15)
+Performing linear regression for Chunk 461 of 567 (Chromosome 15)
+Performing linear regression for Chunk 471 of 567 (Chromosome 16)
+Performing linear regression for Chunk 481 of 567 (Chromosome 16)
+Performing linear regression for Chunk 491 of 567 (Chromosome 17)
+Performing linear regression for Chunk 501 of 567 (Chromosome 17)
+Performing linear regression for Chunk 511 of 567 (Chromosome 18)
+Performing linear regression for Chunk 521 of 567 (Chromosome 19)
+Performing linear regression for Chunk 531 of 567 (Chromosome 19)
+Performing linear regression for Chunk 541 of 567 (Chromosome 20)
+Performing linear regression for Chunk 551 of 567 (Chromosome 21)
+Performing linear regression for Chunk 561 of 567 (Chromosome 22)
+
+Main results saved in /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step2.phenoX.assoc, with a summary version in /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step2.phenoX.summaries and p-values in /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/kvik_output.step2.phenoX.pvalues, where X is the phenotype number
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+This command started at Thu Nov 20 18:53:37 2025 and ended at Thu Nov 20 19:13:06 2025
+The elapsed time was 0.32 hours
+Given the command used 32 threads, this means the CPU time was 10.39 hours
+
+Mission completed. All your basepair are belong to us :)
+
+-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --
+
+==== Test Completed ====
+Output directory:
+    /data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/kvik_test/
+List files:
+total 2.4G
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno10.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno10.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno10.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno11.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno11.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno11.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno12.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno12.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno12.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno13.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno13.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno13.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno14.effects
+-rw-rw---- 1 yuxuans ukbiobank  166 Nov 20 17:29 kvik_output.step1.pheno14.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno14.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno15.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno15.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno15.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno16.effects
+-rw-rw---- 1 yuxuans ukbiobank  166 Nov 20 17:29 kvik_output.step1.pheno16.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno16.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno1.effects
+-rw-rw---- 1 yuxuans ukbiobank  166 Nov 20 17:29 kvik_output.step1.pheno1.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno1.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno2.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno2.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno2.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno3.effects
+-rw-rw---- 1 yuxuans ukbiobank  166 Nov 20 17:29 kvik_output.step1.pheno3.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno3.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno4.effects
+-rw-rw---- 1 yuxuans ukbiobank  166 Nov 20 17:29 kvik_output.step1.pheno4.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno4.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno5.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno5.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno5.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno6.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno6.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno6.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno7.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno7.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno7.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno8.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno8.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno8.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank  19M Nov 20 17:29 kvik_output.step1.pheno9.effects
+-rw-rw---- 1 yuxuans ukbiobank  165 Nov 20 17:29 kvik_output.step1.pheno9.loco.details
+-rw-rw---- 1 yuxuans ukbiobank  46M Nov 20 17:29 kvik_output.step1.pheno9.loco.prs
+-rw-rw---- 1 yuxuans ukbiobank 5.9K Nov 20 17:29 kvik_output.step1.progress
+-rw-rw---- 1 yuxuans ukbiobank  517 Nov 20 15:59 kvik_output.step1.root
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno10.assoc
+-rw-rw---- 1 yuxuans ukbiobank  711 Nov 20 18:54 kvik_output.step2.pheno10.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno10.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno10.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno11.assoc
+-rw-rw---- 1 yuxuans ukbiobank  711 Nov 20 18:54 kvik_output.step2.pheno11.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno11.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno11.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno12.assoc
+-rw-rw---- 1 yuxuans ukbiobank  710 Nov 20 18:54 kvik_output.step2.pheno12.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno12.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno12.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno13.assoc
+-rw-rw---- 1 yuxuans ukbiobank  709 Nov 20 18:54 kvik_output.step2.pheno13.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno13.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno13.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno14.assoc
+-rw-rw---- 1 yuxuans ukbiobank  708 Nov 20 18:54 kvik_output.step2.pheno14.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno14.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno14.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno15.assoc
+-rw-rw---- 1 yuxuans ukbiobank  710 Nov 20 18:54 kvik_output.step2.pheno15.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno15.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno15.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno16.assoc
+-rw-rw---- 1 yuxuans ukbiobank  707 Nov 20 18:54 kvik_output.step2.pheno16.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno16.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno16.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno1.assoc
+-rw-rw---- 1 yuxuans ukbiobank  713 Nov 20 18:54 kvik_output.step2.pheno1.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno1.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno1.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno2.assoc
+-rw-rw---- 1 yuxuans ukbiobank  706 Nov 20 18:54 kvik_output.step2.pheno2.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno2.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno2.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno3.assoc
+-rw-rw---- 1 yuxuans ukbiobank  708 Nov 20 18:54 kvik_output.step2.pheno3.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno3.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno3.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno4.assoc
+-rw-rw---- 1 yuxuans ukbiobank  710 Nov 20 18:54 kvik_output.step2.pheno4.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno4.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno4.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno5.assoc
+-rw-rw---- 1 yuxuans ukbiobank  710 Nov 20 18:54 kvik_output.step2.pheno5.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno5.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno5.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno6.assoc
+-rw-rw---- 1 yuxuans ukbiobank  710 Nov 20 18:54 kvik_output.step2.pheno6.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno6.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno6.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno7.assoc
+-rw-rw---- 1 yuxuans ukbiobank  711 Nov 20 18:54 kvik_output.step2.pheno7.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno7.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno7.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno8.assoc
+-rw-rw---- 1 yuxuans ukbiobank  706 Nov 20 18:54 kvik_output.step2.pheno8.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno8.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno8.summaries
+-rw-rw---- 1 yuxuans ukbiobank  51M Nov 20 19:11 kvik_output.step2.pheno9.assoc
+-rw-rw---- 1 yuxuans ukbiobank  708 Nov 20 18:54 kvik_output.step2.pheno9.coeff
+-rw-rw---- 1 yuxuans ukbiobank  12M Nov 20 19:11 kvik_output.step2.pheno9.pvalues
+-rw-rw---- 1 yuxuans ukbiobank  21M Nov 20 19:11 kvik_output.step2.pheno9.summaries
+-rw-rw---- 1 yuxuans ukbiobank 3.7K Nov 20 19:11 kvik_output.step2.progress
