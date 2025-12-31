@@ -15,7 +15,7 @@ GENO: 0.1
 HWE: 1e-4
 
 # Threads
-THREADS_PLINK: 32
+THREADS_PLINK: 12
 THREADS_R: 20
 # GWAS phenotype column
 PHENO_NAMES:
@@ -42,7 +42,13 @@ CLUMP_R2_LIST: [0.1]
 CLUMP_KB: 250
 
 # Welch dominance gating for PRS_{a+d}
-DOM_PTHRESH: 5E-8
+DOM_PTHRESH: 0.01
 
 # Chromosomes
 CHRS: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22]
+
+# Cross-validation
+N_FOLDS: 5
+CV_SEED: 20251215
+
+GWAS_ASSOC_PATTERN: "{OUT_DIR}/gwas/{trait}/fold{fold}/gwas.assoc"

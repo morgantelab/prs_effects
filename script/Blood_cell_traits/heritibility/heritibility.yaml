@@ -1,0 +1,28 @@
+# GWAS phenotype names
+PHENO_NAMES:
+  - WBC_count
+  - RBC_count
+  - Haemoglobin
+  - MCV
+  - RDW
+  - Platelet_count
+  - Plateletcrit
+  - PDW
+  - Lymphocyte_perc
+  - Monocyte_perc
+  - Neutrophill_perc
+  - Eosinophill_perc
+  - Basophill_perc
+  - Reticulocyte_perc
+  - MSCV
+  - HLR_perc
+
+GWAS_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/effects"
+
+LDSC_DIR: "/data2/morgante_lab/yuxuans/software/ldsc"
+DLDSC_DIR: "/data2/morgante_lab/yuxuans/software/d-ldsc"
+
+REF_LD: "/data2/morgante_lab/yuxuans/reference/ldsc/eur_w_ld_chr"
+DOM_LD: "/data2/morgante_lab/yuxuans/reference/1kg/ldscores_hm3"
+
+OUTDIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/Blood_cell_traits/heritibility"

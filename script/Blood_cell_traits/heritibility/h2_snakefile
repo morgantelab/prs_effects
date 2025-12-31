@@ -1,0 +1,173 @@
+configfile: "heritibility_config.yaml"
+
+TRAITS = config["PHENO_NAMES"]
+GWAS_DIR  = config["GWAS_DIR"]
+LDSC_DIR  = config["LDSC_DIR"]
+DLDSC_DIR = config["DLDSC_DIR"]
+
+REF_LD = config["REF_LD"]
+DOM_LD = config["DOM_LD"]
+
+OUTDIR = config["OUTDIR"]
+
+
+rule all:
+    input:
+        expand(f"{OUTDIR}/additive/{{trait}}.h2.log", trait=TRAITS),
+        expand(f"{OUTDIR}/dominance/{{trait}}.h2.log", trait=TRAITS)
+
+###########################################
+# Additive LDSC
+############################################
+
+rule gwas_to_additive_z:
+    input:
+        gwas = f"{GWAS_DIR}/{{trait}}_ad.txt"
+    output:
+        zfile = f"{OUTDIR}/zfiles/additive/{{trait}}.z.txt"
+    shell:
+        r"""
+        set -euo pipefail
+        source ~/miniconda3/etc/profile.d/conda.sh
+        conda activate ldsc
+
+        mkdir -p $(dirname {output.zfile})
+
+        python - << 'EOF'
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv("{input.gwas}", sep="\t")
+
+z = np.sign(df["a_hat"]) * np.sqrt(-2 * np.log(df["p_a"]))
+
+out = pd.DataFrame({
+    "SNP": df["SNP"],
+    "A1": df["ALT"],
+    "A2": df["REF"],
+    "Z": z,
+    "N": len(df)
+})
+
+out.to_csv("{output.zfile}", sep="\t", index=False)
+EOF
+
+        conda deactivate
+        """
+
+
+rule munge_additive_sumstats:
+    input:
+        zfile = f"{OUTDIR}/zfiles/additive/{{trait}}.z.txt"
+    output:
+        sumstats = f"{OUTDIR}/sumstats/additive/{{trait}}.sumstats.gz"
+    shell:
+        r"""
+        set -euo pipefail
+        source ~/miniconda3/etc/profile.d/conda.sh
+        conda activate ldsc
+
+        mkdir -p $(dirname {output.sumstats})
+
+        Z_ABS=$(realpath {input.zfile})
+        OUT_PREFIX_ABS=$(realpath {OUTDIR}/sumstats/additive/{wildcards.trait})
+
+        python {LDSC_DIR}/munge_sumstats.py \
+          --sumstats "$Z_ABS" \
+          --signed-sumstats Z,0 \
+          --out "$OUT_PREFIX_ABS"
+
+        conda deactivate
+        """
+
+
+rule ldsc_additive_h2:
+    input:
+        sumstats = f"{OUTDIR}/sumstats/additive/{{trait}}.sumstats.gz"
+    output:
+        log = f"{OUTDIR}/additive/{{trait}}.h2.log"
+    shell:
+        r"""
+        set -euo pipefail
+        source ~/miniconda3/etc/profile.d/conda.sh
+        conda activate ldsc
+
+        mkdir -p $(dirname {output.log})
+
+        SUMSTATS_ABS=$(realpath {input.sumstats})
+        OUT_PREFIX_ABS=$(realpath {OUTDIR}/additive/{wildcards.trait})
+
+        python {LDSC_DIR}/ldsc.py \
+          --h2 "$SUMSTATS_ABS" \
+          --ref-ld-chr {REF_LD}/ \
+          --w-ld-chr   {REF_LD}/ \
+          --out "$OUT_PREFIX_ABS"
+
+        conda deactivate
+        """
+
+
+
+################################################
+# Dominance d-LDSC h2
+################################################
+rule gwas_to_dominance_z:
+    input:
+        gwas = f"{GWAS_DIR}/{{trait}}_ad.txt"
+    output:
+        zfile = f"{OUTDIR}/zfiles/dominance/{{trait}}.z.txt"
+    shell:
+        r"""
+        set -euo pipefail
+        source ~/miniconda3/etc/profile.d/conda.sh
+        conda activate d-ldsc
+
+        mkdir -p $(dirname {output.zfile})
+
+        python - << 'EOF'
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv("{input.gwas}", sep="\t")
+
+z = np.sign(df["d_hat"]) * np.sqrt(-2 * np.log(df["p_d"]))
+
+out = pd.DataFrame({
+    "SNP": df["SNP"],
+    "A1": df["ALT"],
+    "A2": df["REF"],
+    "Z": z,
+    "N": len(df)
+})
+out.to_csv("{output.zfile}", sep="\t", index=False)
+EOF
+
+        # 可选：写不写都行
+        conda deactivate
+        """
+
+
+rule dldsc_dominance_h2:
+    input:
+        zfile = f"{OUTDIR}/zfiles/dominance/{{trait}}.z.txt"
+    output:
+        log = f"{OUTDIR}/dominance/{{trait}}.h2.log"
+    shell:
+        r"""
+        set -euo pipefail
+        source ~/miniconda3/etc/profile.d/conda.sh
+        conda activate d-ldsc
+
+        mkdir -p $(dirname {output.log})
+
+        SUMSTATS_ABS=$(realpath {input.zfile})
+        OUT_PREFIX_ABS=$(realpath {OUTDIR}/dominance/{wildcards.trait})
+
+        python {DLDSC_DIR}/get_h2.py \
+          --sumstats "$SUMSTATS_ABS" \
+          --ldscores {DOM_LD} \
+          --out "$OUT_PREFIX_ABS"
+
+        conda deactivate
+        """
+

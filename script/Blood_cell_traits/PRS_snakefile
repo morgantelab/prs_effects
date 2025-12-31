@@ -34,34 +34,8 @@ INDEX_MAP = {i: TRAITS[i-1] for i in PHENO_INDEX}
 # ========= TARGETS =========
 rule all:
     input:
-        # Step 1 outputs
-        expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
-               i=range(1, len(TRAITS)+1)),
-        expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
-               i=range(1, len(TRAITS)+1)),
-        expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
-               i=range(1, len(TRAITS)+1)),
-        f"{OUT_DIR}/kvik/kvik_output.step1.root",
-        f"{OUT_DIR}/kvik/kvik_output.step1.progress",
-
-        # Step 2 outputs
-        expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.assoc",
-               i=range(1, len(TRAITS)+1)),
-        expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.summaries",
-               i=range(1, len(TRAITS)+1)),
-        expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.coeff",
-               i=range(1, len(TRAITS)+1)),
-        expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.pvalues",
-               i=range(1, len(TRAITS)+1)),
-        f"{OUT_DIR}/kvik/kvik_output.step2.progress",
-
-        # GWAS sig hits (trait-name–based)
-        expand(f"{OUT_DIR}/gwas/{{trait}}/significant.snplist",
-               trait=TRAITS),
-
-        # Additive/dominance effect estimation output
-        expand(f"{OUT_DIR}/effects/{{trait}}_ad.txt",
-               trait=TRAITS)
+        expand(f"{OUT_DIR}/gwas/{{trait}}/significant.snplist", trait=TRAITS),
+        expand(f"{OUT_DIR}/effects/{{trait}}_ad.txt", trait=TRAITS)
 
 
 # ========= 1) Filter bfiles per chromosome =========
@@ -136,81 +110,98 @@ rule merge_chromosomes:
 
 
 # ========= 2) GWAS  =========
-rule kvik_step1:
-    input:
-        bed   = f"{OUT_DIR}/merged/ukb_merged.bed",
-        bim   = f"{OUT_DIR}/merged/ukb_merged.bim",
-        fam   = f"{OUT_DIR}/merged/ukb_merged.fam",
-        pheno = PHENO_CSV,
-        covar = COVAR_FILE,
-        keep  = ID_LIST
-    output:
-        root     = f"{OUT_DIR}/kvik/kvik_output.step1.root",
-        progress = f"{OUT_DIR}/kvik/kvik_output.step1.progress",
-        effects  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
-                          i = range(1, len(TRAITS)+1)),
-        prs      = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
-                          i = range(1, len(TRAITS)+1)),
-        details  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
-                          i = range(1, len(TRAITS)+1))
-    threads: THREADS_PLK
-    shell:
-        r"""
-        mkdir -p {OUT_DIR}/kvik
+# rule kvik_step1:
+#     input:
+#         bed   = f"{OUT_DIR}/merged/ukb_merged.bed",
+#         bim   = f"{OUT_DIR}/merged/ukb_merged.bim",
+#         fam   = f"{OUT_DIR}/merged/ukb_merged.fam",
+#         pheno = PHENO_CSV,
+#         covar = COVAR_FILE,
+#         keep  = ID_LIST
+#     output:
+#         root     = f"{OUT_DIR}/kvik/kvik_output.step1.root",
+#         progress = f"{OUT_DIR}/kvik/kvik_output.step1.progress",
+#         effects  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
+#                           i = range(1, len(TRAITS)+1)),
+#         prs      = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
+#                           i = range(1, len(TRAITS)+1)),
+#         details  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
+#                           i = range(1, len(TRAITS)+1))
+#     threads: THREADS_PLK
+#     shell:
+#         r"""
+#         mkdir -p {OUT_DIR}/kvik
+#
+#         {LDAK} \
+#             --kvik-step1 {OUT_DIR}/kvik/kvik_output \
+#             --bfile {OUT_DIR}/merged/ukb_merged \
+#             --pheno {input.pheno} \
+#             --covar {input.covar} \
+#             --mpheno ALL \
+#             --keep {input.keep} \
+#             --max-threads {threads}
+#         """
 
-        {LDAK} \
-            --kvik-step1 {OUT_DIR}/kvik/kvik_output \
-            --bfile {OUT_DIR}/merged/ukb_merged \
-            --pheno {input.pheno} \
-            --covar {input.covar} \
-            --mpheno ALL \
-            --keep {input.keep} \
-            --max-threads {threads}
-        """
 
+# rule kvik_step2:
+#     input:
+#         root    = f"{OUT_DIR}/kvik/kvik_output.step1.root",
+#         effects = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
+#                          i = range(1, len(TRAITS)+1)),
+#         prs     = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
+#                          i = range(1, len(TRAITS)+1)),
+#         details = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
+#                          i = range(1, len(TRAITS)+1)),
+#         pheno   = PHENO_CSV,
+#         covar   = COVAR_FILE,
+#         keep    = ID_LIST
+#     output:
+#         assoc     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.assoc",
+#                            i = range(1, len(TRAITS)+1)),
+#         summaries = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.summaries",
+#                            i = range(1, len(TRAITS)+1)),
+#         coeff     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.coeff",
+#                            i = range(1, len(TRAITS)+1)),
+#         pvalues   = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.pvalues",
+#                            i = range(1, len(TRAITS)+1)),
+#         progress  = f"{OUT_DIR}/kvik/kvik_output.step2.progress"
+#     threads: THREADS_PLK
+#     shell:
+#         r"""
+#         {LDAK} \
+#             --kvik-step2 {OUT_DIR}/kvik/kvik_output \
+#             --pheno {input.pheno} \
+#             --covar {input.covar} \
+#             --mpheno ALL \
+#             --max-threads {threads}
+#         """
 
-rule kvik_step2:
-    input:
-        root    = f"{OUT_DIR}/kvik/kvik_output.step1.root",
-        effects = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
-                         i = range(1, len(TRAITS)+1)),
-        prs     = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
-                         i = range(1, len(TRAITS)+1)),
-        details = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
-                         i = range(1, len(TRAITS)+1)),
-        pheno   = PHENO_CSV,
-        covar   = COVAR_FILE,
-        keep    = ID_LIST
-    output:
-        assoc     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.assoc",
-                           i = range(1, len(TRAITS)+1)),
-        summaries = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.summaries",
-                           i = range(1, len(TRAITS)+1)),
-        coeff     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.coeff",
-                           i = range(1, len(TRAITS)+1)),
-        pvalues   = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.pvalues",
-                           i = range(1, len(TRAITS)+1)),
-        progress  = f"{OUT_DIR}/kvik/kvik_output.step2.progress"
-    threads: THREADS_PLK
-    shell:
-        r"""
-        {LDAK} \
-            --kvik-step2 {OUT_DIR}/kvik/kvik_output \
-            --pheno {input.pheno} \
-            --covar {input.covar} \
-            --mpheno ALL \
-            --max-threads {threads}
-        """
 
 TRAIT_TO_INDEX = {trait: i for i, trait in enumerate(TRAITS, start=1)}
+
+# rule gwas_sig_hits:
+#     input:
+#         assoc = lambda wc: f"{OUT_DIR}/kvik/kvik_output.step2.pheno{TRAIT_TO_INDEX[wc.trait]}.assoc"
+#     output:
+#         sig   = f"{OUT_DIR}/gwas/{{trait}}/significant.snplist"
+#     params:
+#         p = DOM_PTHRESH
+#     run:
+#         import pandas as pd
+#         import os
+
+#         os.makedirs(os.path.dirname(output.sig), exist_ok=True)
+
+#         df = pd.read_csv(input.assoc, sep=r"\s+")
+#         hits = df[df["Wald_P"] < float(params.p)]
+#         hits["Predictor"].to_csv(output.sig, index=False, header=False)
+
 
 rule gwas_sig_hits:
     input:
         assoc = lambda wc: f"{OUT_DIR}/kvik/kvik_output.step2.pheno{TRAIT_TO_INDEX[wc.trait]}.assoc"
     output:
-        sig   = f"{OUT_DIR}/gwas/{{trait}}/significant.snplist"
-    params:
-        p = DOM_PTHRESH
+        sig   = f"{OUT_DIR}/gwas/{{trait}}/significant.snplist2"
     run:
         import pandas as pd
         import os
@@ -218,13 +209,19 @@ rule gwas_sig_hits:
         os.makedirs(os.path.dirname(output.sig), exist_ok=True)
 
         df = pd.read_csv(input.assoc, sep=r"\s+")
-        hits = df[df["Wald_P"] < float(params.p)]
+        n_snps = df.shape[0]
+
+        # Bonferroni: 5e-8 / number of SNPs
+        alpha = 0.05
+        thresh = alpha / n_snps
+        hits = df[df["Wald_P"] < thresh]
         hits["Predictor"].to_csv(output.sig, index=False, header=False)
+
 
 
 rule estimate_ad_real:
     input:
-        sig   = f"{OUT_DIR}/gwas/{{trait}}/significant.snplist",
+        sig   = f"{OUT_DIR}/gwas/{{trait}}/significant.snplist2",
         pheno = PHENO_CSV,
         ids   = ID_LIST
     output:

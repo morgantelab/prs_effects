@@ -28,14 +28,14 @@ cd /data2/morgante_lab/ukbiobank_projects/prs_effects/script/Blood_cell_traits
 
 # Unlock first (safe to run even if not locked)
 snakemake \
-  -s PRS_snakefile \
+  -s PRS_snakefile_CV \
   --configfile PRS_scan_config.yaml \
   --profile profiles/slurm \
   --unlock
 
 snakemake \
   -p \
-  -s PRS_snakefile \
+  -s PRS_snakefile_CV \
   --configfile PRS_scan_config.yaml \
   --profile profiles/slurm \
   --latency-wait 120
