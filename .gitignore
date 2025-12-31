@@ -13,3 +13,7 @@ code/.snakemake/*
 code/replication/.snakemake/*
 **/.snakemake/
 script/replication/.snakemake/*
+
+# results (recursive)
+results/**
+**/results/**
