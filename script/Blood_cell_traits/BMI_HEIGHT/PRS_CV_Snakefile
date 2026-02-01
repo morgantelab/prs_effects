@@ -1,0 +1,437 @@
+
+import os
+import yaml
+
+configfile: "config.yaml"
+
+OUT_DIR      = config["OUT_DIR"]
+CODE_DIR     = config["CODE_DIR"]
+PLINK2       = config["PLINK2"]
+LDAK         = config["LDAK"]
+COVAR_FILE   = config["COVARIATES"]
+
+TRAITS       = config["PHENO_NAMES"]
+PHENO_FILES  = config["PHENO_FILES"]     # trait -> pheno file
+KEEP_FILES   = config["KEEP_FILES"]      # trait -> keep file
+
+THREADS_PLK  = int(config.get("THREADS_PLINK", 12))
+THREADS_R    = int(config.get("THREADS_R", 8))
+
+# Existing resources you already have
+MERGED_BFILE = config["MERGED_BFILE"]     # plink bfile prefix
+GENO_PREFIX  = config["GENO_PREFIX"]      # e.g., ".../filtered/ukb_chr" (for estimate_effects.R)
+CHRS         = config.get("CHRS", list(range(1, 23)))
+
+CLUMP_P1_LIST = config["CLUMP_P1_LIST"]
+CLUMP_R2_LIST = config["CLUMP_R2_LIST"]
+CLUMP_KB      = int(config["CLUMP_KB"])
+
+DOM_PTHRESH  = float(config["DOM_PTHRESH"])
+
+N_FOLDS = int(config["N_FOLDS"])
+FOLDS   = list(range(1, N_FOLDS + 1))
+CV_SEED = int(config["CV_SEED"])
+
+CV_DIR  = f"{OUT_DIR}/cv"
+PRS_CV  = f"{OUT_DIR}/prs_cv"
+
+wildcard_constraints:
+    p1=".+", r2=".+"
+
+# ========= TARGETS =========
+rule all:
+    input:
+        # β-PRS test-set performance
+        expand(
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"metrics/p{{p1}}_r{{r2}}/corr_beta.txt",
+            trait=TRAITS,
+            fold=FOLDS,
+            p1=CLUMP_P1_LIST,
+            r2=CLUMP_R2_LIST
+        ),
+
+        # a+d PRS test-set performance
+        expand(
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"metrics/p{{p1}}_r{{r2}}/corr_ad.txt",
+            trait=TRAITS,
+            fold=FOLDS,
+            p1=CLUMP_P1_LIST,
+            r2=CLUMP_R2_LIST
+        )
+
+# ========= 1) create cv_folds  =========
+rule make_cv_folds:
+    input:
+        ids = lambda wc: KEEP_FILES[wc.trait]
+    output:
+        train = f"{CV_DIR}/{{trait}}/train_fold{{fold}}.keep",
+        test  = f"{CV_DIR}/{{trait}}/test_fold{{fold}}.keep"
+    params:
+        n_folds = N_FOLDS,
+        seed = CV_SEED
+    run:
+        import os, random
+
+        trait = wildcards.trait
+        fold  = int(wildcards.fold)
+        n_folds = int(params.n_folds)
+        seed = int(params.seed)
+
+        outdir = f"{CV_DIR}/{trait}"
+        os.makedirs(outdir, exist_ok=True)
+
+        rows = []
+        with open(input.ids) as f:
+            for ln in f:
+                ln = ln.strip()
+                if not ln:
+                    continue
+                fid, iid, *_ = ln.split()
+                rows.append((fid, iid))
+
+        # stable shuffle per trait
+        rng = random.Random(seed + (hash(trait) % 10_000_000))
+        rng.shuffle(rows)
+
+        n = len(rows)
+        sizes = [n // n_folds] * n_folds
+        for i in range(n % n_folds):
+            sizes[i] += 1
+
+        folds = []
+        idx = 0
+        for s in sizes:
+            folds.append(rows[idx:idx+s])
+            idx += s
+
+        test_rows  = folds[fold - 1]
+        train_rows = [r for i, blk in enumerate(folds) if i != (fold - 1) for r in blk]
+
+        with open(output.test, "w") as f:
+            for fid, iid in test_rows:
+                f.write(f"{fid}\t{iid}\n")
+
+        with open(output.train, "w") as f:
+            for fid, iid in train_rows:
+                f.write(f"{fid}\t{iid}\n")
+
+
+
+# ========= 3) GWAS  =========
+rule kvik_step1_cv:
+    input:
+        pheno = lambda wc: PHENO_FILES[wc.trait],
+        covar = COVAR_FILE,
+        keep  = f"{CV_DIR}/{{trait}}/train_fold{{fold}}.keep",
+        bed   = f"{MERGED_BFILE}.bed",
+        bim   = f"{MERGED_BFILE}.bim",
+        fam   = f"{MERGED_BFILE}.fam",
+    output:
+        root     = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.root",
+        progress = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.progress",
+        effects  = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.effects",
+        prs      = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.loco.prs",
+        details  = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.loco.details",
+    threads: THREADS_PLK
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p $(dirname {output.root})
+
+        {LDAK} \
+          --kvik-step1 {OUT_DIR}/kvik_cv/{wildcards.trait}/fold{wildcards.fold}/kvik_output \
+          --bfile {MERGED_BFILE} \
+          --pheno {input.pheno} \
+          --covar {input.covar} \
+          --mpheno 1 \
+          --keep {input.keep} \
+          --max-threads {threads}
+        """
+
+rule kvik_step2_cv:
+    input:
+        root    = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.root",
+        effects = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.effects",
+        prs     = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.loco.prs",
+        details = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step1.loco.details",
+        pheno   = lambda wc: PHENO_FILES[wc.trait],
+        covar   = COVAR_FILE,
+        keep    = f"{CV_DIR}/{{trait}}/train_fold{{fold}}.keep",
+    output:
+        assoc    = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step2.assoc",
+        pvalues  = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step2.pvalues",
+        coeff    = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step2.coeff",
+        summaries= f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step2.summaries",
+        progress = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step2.progress",
+    threads: THREADS_PLK
+    shell:
+        r"""
+        set -euo pipefail
+
+        {LDAK} \
+          --kvik-step2 {OUT_DIR}/kvik_cv/{wildcards.trait}/fold{wildcards.fold}/kvik_output \
+          --bfile {MERGED_BFILE} \
+          --pheno {input.pheno} \
+          --covar {input.covar} \
+          --mpheno 1 \
+          --keep {input.keep} \
+          --max-threads {threads}
+        """
+# ========= Clean and clump =========
+
+rule clean_pvalues_for_clump:
+    input:
+        pvalues = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step2.pvalues"
+    output:
+        clean = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"gwas/pvalues.for_clump.tsv"
+        )
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p $(dirname {output.clean})
+
+        # keep header + valid numeric P in [0,1]
+        awk '
+            NR==1 {{ print; next }}
+            ($2 ~ /^[0-9.eE+-]+$/) && ($2 >= 0) && ($2 <= 1) {{ print }}
+        ' {input.pvalues} > {output.clean}
+        """
+
+
+rule clump_cv:
+    input:
+        pvalues = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"gwas/pvalues.for_clump.tsv"
+        ),
+        keep = f"{CV_DIR}" + "/{trait}/train_fold{fold}.keep"
+    output:
+        clumped = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"clump/p{{p1}}_r{{r2}}/clumped.clumps"
+        )
+    params:
+        bfile = MERGED_BFILE,
+        kb    = CLUMP_KB,
+        out_prefix = lambda wc, output: output.clumped.replace(".clumps", "")
+    threads: THREADS_PLK
+    shell:
+        r"""
+        mkdir -p $(dirname {output.clumped})
+
+        {PLINK2} \
+          --bfile {params.bfile} \
+          --keep {input.keep} \
+          --clump {input.pvalues} \
+          --clump-snp-field Predictor \
+          --clump-field P \
+          --clump-p1 {wildcards.p1} \
+          --clump-r2 {wildcards.r2} \
+          --clump-kb {params.kb} \
+          --out {params.out_prefix}
+        """
+
+rule clumped_snplist:
+    input:
+        clumped = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"clump/p{{p1}}_r{{r2}}/clumped.clumps"
+        )
+    output:
+        snps = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"clump/p{{p1}}_r{{r2}}/clumped.snplist"
+        )
+    shell:
+        r"""
+        awk 'NR>1 && $3!="SNP" {{print $3}}' {input.clumped} | sort -u > {output.snps}
+        """
+
+rule estimate_ad_clumped_cv:
+    input:
+        snps  = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"clump/p{{p1}}_r{{r2}}/clumped.snplist"
+        ),
+        ids = f"{CV_DIR}" + "/{trait}/train_fold{fold}.keep",
+        pheno = lambda wc: PHENO_FILES[wc.trait]
+    output:
+        ad = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"effects/p{{p1}}_r{{r2}}/ad_clumped.txt"
+        )
+    params:
+        script = f"{CODE_DIR}/estimate_effects.R",
+        bfile_prefix = GENO_PREFIX
+    threads: THREADS_R
+    shell:
+        r"""
+        mkdir -p $(dirname {output.ad})
+        module load R/4.2.3
+
+        Rscript {params.script} \
+          {params.bfile_prefix} \
+          {input.snps} \
+          {input.ids} \
+          {input.pheno} \
+          {wildcards.trait} \
+          {output.ad}
+
+        module unload R/4.2.3
+        """
+
+# ========= 4) PRS_beta =========
+rule make_beta_weights_clumped:
+    input:
+        assoc = f"{OUT_DIR}/kvik_cv/{{trait}}/fold{{fold}}/kvik_output.step2.assoc",
+        snps = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"clump/p{{p1}}_r{{r2}}/clumped.snplist"
+        )
+    output:
+        weights = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"score/p{{p1}}_r{{r2}}/beta_for_score.clumped.txt"
+        )
+    shell:
+        r"""
+        mkdir -p $(dirname {output.weights})
+
+        awk 'BEGIN{{FS=OFS="\t"}}
+            NR==FNR {{snps[$1]=1; next}}
+            FNR==1  {{next}}
+            ($2 in snps) && !seen[$2]++ {{print $2, $4, $8}}' \
+            {input.snps} {input.assoc} \
+        > {output.weights}
+        """
+
+
+rule score_prs_beta_cv:
+    input:
+        weights  = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"score/p{{p1}}_r{{r2}}/beta_for_score.clumped.txt"
+        ),
+        test_ids = f"{CV_DIR}" + "/{trait}/test_fold{fold}.keep",
+        bfile_bed = f"{MERGED_BFILE}.bed",
+        bfile_bim = f"{MERGED_BFILE}.bim",
+        bfile_fam = f"{MERGED_BFILE}.fam"
+    output:
+        sscore = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"score/p{{p1}}_r{{r2}}/score_beta_clumped.sscore"
+        )
+    params:
+        bfile_pref = MERGED_BFILE,
+        outprefix  = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"score/p{{p1}}_r{{r2}}/score_beta_clumped"
+        )
+    threads: 4
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p "$(dirname {params.outprefix})"
+
+        if [ "$(wc -l < "{input.weights}")" -le 1 ]; then
+          awk 'BEGIN{{OFS="\t"; print "IID","BETA_SUM"}} {{print $2,0}}' \
+              {input.test_ids} > "{output.sscore}"
+        else
+          {PLINK2} \
+            --bfile {params.bfile_pref} \
+            --keep {input.test_ids} \
+            --score {input.weights} 1 2 3 cols=+scoresums \
+            --out {params.outprefix}
+        fi
+        """
+
+
+rule merge_prs_beta_and_corr_cv:
+    input:
+        sscore = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"score/p{{p1}}_r{{r2}}/score_beta_clumped.sscore"
+        ),
+        pheno = lambda wc: PHENO_FILES[wc.trait]
+    output:
+        prs = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"score/p{{p1}}_r{{r2}}/testing_prs_beta_clumped.txt"
+        ),
+        corr = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"metrics/p{{p1}}_r{{r2}}/corr_beta.txt"
+        )
+    params:
+        CODE = f"{CODE_DIR}/merge_prs_and_corr.R"
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p $(dirname {output.prs}) $(dirname {output.corr})
+
+        module load R/4.2.3
+
+        Rscript {params.CODE} \
+          {input.sscore} \
+          {output.prs} \
+          {input.pheno} \
+          {wildcards.trait} \
+          {output.corr}
+
+        module unload R/4.2.3
+        """
+
+# ========= 5) PRS_a_d =========
+rule score_prs_ad_cv:
+    input:
+        effects = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"effects/p{{p1}}_r{{r2}}/ad_clumped.txt"
+        ),
+        test_ids = f"{CV_DIR}" + "/{trait}/test_fold{fold}.keep",
+        pheno    = lambda wc: PHENO_FILES[wc.trait],
+        bfile_bed = f"{MERGED_BFILE}.bed",
+        bfile_bim = f"{MERGED_BFILE}.bim",
+        bfile_fam = f"{MERGED_BFILE}.fam"
+    output:
+        prs = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"score/p{{p1}}_r{{r2}}/testing_prs_ad.txt"
+        ),
+        corr = (
+            f"{PRS_CV}/{{trait}}/fold{{fold}}/"
+            f"metrics/p{{p1}}_r{{r2}}/corr_ad.txt"
+        )
+    params:
+        CODE   = f"{CODE_DIR}/score_prs_ad.R",
+        BFILE  = MERGED_BFILE,
+        PLINK2 = PLINK2,
+        DOMP   = DOM_PTHRESH,
+        TPLINK = THREADS_PLK
+    threads: THREADS_R
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p $(dirname {output.prs}) $(dirname {output.corr})
+        module load R/4.2.3
+
+        Rscript {params.CODE} \
+          {input.effects} \
+          {params.BFILE} \
+          {input.test_ids} \
+          {input.pheno} \
+          {wildcards.trait} \
+          {output.prs} \
+          {output.corr} \
+          {params.PLINK2} \
+          {params.DOMP} \
+          {params.TPLINK}
+
+        module unload R/4.2.3
+        """
+
+

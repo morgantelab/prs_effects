@@ -1,80 +1,62 @@
-configfile: "heritibility_config.yaml"
+configfile: "heritibility.yaml"
 
 TRAITS = config["PHENO_NAMES"]
+CHRS   = config["CHRS"]
 GWAS_DIR  = config["GWAS_DIR"]
 LDSC_DIR  = config["LDSC_DIR"]
 DLDSC_DIR = config["DLDSC_DIR"]
-
+FILTERED_DIR = config["FILTERED_DIR"]
 REF_LD = config["REF_LD"]
-DOM_LD = config["DOM_LD"]
-
+DOM_LD_CHR = config["DOM_LD_CHR"]
+W_LD = config["W_LD"]
 OUTDIR = config["OUTDIR"]
+# trait -> LDAK-KVIK pheno index
+TRAIT_TO_INDEX = {trait: i for i, trait in enumerate(TRAITS, start=1)}
+
+MERGED_DIR = config["MERGED_DIR"] 
+BFILE_PREFIX  = config["BFILE_PREFIX"]
+BFILE         = f"{MERGED_DIR}/{BFILE_PREFIX}"
+COV_FILE  = config["COVARIATES"]
+MAF       = float(config.get("MAF", 0.0))
+NC           = int(config.get("NC", 14))
 
 
 rule all:
     input:
-        expand(f"{OUTDIR}/additive/{{trait}}.h2.log", trait=TRAITS),
-        expand(f"{OUTDIR}/dominance/{{trait}}.h2.log", trait=TRAITS)
+        expand(f"{OUTDIR}/additive/{{trait}}.log", trait=TRAITS),
+        expand(f"{OUTDIR}/dominance/{{trait}}.log", trait=TRAITS)
+        
 
 ###########################################
 # Additive LDSC
 ############################################
 
-rule gwas_to_additive_z:
-    input:
-        gwas = f"{GWAS_DIR}/{{trait}}_ad.txt"
-    output:
-        zfile = f"{OUTDIR}/zfiles/additive/{{trait}}.z.txt"
-    shell:
-        r"""
-        set -euo pipefail
-        source ~/miniconda3/etc/profile.d/conda.sh
-        conda activate ldsc
-
-        mkdir -p $(dirname {output.zfile})
-
-        python - << 'EOF'
-import pandas as pd
-import numpy as np
-
-df = pd.read_csv("{input.gwas}", sep="\t")
-
-z = np.sign(df["a_hat"]) * np.sqrt(-2 * np.log(df["p_a"]))
-
-out = pd.DataFrame({
-    "SNP": df["SNP"],
-    "A1": df["ALT"],
-    "A2": df["REF"],
-    "Z": z,
-    "N": len(df)
-})
-
-out.to_csv("{output.zfile}", sep="\t", index=False)
-EOF
-
-        conda deactivate
-        """
-
-
 rule munge_additive_sumstats:
     input:
-        zfile = f"{OUTDIR}/zfiles/additive/{{trait}}.z.txt"
+        gwas = lambda wc: f"{GWAS_DIR}/kvik_output.step2.pheno{TRAIT_TO_INDEX[wc.trait]}.assoc"
     output:
         sumstats = f"{OUTDIR}/sumstats/additive/{{trait}}.sumstats.gz"
     shell:
         r"""
         set -euo pipefail
-        source ~/miniconda3/etc/profile.d/conda.sh
+        source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
         conda activate ldsc
 
         mkdir -p $(dirname {output.sumstats})
 
-        Z_ABS=$(realpath {input.zfile})
+        GWAS_ABS=$(realpath {input.gwas})
         OUT_PREFIX_ABS=$(realpath {OUTDIR}/sumstats/additive/{wildcards.trait})
 
+        # header:
+        # Chromosome Predictor Basepair A1 A2 Wald_Stat Wald_P Effect SE MAF CallRate MachR2 SPA_Status
         python {LDSC_DIR}/munge_sumstats.py \
-          --sumstats "$Z_ABS" \
-          --signed-sumstats Z,0 \
+          --sumstats "$GWAS_ABS" \
+          --snp Predictor \
+          --a1 A1 \
+          --a2 A2 \
+          --p  Wald_P \
+          --signed-sumstats Effect,0 \
+          --N 265132 \
           --out "$OUT_PREFIX_ABS"
 
         conda deactivate
@@ -85,11 +67,11 @@ rule ldsc_additive_h2:
     input:
         sumstats = f"{OUTDIR}/sumstats/additive/{{trait}}.sumstats.gz"
     output:
-        log = f"{OUTDIR}/additive/{{trait}}.h2.log"
+        log = f"{OUTDIR}/additive/{{trait}}.log"
     shell:
         r"""
         set -euo pipefail
-        source ~/miniconda3/etc/profile.d/conda.sh
+        source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
         conda activate ldsc
 
         mkdir -p $(dirname {output.log})
@@ -101,73 +83,107 @@ rule ldsc_additive_h2:
           --h2 "$SUMSTATS_ABS" \
           --ref-ld-chr {REF_LD}/ \
           --w-ld-chr   {REF_LD}/ \
+          --n-blocks 50 \
           --out "$OUT_PREFIX_ABS"
 
         conda deactivate
         """
 
+###########################################
+#         Dominance LDSC
+###########################################
+# phi files already split here:
+PHI_DIR = f"{OUTDIR}/dldsc/phi"
 
-
-################################################
-# Dominance d-LDSC h2
-################################################
-rule gwas_to_dominance_z:
+rule dldsc_get_sumstats_dominance_chr:
     input:
-        gwas = f"{GWAS_DIR}/{{trait}}_ad.txt"
+        bed = f"{FILTERED_DIR}/ukb_chr{{chr}}_filtered.bed",
+        bim = f"{FILTERED_DIR}/ukb_chr{{chr}}_filtered.bim",
+        fam = f"{FILTERED_DIR}/ukb_chr{{chr}}_filtered.fam",
+        phi = f"{PHI_DIR}/{{trait}}.phi",
+        cov = COV_FILE
+    threads: 24
+    resources:
+        mem_mb = 500000
     output:
-        zfile = f"{OUTDIR}/zfiles/dominance/{{trait}}.z.txt"
+        sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/by_chr/{{trait}}/chr{{chr}}.sumstats"
     shell:
         r"""
         set -euo pipefail
-        source ~/miniconda3/etc/profile.d/conda.sh
-        conda activate d-ldsc
+        source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
+        conda activate d-ldsc-py27
 
-        mkdir -p $(dirname {output.zfile})
+        mkdir -p $(dirname {output.sumstats})
 
-        python - << 'EOF'
-import pandas as pd
-import numpy as np
+        # IMPORTANT: get_sumstats.py uses --out prefix (not the .gz path directly)
+        PREFIX="{OUTDIR}/dldsc/sumstats/dominance/by_chr/{wildcards.trait}/chr{wildcards.chr}"
 
-df = pd.read_csv("{input.gwas}", sep="\t")
+        stdbuf -oL -eL python -u {DLDSC_DIR}/get_sumstats.py \
+          --out "$PREFIX" \
+          --bfile "{FILTERED_DIR}/ukb_chr{wildcards.chr}_filtered" \
+          --maf {MAF} \
+          --phifile "{input.phi}" \
+          --gxefile "{input.cov}" \
+          --nC {NC} \
+          --ny 1 \
+          --dominance \
+          --additive
 
-z = np.sign(df["d_hat"]) * np.sqrt(-2 * np.log(df["p_d"]))
+        conda deactivate
+        """
 
-out = pd.DataFrame({
-    "SNP": df["SNP"],
-    "A1": df["ALT"],
-    "A2": df["REF"],
-    "Z": z,
-    "N": len(df)
-})
-out.to_csv("{output.zfile}", sep="\t", index=False)
-EOF
+rule dldsc_merge_sumstats_dominance:
+    input:
+        chr_sumstats = lambda wc: expand(
+            f"{OUTDIR}/dldsc/sumstats/dominance/by_chr/{wc.trait}/chr{{chr}}.sumstats",
+            chr=CHRS
+        )
+    output:
+        sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/{{trait}}.sumstats"
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p $(dirname {output.sumstats})
 
-        # 可选：写不写都行
+        # keep header only once (plain text files)
+        head -n 1 {input.chr_sumstats[0]} > {output.sumstats}.tmp
+        for f in {input.chr_sumstats}; do
+          awk 'NR>1' "$f" >> {output.sumstats}.tmp
+        done
+
+        mv -f {output.sumstats}.tmp {output.sumstats}
+        """
+
+
+rule dldsc_get_h2_dominance:
+    input:
+        sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/{{trait}}.sumstats"
+    output:
+        log = f"{OUTDIR}/dominance/{{trait}}.log"
+    shell:
+        r"""
+        set -euo pipefail
+        source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
+        conda activate d-ldsc-py27
+
+        OUT_PREFIX="{OUTDIR}/dominance/{wildcards.trait}"
+        mkdir -p "$(dirname "$OUT_PREFIX")"
+
+        stdbuf -oL -eL python -u {DLDSC_DIR}/get_h2.py \
+          --out "$OUT_PREFIX" \
+          --h2  "{input.sumstats}" \
+          --ref-ld-chr "{DOM_LD_CHR}" \
+          --w-ld-chr   "{W_LD}" \
+          --dominance \
+          --n-blocks 50 \
+
         conda deactivate
         """
 
 
-rule dldsc_dominance_h2:
-    input:
-        zfile = f"{OUTDIR}/zfiles/dominance/{{trait}}.z.txt"
-    output:
-        log = f"{OUTDIR}/dominance/{{trait}}.h2.log"
-    shell:
-        r"""
-        set -euo pipefail
-        source ~/miniconda3/etc/profile.d/conda.sh
-        conda activate d-ldsc
 
-        mkdir -p $(dirname {output.log})
 
-        SUMSTATS_ABS=$(realpath {input.zfile})
-        OUT_PREFIX_ABS=$(realpath {OUTDIR}/dominance/{wildcards.trait})
 
-        python {DLDSC_DIR}/get_h2.py \
-          --sumstats "$SUMSTATS_ABS" \
-          --ldscores {DOM_LD} \
-          --out "$OUT_PREFIX_ABS"
 
-        conda deactivate
-        """
+
 

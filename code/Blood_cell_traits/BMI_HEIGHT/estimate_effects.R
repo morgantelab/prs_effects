@@ -1,0 +1,225 @@
+#!/usr/bin/env Rscript
+suppressPackageStartupMessages({
+  library(data.table)
+  library(BEDMatrix)
+})
+
+# -------------------- Args --------------------
+args <- commandArgs(trailingOnly = TRUE)
+if (length(args) != 6) {
+  stop("Usage: estimate_ad_real.R FILTERED_PREFIX SIG_SNPLIST ID_LIST PHENO_CSV TRAIT OUTPUT")
+}
+
+filtered_prefix <- args[1]    # e.g. /.../OUT_DIR/filtered/ukb_chr
+snplist_file    <- args[2]    # significant hits
+id_list_file    <- args[3]    # FID IID (analysis samples)
+pheno_file      <- args[4]    # phenotype file
+trait_name      <- args[5]    # trait to analyze
+output_file     <- args[6]    # final table
+
+# -------------------- Load IDs --------------------
+ids <- fread(id_list_file, header = FALSE, col.names = c("FID","IID"))
+ids[, `:=`(FID = as.character(FID), IID = as.character(IID))]
+
+# -------------------- Load phenotype --------------------
+ph_raw <- fread(pheno_file)
+
+# Helper: pick the best-matching phenotype column for trait_name
+resolve_trait_col <- function(cols, trait) {
+  # 1) exact
+  if (trait %in% cols) return(trait)
+
+  # 2) case-insensitive exact
+  hit <- cols[tolower(cols) == tolower(trait)]
+  if (length(hit) >= 1L) return(hit[1L])
+
+  # 3) common UKB / derived patterns:
+  #    - "HEIGHT_RINT", "HEIGHT.rint", "HEIGHT-0.0", "HEIGHT_..."
+  #    - "50-0.0" (UKB field id) won't match; if you want that, you must pass "50" or "50-0.0"
+  pattern <- paste0("(^", trait, "$)|(^", trait, "[._-])|(\\b", trait, "\\b)")
+  hit2 <- grep(pattern, cols, value = TRUE, ignore.case = TRUE)
+  if (length(hit2) >= 1L) return(hit2[1L])
+
+  return(NA_character_)
+}
+
+trait_col <- resolve_trait_col(names(ph_raw), trait_name)
+if (is.na(trait_col)) {
+  stop(
+    "Trait not found in phenotype file: ", trait_name,
+    "\nAvailable columns (first 50): ",
+    paste(head(names(ph_raw), 50), collapse = ", ")
+  )
+}
+
+# Helper: detect ID columns
+has_fid_iid <- all(c("FID","IID") %in% names(ph_raw))
+has_eid     <- ("eid" %in% names(ph_raw))
+
+# Build phenotype table with columns: FID, IID, pheno
+if (has_fid_iid) {
+  ph_tmp <- ph_raw[, .(FID = as.character(FID), IID = as.character(IID), pheno = get(trait_col))]
+  # restrict to keep IDs
+  ph <- merge(ids, ph_tmp, by = c("FID","IID"), all.x = TRUE, sort = FALSE)
+} else if (has_eid) {
+  # UKB commonly uses eid; your keep file IID is typically the eid.
+  ph_tmp <- ph_raw[, .(IID = as.character(eid), pheno = get(trait_col))]
+  ph <- merge(ids, ph_tmp, by = "IID", all.x = TRUE, sort = FALSE)
+} else {
+  stop(
+    "Phenotype file does not contain (FID,IID) nor eid columns.\n",
+    "Columns (first 50): ", paste(head(names(ph_raw), 50), collapse = ", ")
+  )
+}
+
+# phenotype vector named by IID (character)
+pheno_vec <- ph$pheno
+names(pheno_vec) <- ph$IID
+
+cat("Using phenotype column:", trait_col, "\n")
+cat("Phenotype N (keep file):", nrow(ph), "\n")
+
+# -------------------- Load SNP list --------------------
+snps <- fread(snplist_file, header = FALSE)[[1]]
+cat("SNPs to analyze:", length(snps), "\n")
+
+# -------------------- Helper: Welch calculations --------------------
+calculate_welch <- function(y, g, snp) {
+  AA <- g == 2L
+  Aa <- g == 1L
+  aa <- g == 0L
+
+  nAA <- sum(AA); nAa <- sum(Aa); naa <- sum(aa)
+  if (nAA < 2 || nAa < 2 || naa < 2) return(NULL)
+
+  yAA <- y[AA]; yAa <- y[Aa]; yaa <- y[aa]
+
+  meanAA <- mean(yAA); meanAa <- mean(yAa); meanaa <- mean(yaa)
+  varAA  <- var(yAA);  varAa  <- var(yAa);  varaa  <- var(yaa)
+
+  # -------------------- Additive --------------------
+  a_hat <- (meanAA - meanaa) / 2
+  var_a <- 0.25 * (varAA/nAA + varaa/naa)
+  if (!is.finite(var_a) || var_a <= 0) return(NULL)
+
+  df_a <- (varAA/nAA + varaa/naa)^2 /
+    ((varAA/nAA)^2/(nAA-1) + (varaa/naa)^2/(naa-1))
+  t_a <- a_hat / sqrt(var_a)
+  p_a <- 2 * pt(abs(t_a), df = df_a, lower.tail = FALSE)
+
+  # -------------------- Dominance --------------------
+  d_hat <- meanAa - (meanAA + meanaa)/2
+  var_d <- varAa/nAa + 0.25*(varAA/nAA + varaa/naa)
+  if (!is.finite(var_d) || var_d <= 0) return(NULL)
+
+  df_d <- (var_d)^2 / (
+    (varAa/nAa)^2/(nAa-1) +
+      (varAA/(4*nAA))^2/(nAA-1) +
+      (varaa/(4*naa))^2/(naa-1)
+  )
+  t_d <- d_hat / sqrt(var_d)
+  p_d <- 2 * pt(abs(t_d), df = df_d, lower.tail = FALSE)
+
+  data.table(
+    SNP = snp,
+    a_hat = a_hat,
+    d_hat = d_hat,
+    p_a   = p_a,
+    p_d   = p_d
+  )
+}
+
+# -------------------- Impute missing genotypes --------------------
+impute_mode <- function(G) {
+  for (j in seq_len(ncol(G))) {
+    g <- G[, j]
+    if (anyNA(g)) {
+      tab <- tabulate(g[!is.na(g)] + 1L, nbins = 3)
+      g[is.na(g)] <- which.max(tab) - 1L
+      G[, j] <- g
+    }
+  }
+  G
+}
+
+# -------------------- Main Loop: For each chromosome --------------------
+final_list <- list()
+
+for (chr in 1:22) {
+
+  cat("\n▶ Chromosome", chr, "\n")
+
+  base <- sprintf("%s%d_filtered", filtered_prefix, chr)
+  bedfile <- paste0(base, ".bed")
+  bimfile <- paste0(base, ".bim")
+  famfile <- paste0(base, ".fam")
+
+  if (!file.exists(bedfile)) {
+    cat("  - missing filtered bed → skip\n")
+    next
+  }
+
+  bim <- fread(bimfile, col.names = c("CHR","SNP","cM","BP","ALT","REF"))
+
+  idx <- match(snps, bim$SNP)
+  keep <- !is.na(idx)
+
+  if (!any(keep)) {
+    cat("  - no SNPs on this chromosome\n")
+    next
+  }
+
+  snp_idx <- idx[keep]
+  snp_names <- bim$SNP[snp_idx]
+
+  # -------------------- Load genotype matrix --------------------
+  G <- BEDMatrix(bedfile)[, snp_idx, drop = FALSE]
+  colnames(G) <- snp_names
+
+  # apply imputation
+  G <- impute_mode(G)
+
+  fam <- fread(famfile, col.names = c("FID","IID","pat","mat","sex","pheno"))
+  fam_ids <- as.character(fam$IID)
+
+  # -------------------- Align phenotypes and samples --------------------
+  ord <- match(fam_ids, names(pheno_vec))
+  y <- pheno_vec[ord]
+
+  ok <- !is.na(y)
+  G <- G[ok, , drop = FALSE]
+  y <- y[ok]
+
+  cat("  Samples:", length(y), "\n")
+
+  # -------------------- Compute effects --------------------
+  out_chr <- lapply(seq_len(ncol(G)), function(j) {
+    calculate_welch(y, G[, j], snp_names[j])
+  })
+
+  out_chr <- rbindlist(out_chr, use.names = TRUE, fill = TRUE)
+  if (nrow(out_chr)) {
+    out_chr <- merge(
+      out_chr,
+      bim[, .(SNP, BP, REF, ALT)],
+      by = "SNP",
+      all.x = TRUE
+    )[, .(
+      CHR = chr,
+      POS = BP,
+      SNP,
+      REF,
+      ALT,
+      a_hat, d_hat, p_a, p_d
+    )]
+
+    final_list[[length(final_list) + 1L]] <- out_chr
+  }
+}
+
+# -------------------- Write Output --------------------
+final <- rbindlist(final_list, use.names = TRUE, fill = TRUE)
+dir.create(dirname(output_file), showWarnings = FALSE, recursive = TRUE)
+fwrite(final, output_file, sep = "\t")
+
+cat("\n✔ Saved results → ", output_file, "\n")
