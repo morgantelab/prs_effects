@@ -63,6 +63,7 @@ plot_trait_avg_bar <- function(dt_avg, pth) {
 }
 
 p_avg_1 <- plot_trait_avg_bar(dt_avg, "p10e-8_r0.1")
+
 p_avg_2 <- plot_trait_avg_bar(dt_avg, "p10e-5_r0.1")
 
 print(p_avg_1)

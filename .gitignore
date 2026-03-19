@@ -17,3 +17,28 @@ script/replication/.snakemake/*
 # results (recursive)
 results/**
 **/results/**
+
+# ignore whole script
+script/*
+
+# keep used
+!script/Blood_cell_traits/
+!script/replication_v3/
+
+# allow all files within the used folders
+!script/Blood_cell_traits/**
+!script/replication_v3/**
+
+# ignore whole code
+code/*
+
+# keep used
+!code/test_method2/
+!code/Blood_cell_traits/
+
+# allow all files within the used folders
+!code/test_method2/**
+!code/Blood_cell_traits/**
+
+# ignore snakemake anywhere
+**/.snakemake/**

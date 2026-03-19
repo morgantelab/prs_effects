@@ -175,6 +175,7 @@ rule estimate_ad_real:
     input:
         sig   = f"{OUT_DIR}/gwas/{{trait}}/significant.snplist",
         pheno = lambda wc: PHENO_FILES[wc.trait],
+        covar = COVAR_FILE,
         ids   = lambda wc: KEEP_FILES[wc.trait],
         beds  = lambda wc: expand(f"{OUT_DIR}/filtered/{wc.trait}/ukb_chr{{chr}}_filtered.bed", chr=CHRS),
         bims  = lambda wc: expand(f"{OUT_DIR}/filtered/{wc.trait}/ukb_chr{{chr}}_filtered.bim", chr=CHRS),
@@ -196,6 +197,7 @@ rule estimate_ad_real:
           {input.sig} \
           {input.ids} \
           {input.pheno} \
+          {input.covar} \
           {wildcards.trait} \
           {output.ad}
 

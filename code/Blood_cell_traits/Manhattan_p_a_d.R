@@ -72,7 +72,6 @@ manhattan_plot <- function(dt, p_col, trait, out_png) {
   p <- ggplot2::ggplot(dt, ggplot2::aes(x = pos_cum, y = logp)) +
     ggplot2::geom_point(size = 0.8, alpha = 0.75, color = "#4D79A6") +
     ggplot2::geom_hline(yintercept = bonf_line, color = "red",  linetype = "dashed") +
-    ggplot2::geom_hline(yintercept = gw_line,   color = "blue", linetype = "dashed") +
     ggplot2::scale_x_continuous(breaks = chr_span$mid, labels = chr_span$CHR) +
     ggplot2::labs(
       title = paste("Manhattan Plot —", trait, sprintf("(%s)", p_col)),

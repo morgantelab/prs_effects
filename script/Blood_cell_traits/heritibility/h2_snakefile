@@ -2,66 +2,130 @@ configfile: "heritibility.yaml"
 
 TRAITS = config["PHENO_NAMES"]
 CHRS   = config["CHRS"]
-GWAS_DIR  = config["GWAS_DIR"]
-LDSC_DIR  = config["LDSC_DIR"]
-DLDSC_DIR = config["DLDSC_DIR"]
-FILTERED_DIR = config["FILTERED_DIR"]
-REF_LD = config["REF_LD"]
-DOM_LD_CHR = config["DOM_LD_CHR"]
-W_LD = config["W_LD"]
+NY     = len(TRAITS)
 OUTDIR = config["OUTDIR"]
 # trait -> LDAK-KVIK pheno index
 TRAIT_TO_INDEX = {trait: i for i, trait in enumerate(TRAITS, start=1)}
 
-MERGED_DIR = config["MERGED_DIR"] 
+# Phenotype files
+PHENO_FILE    = config["PHENO_FILE"]
+PHENO_ALIGNED = f"{OUTDIR}/dldsc/pheno/ukb_16traits.aligned.noheader.phi"
+
+
+# GWAS / LDSC tools
+GWAS_DIR  = config["GWAS_DIR"]
+LDSC_DIR  = config["LDSC_DIR"]
+DLDSC_DIR = config["DLDSC_DIR"]
+PLINK2    = config["PLINK2"]
+
+# Reference data
+REF_LD      = config["REF_LD"]
+DOM_LD_CHR  = config["DOM_LD_CHR"]
+W_LD        = config["W_LD"]
+CHAIN       = config["CHAIN"]
+W_HM3       =config["W_HM3"]
+# Genotype paths
+
+FILTERED_DIR      = config["FILTERED_DIR"]
+FILTERED_DIR_HG38 = f"{FILTERED_DIR}_hg38"
+
+MERGED_DIR    = config["MERGED_DIR"]
 BFILE_PREFIX  = config["BFILE_PREFIX"]
 BFILE         = f"{MERGED_DIR}/{BFILE_PREFIX}"
-COV_FILE  = config["COVARIATES"]
-MAF       = float(config.get("MAF", 0.0))
-NC           = int(config.get("NC", 14))
+
+# Covariates & parameters
+COV_FILE = config["COVARIATES"]
+MAF      = float(config.get("MAF", 0.0))
+NC       = int(config.get("NC", 14))
 
 
 rule all:
     input:
-        expand(f"{OUTDIR}/additive/{{trait}}.log", trait=TRAITS),
-        expand(f"{OUTDIR}/dominance/{{trait}}.log", trait=TRAITS)
-        
+        # Additive LDSC (complete)
+        expand(
+            f"{OUTDIR}/additive/{{trait}}.log",
+            trait=TRAITS
+        ),
+
+        # Dominance d-LDSC (stop at per-chr multi output directories)
+        expand(
+            f"{OUTDIR}/dldsc/sumstats/dominance/by_chr_multi/chr{{chr}}",
+            chr=CHRS
+        )
+
+
 
 ###########################################
 # Additive LDSC
 ############################################
+rule liftover_kvik_assoc_hg38:
+    input:
+        assoc = lambda wc: f"{GWAS_DIR}/kvik_output.step2.pheno{TRAIT_TO_INDEX[wc.trait]}.assoc"
+    output:
+        assoc_hg38 = f"{OUTDIR}/gwas_hg38/{{trait}}.assoc"
+    shell:
+        r"""
+        set -euo pipefail
+        source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
+        conda activate liftover
+
+        mkdir -p $(dirname {output.assoc_hg38})
+
+        # 1) assoc → BED (hg19)
+        awk 'BEGIN{{OFS="\t"}} NR>1 {{print "chr"$1, $3-1, $3, $2}}' \
+          {input.assoc} > {output.assoc_hg38}.hg19.bed
+
+        # 2) liftover
+        liftOver \
+          {output.assoc_hg38}.hg19.bed \
+          {CHAIN} \
+          {output.assoc_hg38}.hg38.bed \
+          {output.assoc_hg38}.unmapped.bed
+
+        # 3) rebuild assoc with hg38 positions
+        awk 'BEGIN{{OFS="\t"}} NR==FNR {{pos[$4]=$3; next}} \
+             NR==1 {{print; next}} \
+             ($2 in pos) {{$3=pos[$2]; print}}' \
+          {output.assoc_hg38}.hg38.bed \
+          {input.assoc} > {output.assoc_hg38}
+
+        conda deactivate
+        """
 
 rule munge_additive_sumstats:
     input:
-        gwas = lambda wc: f"{GWAS_DIR}/kvik_output.step2.pheno{TRAIT_TO_INDEX[wc.trait]}.assoc"
+        gwas = f"{OUTDIR}/gwas_hg38/{{trait}}.assoc"
     output:
         sumstats = f"{OUTDIR}/sumstats/additive/{{trait}}.sumstats.gz"
     shell:
         r"""
         set -euo pipefail
         source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
-        conda activate ldsc
+        conda activate ldsc39
 
         mkdir -p $(dirname {output.sumstats})
 
-        GWAS_ABS=$(realpath {input.gwas})
-        OUT_PREFIX_ABS=$(realpath {OUTDIR}/sumstats/additive/{wildcards.trait})
+        TMP=$(mktemp)
 
-        # header:
-        # Chromosome Predictor Basepair A1 A2 Wald_Stat Wald_P Effect SE MAF CallRate MachR2 SPA_Status
+        # 1) add header
+        echo -e "CHR\tSNP\tBP\tA1\tA2\tWALD\tP\tBETA\tSE\tMAF\tCALLRATE\tMACHR2\tSPA" > $TMP
+        cat {input.gwas} >> $TMP
+
+        # 2) munge
         python {LDSC_DIR}/munge_sumstats.py \
-          --sumstats "$GWAS_ABS" \
-          --snp Predictor \
+          --sumstats "$TMP" \
+          --snp SNP \
           --a1 A1 \
           --a2 A2 \
-          --p  Wald_P \
-          --signed-sumstats Effect,0 \
+          --p  P \
+          --signed-sumstats BETA,0 \
           --N 265132 \
-          --out "$OUT_PREFIX_ABS"
+          --merge-alleles 
+          --out {OUTDIR}/sumstats/additive/{wildcards.trait}
 
+        rm -f $TMP
         conda deactivate
         """
-
 
 rule ldsc_additive_h2:
     input:
@@ -72,7 +136,7 @@ rule ldsc_additive_h2:
         r"""
         set -euo pipefail
         source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
-        conda activate ldsc
+        conda activate ldsc39
 
         mkdir -p $(dirname {output.log})
 
@@ -95,90 +159,193 @@ rule ldsc_additive_h2:
 # phi files already split here:
 PHI_DIR = f"{OUTDIR}/dldsc/phi"
 
-rule dldsc_get_sumstats_dominance_chr:
+rule liftover_filtered_bfile_hg38:
     input:
         bed = f"{FILTERED_DIR}/ukb_chr{{chr}}_filtered.bed",
         bim = f"{FILTERED_DIR}/ukb_chr{{chr}}_filtered.bim",
-        fam = f"{FILTERED_DIR}/ukb_chr{{chr}}_filtered.fam",
-        phi = f"{PHI_DIR}/{{trait}}.phi",
-        cov = COV_FILE
+        fam = f"{FILTERED_DIR}/ukb_chr{{chr}}_filtered.fam"
+    output:
+        bed = f"{FILTERED_DIR_HG38}/ukb_chr{{chr}}_filtered_hg38.bed",
+        bim = f"{FILTERED_DIR_HG38}/ukb_chr{{chr}}_filtered_hg38.bim",
+        fam = f"{FILTERED_DIR_HG38}/ukb_chr{{chr}}_filtered_hg38.fam"
+    params:
+        chain = CHAIN
+    shell:
+        r"""
+        set -euo pipefail
+
+        source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
+        conda activate liftover
+
+        mkdir -p {FILTERED_DIR_HG38}
+        TMPDIR=$(mktemp -d)
+
+        # --------------------------------------------------
+        # 1) BIM → BED (hg19, 0-based)
+        # --------------------------------------------------
+        awk 'BEGIN{{OFS="\t"}} {{print "chr"$1, $4-1, $4, $2}}' \
+          {input.bim} > $TMPDIR/chr{wildcards.chr}.hg19.bed
+
+        # --------------------------------------------------
+        # 2) UCSC liftover
+        # --------------------------------------------------
+        liftOver \
+          $TMPDIR/chr{wildcards.chr}.hg19.bed \
+          {params.chain} \
+          $TMPDIR/chr{wildcards.chr}.hg38.bed \
+          $TMPDIR/chr{wildcards.chr}.unmapped.bed
+
+        # --------------------------------------------------
+        # 3) Build update-map + unmapped snplist
+        # --------------------------------------------------
+        awk '{{print $4, $3}}' \
+          $TMPDIR/chr{wildcards.chr}.hg38.bed > $TMPDIR/update_map.txt
+
+        awk '{{print $4}}' \
+          $TMPDIR/chr{wildcards.chr}.unmapped.bed > $TMPDIR/unmapped.snplist || true
+
+        # --------------------------------------------------
+        # 4) Apply coordinate update with PLINK2
+        # --------------------------------------------------
+        {PLINK2} \
+          --bed {input.bed} \
+          --bim {input.bim} \
+          --fam {input.fam} \
+          --update-map $TMPDIR/update_map.txt 1 2 \
+          --exclude $TMPDIR/unmapped.snplist \
+          --make-bed \
+          --out {FILTERED_DIR_HG38}/ukb_chr{wildcards.chr}_filtered_hg38
+
+        rm -rf $TMPDIR
+        conda deactivate
+        """
+
+rule dldsc_prepare_pheno_aligned:
+    input:
+        pheno = PHENO_FILE,
+        fam   = f"{FILTERED_DIR_HG38}/ukb_chr1_filtered_hg38.fam"
+    output:
+        pheno = PHENO_ALIGNED
+    shell:
+        r"""
+        set -euo pipefail
+        mkdir -p $(dirname {output.pheno})
+
+        # fam IDs
+        awk '{{print $1, $2}}' {input.fam} > fam.ids
+
+        # pheno header + body
+        head -n 1 {input.pheno} > pheno.header
+        tail -n +2 {input.pheno} > pheno.body
+
+        # align pheno rows to fam order
+        awk 'NR==FNR{{key[$1 FS $2]=NR; next}}
+             ($1 FS $2 in key)' fam.ids pheno.body \
+        | sort -k1,1 -k2,2 --stable \
+        > pheno.aligned
+
+        # remove header (d-LDSC requires no header)
+        cat pheno.aligned > {output.pheno}
+
+        # basic sanity check
+        fam_n=$(wc -l < fam.ids)
+        phe_n=$(wc -l < {output.pheno})
+        if [ "$fam_n" -ne "$phe_n" ]; then
+          echo "ERROR: FAM ($fam_n) and PHENO ($phe_n) row counts differ"
+          exit 1
+        fi
+
+        rm -f fam.ids pheno.header pheno.body pheno.aligned
+        """
+
+rule dldsc_get_sumstats_dominance_chr:
+    input:
+        bed   = f"{FILTERED_DIR_HG38}/ukb_chr{{chr}}_filtered_hg38.bed",
+        bim   = f"{FILTERED_DIR_HG38}/ukb_chr{{chr}}_filtered_hg38.bim",
+        fam   = f"{FILTERED_DIR_HG38}/ukb_chr{{chr}}_filtered_hg38.fam",
+        pheno = PHENO_ALIGNED,
+        cov   = COV_FILE
     threads: 24
     resources:
         mem_mb = 500000
     output:
-        sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/by_chr/{{trait}}/chr{{chr}}.sumstats"
+        outdir = directory(
+            f"{OUTDIR}/dldsc/sumstats/dominance/by_chr_multi/chr{{chr}}"
+        )
+    params:
+        ny = len(TRAITS)
     shell:
         r"""
         set -euo pipefail
         source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
         conda activate d-ldsc-py27
 
-        mkdir -p $(dirname {output.sumstats})
+        mkdir -p {output.outdir}
 
-        # IMPORTANT: get_sumstats.py uses --out prefix (not the .gz path directly)
-        PREFIX="{OUTDIR}/dldsc/sumstats/dominance/by_chr/{wildcards.trait}/chr{wildcards.chr}"
+        PREFIX="{output.outdir}/sumstats"
 
         stdbuf -oL -eL python -u {DLDSC_DIR}/get_sumstats.py \
           --out "$PREFIX" \
-          --bfile "{FILTERED_DIR}/ukb_chr{wildcards.chr}_filtered" \
+          --bfile "{FILTERED_DIR_HG38}/ukb_chr{wildcards.chr}_filtered_hg38" \
           --maf {MAF} \
-          --phifile "{input.phi}" \
+          --phifile "{input.pheno}" \
           --gxefile "{input.cov}" \
           --nC {NC} \
-          --ny 1 \
+          --ny {params.ny} \
           --dominance \
           --additive
 
         conda deactivate
         """
 
-rule dldsc_merge_sumstats_dominance:
-    input:
-        chr_sumstats = lambda wc: expand(
-            f"{OUTDIR}/dldsc/sumstats/dominance/by_chr/{wc.trait}/chr{{chr}}.sumstats",
-            chr=CHRS
-        )
-    output:
-        sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/{{trait}}.sumstats"
-    shell:
-        r"""
-        set -euo pipefail
-        mkdir -p $(dirname {output.sumstats})
 
-        # keep header only once (plain text files)
-        head -n 1 {input.chr_sumstats[0]} > {output.sumstats}.tmp
-        for f in {input.chr_sumstats}; do
-          awk 'NR>1' "$f" >> {output.sumstats}.tmp
-        done
+# rule dldsc_merge_sumstats_dominance:
+#     input:
+#         chr_sumstats = lambda wc: expand(
+#             f"{OUTDIR}/dldsc/sumstats/dominance/by_chr/{wc.trait}/chr{{chr}}.sumstats",
+#             chr=CHRS
+#         )
+#     output:
+#         sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/{{trait}}.sumstats"
+#     shell:
+#         r"""
+#         set -euo pipefail
+#         mkdir -p $(dirname {output.sumstats})
 
-        mv -f {output.sumstats}.tmp {output.sumstats}
-        """
+#         # keep header only once (plain text files)
+#         head -n 1 {input.chr_sumstats[0]} > {output.sumstats}.tmp
+#         for f in {input.chr_sumstats}; do
+#           awk 'NR>1' "$f" >> {output.sumstats}.tmp
+#         done
+
+#         mv -f {output.sumstats}.tmp {output.sumstats}
+#         """
 
 
-rule dldsc_get_h2_dominance:
-    input:
-        sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/{{trait}}.sumstats"
-    output:
-        log = f"{OUTDIR}/dominance/{{trait}}.log"
-    shell:
-        r"""
-        set -euo pipefail
-        source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
-        conda activate d-ldsc-py27
+# rule dldsc_get_h2_dominance:
+#     input:
+#         sumstats = f"{OUTDIR}/dldsc/sumstats/dominance/{{trait}}.sumstats"
+#     output:
+#         log = f"{OUTDIR}/dominance/{{trait}}.log"
+#     shell:
+#         r"""
+#         set -euo pipefail
+#         source /opt/ohpc/pub/Software/mamba-rocky/etc/profile.d/conda.sh
+#         conda activate d-ldsc-py27
 
-        OUT_PREFIX="{OUTDIR}/dominance/{wildcards.trait}"
-        mkdir -p "$(dirname "$OUT_PREFIX")"
+#         OUT_PREFIX="{OUTDIR}/dominance/{wildcards.trait}"
+#         mkdir -p "$(dirname "$OUT_PREFIX")"
 
-        stdbuf -oL -eL python -u {DLDSC_DIR}/get_h2.py \
-          --out "$OUT_PREFIX" \
-          --h2  "{input.sumstats}" \
-          --ref-ld-chr "{DOM_LD_CHR}" \
-          --w-ld-chr   "{W_LD}" \
-          --dominance \
-          --n-blocks 50 \
+#         stdbuf -oL -eL python -u {DLDSC_DIR}/get_h2.py \
+#           --out "$OUT_PREFIX" \
+#           --h2  "{input.sumstats}" \
+#           --ref-ld-chr "{DOM_LD_CHR}" \
+#           --w-ld-chr   "{W_LD}" \
+#           --dominance \
+#           --n-blocks 50 \
 
-        conda deactivate
-        """
+#         conda deactivate
+#         """
 
 
 

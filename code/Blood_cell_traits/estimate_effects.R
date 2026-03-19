@@ -6,18 +6,15 @@ suppressPackageStartupMessages({
 
 # -------------------- Args --------------------
 args <- commandArgs(trailingOnly = TRUE)
-if (length(args) != 6) {
-  stop("Usage: estimate_ad_real.R FILTERED_PREFIX SIG_SNPLIST ID_LIST PHENO_CSV TRAIT OUTPUT")
-}
-
 filtered_prefix <- args[1]    # e.g. /.../OUT_DIR/filtered/ukb_chr
 snplist_file    <- args[2]    # significant hits
 id_list_file    <- args[3]    # FID IID (analysis samples)
 pheno_file      <- args[4]    # contains all 16 traits
-trait_name      <- args[5]    # trait to analyze
-output_file     <- args[6]    # final table
+covar_file      <- args[5]    # covariates used in GWAS
+trait_name      <- args[6]    # trait to analyze
+output_file     <- args[7]    # final table
 
-# -------------------- Load IDs and phenotype --------------------
+# -------------------- Load IDs, phenotype, and covariates --------------------
 ids <- fread(id_list_file, header = FALSE, col.names = c("FID","IID"))
 
 ph <- fread(pheno_file)
@@ -25,8 +22,27 @@ if (!trait_name %in% names(ph)) {
   stop("Trait not found in phenotype file: ", trait_name)
 }
 ph <- ph[, .(FID, IID, pheno = get(trait_name))]
-pheno_vec <- ph$pheno
-names(pheno_vec) <- ph$IID
+
+covar <- fread(covar_file)
+if (!all(c("FID", "IID") %in% names(covar))) {
+  stop("Covariate file must contain FID and IID columns: ", covar_file)
+}
+
+covar_cols <- setdiff(names(covar), c("FID", "IID"))
+
+ids[,  `:=`(FID = as.character(FID), IID = as.character(IID))]
+ph[,   `:=`(FID = as.character(FID),  IID = as.character(IID))]
+covar[,`:=`(FID = as.character(FID), IID = as.character(IID))]
+
+sample_df <- merge(ids, ph, by = c("FID", "IID"), all.x = TRUE)
+sample_df <- merge(sample_df, covar, by = c("FID", "IID"), all.x = TRUE)
+
+cc <- complete.cases(sample_df[, c("pheno", covar_cols), with = FALSE])
+model_df <- sample_df[cc]
+fit <- lm(reformulate(covar_cols, response = "pheno"), data = model_df)
+model_df[, pheno_resid := residuals(fit)]
+pheno_vec <- model_df$pheno_resid
+names(pheno_vec) <- model_df$IID
 
 # -------------------- Load SNP list --------------------
 snps <- fread(snplist_file, header = FALSE)[[1]]

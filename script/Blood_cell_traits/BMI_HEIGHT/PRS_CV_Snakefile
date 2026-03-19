@@ -258,7 +258,8 @@ rule estimate_ad_clumped_cv:
             f"clump/p{{p1}}_r{{r2}}/clumped.snplist"
         ),
         ids = f"{CV_DIR}" + "/{trait}/train_fold{fold}.keep",
-        pheno = lambda wc: PHENO_FILES[wc.trait]
+        pheno = lambda wc: PHENO_FILES[wc.trait],
+        covar   = COVAR_FILE
     output:
         ad = (
             f"{PRS_CV}/{{trait}}/fold{{fold}}/"
@@ -278,6 +279,7 @@ rule estimate_ad_clumped_cv:
           {input.snps} \
           {input.ids} \
           {input.pheno} \
+          {input.covar} \
           {wildcards.trait} \
           {output.ad}
 

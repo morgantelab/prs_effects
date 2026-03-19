@@ -36,8 +36,8 @@ PHENO_NAMES:
   - MSCV
   - HLR_perc
 
-# Clumping sweep (3 x 3 = 9)
-CLUMP_P1_LIST: [10e-5, 10e-8]
+# Clumping sweep
+CLUMP_P1_LIST: [10e-5, 10e-8, 5e-8]
 CLUMP_R2_LIST: [0.1]
 CLUMP_KB: 250
 

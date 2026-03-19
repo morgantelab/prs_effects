@@ -13,9 +13,9 @@ if (length(args) != 11) {
        "DOM_PTHRESH CHUNK_SIZE THREADS NCHR")
 }
 
-pheno_dir       <- args[1]   # e.g. /.../OUT_DIR/<scen>/rep<rep>
-plink2_path     <- args[2]   # e.g. /path/to/plink2
-filtered_prefix <- args[3]   # e.g. /.../OUT_DIR/filtered/ukb_chr
+pheno_dir       <- args[1]
+plink2_path     <- args[2]
+filtered_prefix <- args[3]
 train_ids_file  <- args[4]
 test_ids_file   <- args[5]
 train_pheno_file<- args[6]
