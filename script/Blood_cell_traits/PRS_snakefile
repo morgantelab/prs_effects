@@ -34,147 +34,147 @@ INDEX_MAP = {i: TRAITS[i-1] for i in PHENO_INDEX}
 # ========= TARGETS =========
 rule all:
     input:
-        # expand(f"{OUT_DIR}/gwas/{{trait}}/significant.snplist", trait=TRAITS),
+        expand(f"{OUT_DIR}/gwas/{{trait}}/significant.snplist", trait=TRAITS),
         expand(f"{OUT_DIR}/effects/{{trait}}_ad.txt", trait=TRAITS)
 
 
-# # ========= 1) Filter bfiles per chromosome =========
-# rule filter_chr:
-#     input:
-#         bed = lambda w: f"{BED_BIM_DIR}/ukb22418_c{w.chr}_b0_v2_s488243.bed",
-#         bim = lambda w: f"{BED_BIM_DIR}/ukb22418_c{w.chr}_b0_v2_s488243.bim",
-#         fam = lambda w: f"{FAM_DIR}/ukb22418_c{w.chr}_b0_v2_s487945.fam",
-#         keep = ID_LIST
-#     output:
-#         bed = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bed",
-#         bim = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bim",
-#         fam = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.fam"
-#     threads: THREADS_PLK
-#     params:
-#         maf = MAF,
-#         mac = MAC,
-#         geno = GENO,
-#         hwe = HWE
-#     shell:
-#         r"""
-#         mkdir -p {OUT_DIR}/filtered
+# ========= 1) Filter bfiles per chromosome =========
+rule filter_chr:
+    input:
+        bed = lambda w: f"{BED_BIM_DIR}/ukb22418_c{w.chr}_b0_v2_s488243.bed",
+        bim = lambda w: f"{BED_BIM_DIR}/ukb22418_c{w.chr}_b0_v2_s488243.bim",
+        fam = lambda w: f"{FAM_DIR}/ukb22418_c{w.chr}_b0_v2_s487945.fam",
+        keep = ID_LIST
+    output:
+        bed = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bed",
+        bim = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bim",
+        fam = f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.fam"
+    threads: THREADS_PLK
+    params:
+        maf = MAF,
+        mac = MAC,
+        geno = GENO,
+        hwe = HWE
+    shell:
+        r"""
+        mkdir -p {OUT_DIR}/filtered
 
-#         {PLINK2} \
-#           --bed {input.bed} \
-#           --bim {input.bim} \
-#           --fam {input.fam} \
-#           --keep {input.keep} \
-#           --snps-only just-acgt \
-#           --rm-dup exclude-all \
-#           --maf {params.maf} \
-#           --mac {params.mac} \
-#           --geno {params.geno} \
-#           --hwe {params.hwe} \
-#           --threads {threads} \
-#           --make-bed \
-#           --out {OUT_DIR}/filtered/ukb_chr{wildcards.chr}_filtered
-#         """
+        {PLINK2} \
+          --bed {input.bed} \
+          --bim {input.bim} \
+          --fam {input.fam} \
+          --keep {input.keep} \
+          --snps-only just-acgt \
+          --rm-dup exclude-all \
+          --maf {params.maf} \
+          --mac {params.mac} \
+          --geno {params.geno} \
+          --hwe {params.hwe} \
+          --threads {threads} \
+          --make-bed \
+          --out {OUT_DIR}/filtered/ukb_chr{wildcards.chr}_filtered
+        """
 
-# rule merge_chromosomes:
-#     input:
-#         bed = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bed", chr=CHRS),
-#         bim = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bim", chr=CHRS),
-#         fam = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.fam", chr=CHRS)
-#     output:
-#         bed = f"{OUT_DIR}/merged/ukb_merged.bed",
-#         bim = f"{OUT_DIR}/merged/ukb_merged.bim",
-#         fam = f"{OUT_DIR}/merged/ukb_merged.fam"
-#     threads: 20
-#     run:
-#         import os
+rule merge_chromosomes:
+    input:
+        bed = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bed", chr=CHRS),
+        bim = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.bim", chr=CHRS),
+        fam = expand(f"{OUT_DIR}/filtered/ukb_chr{{chr}}_filtered.fam", chr=CHRS)
+    output:
+        bed = f"{OUT_DIR}/merged/ukb_merged.bed",
+        bim = f"{OUT_DIR}/merged/ukb_merged.bim",
+        fam = f"{OUT_DIR}/merged/ukb_merged.fam"
+    threads: 20
+    run:
+        import os
 
-#         out_dir = f"{OUT_DIR}/merged"
-#         os.makedirs(out_dir, exist_ok=True)
+        out_dir = f"{OUT_DIR}/merged"
+        os.makedirs(out_dir, exist_ok=True)
 
-#         merge_list = f"{out_dir}/merge_list.txt"
+        merge_list = f"{out_dir}/merge_list.txt"
 
-#         # write plink2 --pmerge-list format (bed bim fam per line)
-#         with open(merge_list, "w") as f:
-#             for c in CHRS[1:]:  # skip chr1 as base
-#                 prefix = f"{OUT_DIR}/filtered/ukb_chr{c}_filtered"
-#                 f.write(f"{prefix}.bed {prefix}.bim {prefix}.fam\n")
+        # write plink2 --pmerge-list format (bed bim fam per line)
+        with open(merge_list, "w") as f:
+            for c in CHRS[1:]:  # skip chr1 as base
+                prefix = f"{OUT_DIR}/filtered/ukb_chr{c}_filtered"
+                f.write(f"{prefix}.bed {prefix}.bim {prefix}.fam\n")
 
-#         # run plink2 parallel merge
-#         shell(f"""
-#             {PLINK2} \
-#                 --bfile {OUT_DIR}/filtered/ukb_chr1_filtered \
-#                 --pmerge-list {merge_list} \
-#                 --make-bed \
-#                 --out {OUT_DIR}/merged/ukb_merged
-#         """)
+        # run plink2 parallel merge
+        shell(f"""
+            {PLINK2} \
+                --bfile {OUT_DIR}/filtered/ukb_chr1_filtered \
+                --pmerge-list {merge_list} \
+                --make-bed \
+                --out {OUT_DIR}/merged/ukb_merged
+        """)
 
 
 # ========= 2) GWAS  =========
-# rule kvik_step1:
-#     input:
-#         bed   = f"{OUT_DIR}/merged/ukb_merged.bed",
-#         bim   = f"{OUT_DIR}/merged/ukb_merged.bim",
-#         fam   = f"{OUT_DIR}/merged/ukb_merged.fam",
-#         pheno = PHENO_CSV,
-#         covar = COVAR_FILE,
-#         keep  = ID_LIST
-#     output:
-#         root     = f"{OUT_DIR}/kvik/kvik_output.step1.root",
-#         progress = f"{OUT_DIR}/kvik/kvik_output.step1.progress",
-#         effects  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
-#                           i = range(1, len(TRAITS)+1)),
-#         prs      = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
-#                           i = range(1, len(TRAITS)+1)),
-#         details  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
-#                           i = range(1, len(TRAITS)+1))
-#     threads: THREADS_PLK
-#     shell:
-#         r"""
-#         mkdir -p {OUT_DIR}/kvik
-#
-#         {LDAK} \
-#             --kvik-step1 {OUT_DIR}/kvik/kvik_output \
-#             --bfile {OUT_DIR}/merged/ukb_merged \
-#             --pheno {input.pheno} \
-#             --covar {input.covar} \
-#             --mpheno ALL \
-#             --keep {input.keep} \
-#             --max-threads {threads}
-#         """
+rule kvik_step1:
+    input:
+        bed   = f"{OUT_DIR}/merged/ukb_merged.bed",
+        bim   = f"{OUT_DIR}/merged/ukb_merged.bim",
+        fam   = f"{OUT_DIR}/merged/ukb_merged.fam",
+        pheno = PHENO_CSV,
+        covar = COVAR_FILE,
+        keep  = ID_LIST
+    output:
+        root     = f"{OUT_DIR}/kvik/kvik_output.step1.root",
+        progress = f"{OUT_DIR}/kvik/kvik_output.step1.progress",
+        effects  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
+                          i = range(1, len(TRAITS)+1)),
+        prs      = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
+                          i = range(1, len(TRAITS)+1)),
+        details  = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
+                          i = range(1, len(TRAITS)+1))
+    threads: THREADS_PLK
+    shell:
+        r"""
+        mkdir -p {OUT_DIR}/kvik
+
+        {LDAK} \
+            --kvik-step1 {OUT_DIR}/kvik/kvik_output \
+            --bfile {OUT_DIR}/merged/ukb_merged \
+            --pheno {input.pheno} \
+            --covar {input.covar} \
+            --mpheno ALL \
+            --keep {input.keep} \
+            --max-threads {threads}
+        """
 
 
-# rule kvik_step2:
-#     input:
-#         root    = f"{OUT_DIR}/kvik/kvik_output.step1.root",
-#         effects = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
-#                          i = range(1, len(TRAITS)+1)),
-#         prs     = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
-#                          i = range(1, len(TRAITS)+1)),
-#         details = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
-#                          i = range(1, len(TRAITS)+1)),
-#         pheno   = PHENO_CSV,
-#         covar   = COVAR_FILE,
-#         keep    = ID_LIST
-#     output:
-#         assoc     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.assoc",
-#                            i = range(1, len(TRAITS)+1)),
-#         summaries = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.summaries",
-#                            i = range(1, len(TRAITS)+1)),
-#         coeff     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.coeff",
-#                            i = range(1, len(TRAITS)+1)),
-#         pvalues   = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.pvalues",
-#                            i = range(1, len(TRAITS)+1)),
-#         progress  = f"{OUT_DIR}/kvik/kvik_output.step2.progress"
-#     threads: THREADS_PLK
-#     shell:
-#         r"""
-#         {LDAK} \
-#             --kvik-step2 {OUT_DIR}/kvik/kvik_output \
-#             --pheno {input.pheno} \
-#             --covar {input.covar} \
-#             --mpheno ALL \
-#             --max-threads {threads}
-#         """
+rule kvik_step2:
+    input:
+        root    = f"{OUT_DIR}/kvik/kvik_output.step1.root",
+        effects = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.effects",
+                         i = range(1, len(TRAITS)+1)),
+        prs     = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.prs",
+                         i = range(1, len(TRAITS)+1)),
+        details = expand(f"{OUT_DIR}/kvik/kvik_output.step1.pheno{{i}}.loco.details",
+                         i = range(1, len(TRAITS)+1)),
+        pheno   = PHENO_CSV,
+        covar   = COVAR_FILE,
+        keep    = ID_LIST
+    output:
+        assoc     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.assoc",
+                           i = range(1, len(TRAITS)+1)),
+        summaries = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.summaries",
+                           i = range(1, len(TRAITS)+1)),
+        coeff     = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.coeff",
+                           i = range(1, len(TRAITS)+1)),
+        pvalues   = expand(f"{OUT_DIR}/kvik/kvik_output.step2.pheno{{i}}.pvalues",
+                           i = range(1, len(TRAITS)+1)),
+        progress  = f"{OUT_DIR}/kvik/kvik_output.step2.progress"
+    threads: THREADS_PLK
+    shell:
+        r"""
+        {LDAK} \
+            --kvik-step2 {OUT_DIR}/kvik/kvik_output \
+            --pheno {input.pheno} \
+            --covar {input.covar} \
+            --mpheno ALL \
+            --max-threads {threads}
+        """
 
 
 TRAIT_TO_INDEX = {trait: i for i, trait in enumerate(TRAITS, start=1)}

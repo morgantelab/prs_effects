@@ -12,7 +12,7 @@ LDAK: "/data2/morgante_lab/yuxuans/software/ldak6.1.linux"
 MAF: 0.01
 MAC: 5
 GENO: 0.1
-HWE: 1e-4
+HWE: 1e-5
 
 # Threads
 THREADS_PLINK: 12
