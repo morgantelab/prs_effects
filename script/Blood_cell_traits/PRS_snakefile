@@ -170,9 +170,11 @@ rule kvik_step2:
         r"""
         {LDAK} \
             --kvik-step2 {OUT_DIR}/kvik/kvik_output \
+            --bfile {OUT_DIR}/merged/ukb_merged \
             --pheno {input.pheno} \
             --covar {input.covar} \
             --mpheno ALL \
+            --keep {input.keep} \
             --max-threads {threads}
         """
 
@@ -209,11 +211,7 @@ rule gwas_sig_hits:
         os.makedirs(os.path.dirname(output.sig), exist_ok=True)
 
         df = pd.read_csv(input.assoc, sep=r"\s+")
-        n_snps = df.shape[0]
-
-        # Bonferroni: 5e-8 / number of SNPs
-        alpha = 0.05
-        thresh = alpha / n_snps
+        thresh = 5e-8
         hits = df[df["Wald_P"] < thresh]
         hits["Predictor"].to_csv(output.sig, index=False, header=False)
 

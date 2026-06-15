@@ -6,19 +6,17 @@ suppressPackageStartupMessages({
 
 args <- commandArgs(trailingOnly = TRUE)
 
-# -----------------------------
-# Args (STRICT ORDER)
-# -----------------------------
 effects_file   <- args[1]   # ad_clumped.txt (CHR POS SNP REF ALT a_hat d_hat p_a p_d)
 bfile_merged   <- args[2]   # merged bfile prefix
 test_ids_file  <- args[3]   # keep file (FID IID)
 pheno_file     <- args[4]   # PHENO_CSV
 trait_name     <- args[5]   # e.g., MCV
-out_prs        <- args[6]
-out_corr       <- args[7]
-plink2_path    <- args[8]
-dom_p_thresh   <- as.numeric(args[9])
-threads_plink  <- as.integer(args[10])
+covar          <- args[6]
+out_prs        <- args[7]
+out_corr       <- args[8]
+plink2_path    <- args[9]
+dom_p_thresh   <- as.numeric(args[10])
+threads_plink  <- as.integer(args[11])
 
 # -----------------------------
 # Helpers
@@ -146,12 +144,68 @@ fwrite(data.table(IID = test_ids_vec, PRS = prs_vec), out_prs, sep = "\t")
 prs_dt <- data.table(IID = test_ids_vec, PRS = prs_vec)
 prs_dt[, IID := as.character(IID)]
 
-pheno[, IID := as.character(IID)]
-res <- merge(prs_dt, pheno, by = "IID")
-rval <- suppressWarnings(cor(res$pheno, res$PRS, use = "complete.obs"))
+# -----------------------------
+# Phenotype residualization: y ~ C
+# -----------------------------
+ph_dt <- fread(pheno_file)
+cv_dt <- fread(covar)
+
+ph_dt[, IID := as.character(IID)]
+cv_dt[, IID := as.character(IID)]
+
+ph_work <- merge(
+  ph_dt[, .(IID, pheno = as.numeric(get(trait_name)))],
+  cv_dt,
+  by = "IID"
+)
+
+# remove duplicated IID if any
+ph_work <- unique(ph_work, by = "IID")
+
+covars <- setdiff(names(cv_dt), c("FID", "IID"))
+
+ph_work[, pheno_adj := pheno]
+
+if (length(covars) > 0) {
+  model_vars <- c("pheno", covars)
+  cc <- complete.cases(ph_work[, ..model_vars])
+
+  if (sum(cc) < 3) {
+    stop("Not enough complete observations to fit adjustment model y ~ C")
+  }
+
+  rhs <- paste(covars, collapse = " + ")
+  fml <- as.formula(paste("pheno ~", rhs))
+  fit <- lm(fml, data = ph_work[cc])
+
+  ph_work[cc, pheno_adj := residuals(fit)]
+  ph_work[!cc, pheno_adj := NA_real_]
+}
+
+ph_adj <- ph_work[, .(IID, pheno_adj)]
+
+# -----------------------------
+# Correlation (r and R^2) on adjusted phenotype
+# -----------------------------
+res <- merge(prs_dt, ph_adj, by = "IID")
+cc_corr <- complete.cases(res[, .(PRS, pheno_adj)])
+
+rval <- suppressWarnings(cor(res$pheno_adj[cc_corr], res$PRS[cc_corr]))
+r2   <- rval^2
 
 dir.create(dirname(out_corr), showWarnings = FALSE, recursive = TRUE)
-fwrite(data.table(corr_ad = rval, N = nrow(res)), out_corr, sep = "\t")
+fwrite(
+  data.table(
+    corr_ad_r2 = r2,
+    corr_ad_r  = rval,
+    N          = sum(cc_corr)
+  ),
+  out_corr,
+  sep = "\t"
+)
 
-cat(sprintf("[TEST merged method2 a+d] trait=%s N=%d cor=%.6f\n", trait_name, nrow(res), rval))
+cat(sprintf(
+  "[TEST merged method2 a+d adjusted] trait=%s N=%d r=%.6f R2=%.6f\n",
+  trait_name, sum(cc_corr), rval, r2
+))
 cat("Saved PRS -> ", out_prs, "\n", sep = "")

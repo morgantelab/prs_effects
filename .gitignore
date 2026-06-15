@@ -21,24 +21,24 @@ results/**
 # ignore whole script
 script/*
 
-# keep used
+# keep only these folders
 !script/Blood_cell_traits/
-!script/replication_v3/
+!script/simulation/
 
-# allow all files within the used folders
+# allow all files inside
 !script/Blood_cell_traits/**
-!script/replication_v3/**
+!script/simulation/**
 
 # ignore whole code
 code/*
 
-# keep used
-!code/test_method2/
+# keep only these folders
 !code/Blood_cell_traits/
+!code/simulation/
 
-# allow all files within the used folders
-!code/test_method2/**
+# allow all files inside
 !code/Blood_cell_traits/**
+!code/simulation/**
 
 # ignore snakemake anywhere
 **/.snakemake/**

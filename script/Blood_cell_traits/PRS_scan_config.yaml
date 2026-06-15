@@ -37,7 +37,7 @@ PHENO_NAMES:
   - HLR_perc
 
 # Clumping sweep
-CLUMP_P1_LIST: [10e-5, 10e-8, 5e-8]
+CLUMP_P1_LIST: [10e-5, 10e-8]
 CLUMP_R2_LIST: [0.1]
 CLUMP_KB: 250
 

@@ -159,13 +159,13 @@ ttest_res <- rmse_dt[
 ]
 
 final_rmse_summary <- merge(rmse_mean_wide, ttest_res, by = "trait")
-final_rmse_summary[, sig := ifelse(p_value < 0.05, "Yes", "No")]
+final_rmse_summary[, sig := ifelse(p_value < 0.05/16, "Yes", "No")]
 setorder(final_rmse_summary, p_value)
 
 print(final_rmse_summary)
 
 # Significant AND PRS_ad better
-sig_ad_better <- final_rmse_summary[p_value < 0.05 & PRS_ad < PRS_beta]
+sig_ad_better <- final_rmse_summary[p_value < 0.05/16 & PRS_ad < PRS_beta]
 n_sig_ad_better <- nrow(sig_ad_better)
 
 cat("Number of traits where PRS_ad significantly outperforms PRS_beta (p < 0.05) using residualized phenotype:",

@@ -183,49 +183,89 @@ rule make_cv_folds:
 # ========= 3) GWAS  =========
 rule kvik_step1_cv:
     input:
+        bed   = f"{OUT_DIR}/merged/ukb_merged.bed",
+        bim   = f"{OUT_DIR}/merged/ukb_merged.bim",
+        fam   = f"{OUT_DIR}/merged/ukb_merged.fam",
         pheno = PHENO_CSV,
         covar = COVAR_FILE,
         keep  = f"{CV_DIR}/train_fold{{fold}}.keep"
     output:
         root     = f"{OUT_DIR}/kvik_cv/fold{{fold}}/kvik_output.step1.root",
         progress = f"{OUT_DIR}/kvik_cv/fold{{fold}}/kvik_output.step1.progress",
-    threads: THREADS_PLK
-    shell:
-        r"""
-        {LDAK} \
-          --kvik-step1 {OUT_DIR}/kvik_cv/fold{wildcards.fold}/kvik_output \
-          --bfile {OUT_DIR}/merged/ukb_merged \
-          --pheno {input.pheno} \
-          --covar {input.covar} \
-          --mpheno ALL \
-          --keep {input.keep} \
-          --max-threads {threads}
-        """
-
-
-
-rule kvik_step2_cv:
-    input:
-        root  = f"{OUT_DIR}/kvik_cv/fold{{fold}}/kvik_output.step1.root",
-        pheno = PHENO_CSV,
-        covar = COVAR_FILE,
-        keep  = f"{CV_DIR}/train_fold{{fold}}.keep"
-    output:
-        assoc = (
-            f"{OUT_DIR}/kvik_cv/fold{{fold}}/"
-            f"kvik_output.step2.pheno{{pheno}}.assoc"
+        effects  = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step1.pheno{i}.effects",
+            i=range(1, len(TRAITS)+1)
+        ),
+        prs      = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step1.pheno{i}.loco.prs",
+            i=range(1, len(TRAITS)+1)
+        ),
+        details  = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step1.pheno{i}.loco.details",
+            i=range(1, len(TRAITS)+1)
         )
     threads: THREADS_PLK
     shell:
         r"""
+        mkdir -p {OUT_DIR}/kvik_cv/fold{wildcards.fold}
+
         {LDAK} \
-          --kvik-step2 {OUT_DIR}/kvik_cv/fold{wildcards.fold}/kvik_output \
-          --bfile {OUT_DIR}/merged/ukb_merged \
-          --pheno {input.pheno} \
-          --covar {input.covar} \
-          --keep {input.keep} \
-          --mpheno ALL \
-          --max-threads {threads}
+            --kvik-step1 {OUT_DIR}/kvik_cv/fold{wildcards.fold}/kvik_output \
+            --bfile {OUT_DIR}/merged/ukb_merged \
+            --pheno {input.pheno} \
+            --covar {input.covar} \
+            --mpheno ALL \
+            --keep {input.keep} \
+            --max-threads {threads}
+        """
+
+rule kvik_step2_cv:
+    input:
+        root    = f"{OUT_DIR}/kvik_cv/fold{{fold}}/kvik_output.step1.root",
+        effects = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step1.pheno{i}.effects",
+            i=range(1, len(TRAITS)+1)
+        ),
+        prs     = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step1.pheno{i}.loco.prs",
+            i=range(1, len(TRAITS)+1)
+        ),
+        details = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step1.pheno{i}.loco.details",
+            i=range(1, len(TRAITS)+1)
+        ),
+        pheno   = PHENO_CSV,
+        covar   = COVAR_FILE,
+        keep    = f"{CV_DIR}/train_fold{{fold}}.keep"
+    output:
+        assoc     = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step2.pheno{i}.assoc",
+            i=range(1, len(TRAITS)+1)
+        ),
+        summaries = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step2.pheno{i}.summaries",
+            i=range(1, len(TRAITS)+1)
+        ),
+        coeff     = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step2.pheno{i}.coeff",
+            i=range(1, len(TRAITS)+1)
+        ),
+        pvalues   = expand(
+            OUT_DIR + "/kvik_cv/fold{{fold}}/kvik_output.step2.pheno{i}.pvalues",
+            i=range(1, len(TRAITS)+1)
+        ),
+        progress  = f"{OUT_DIR}/kvik_cv/fold{{fold}}/kvik_output.step2.progress"
+    threads: THREADS_PLK
+    shell:
+        r"""
+        {LDAK} \
+            --kvik-step2 {OUT_DIR}/kvik_cv/fold{wildcards.fold}/kvik_output \
+            --bfile {OUT_DIR}/merged/ukb_merged \
+            --pheno {input.pheno} \
+            --covar {input.covar} \
+            --keep {input.keep} \
+            --mpheno ALL \
+            --max-threads {threads}
         """
         
 TRAIT_TO_INDEX = {trait: i for i, trait in enumerate(TRAITS, start=1)}
@@ -413,7 +453,8 @@ rule merge_prs_beta_and_corr_cv:
             f"{PRS_CV}/{{trait}}/fold{{fold}}/"
             f"score/p{{p1}}_r{{r2}}/score_beta_clumped.sscore"
         ),
-        pheno = PHENO_CSV
+        pheno = PHENO_CSV,
+        covar = COVAR_FILE
     output:
         prs = (
             f"{PRS_CV}/{{trait}}/fold{{fold}}/"
@@ -437,6 +478,7 @@ rule merge_prs_beta_and_corr_cv:
           {output.prs} \
           {input.pheno} \
           {wildcards.trait} \
+          {input.covar} \
           {output.corr}
 
         module unload R/4.2.3
@@ -453,7 +495,8 @@ rule score_prs_ad_cv:
         pheno    = PHENO_CSV,
         bfile_bed = f"{OUT_DIR}/merged/ukb_merged.bed",
         bfile_bim = f"{OUT_DIR}/merged/ukb_merged.bim",
-        bfile_fam = f"{OUT_DIR}/merged/ukb_merged.fam"
+        bfile_fam = f"{OUT_DIR}/merged/ukb_merged.fam" ,
+        covar    = COVAR_FILE
     output:
         prs = (
             f"{PRS_CV}/{{trait}}/fold{{fold}}/"
@@ -482,6 +525,7 @@ rule score_prs_ad_cv:
           {input.test_ids} \
           {input.pheno} \
           {wildcards.trait} \
+          {input.covar} \
           {output.prs} \
           {output.corr} \
           {params.PLINK2} \

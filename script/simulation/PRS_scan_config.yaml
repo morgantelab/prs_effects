@@ -1,5 +1,5 @@
 OUT_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/results/1000causal"
-CODE_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/test_method2"
+CODE_DIR: "/data2/morgante_lab/ukbiobank_projects/prs_effects/code/simulation"
 PHENO_CSV: "/data2/morgante_lab/data/ukbiobank/download_software/csv/ukb45105.csv"
 BED_BIM_DIR: "/data2/morgante_lab/data/ukbiobank/genotypes/array"
 FAM_DIR: "/data2/morgante_lab/data/ukbiobank/genotypes/array/fam_04042024"
@@ -15,7 +15,7 @@ H2: 0.5
 MAF: 0.01
 MAC: 5
 GENO: 0.1
-HWE: 1e-4
+HWE: 1e-5
 
 # Threads
 THREADS_PLINK: 20
