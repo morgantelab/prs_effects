@@ -37,7 +37,6 @@ if ("IID" %in% names(covar)) {
 }
 setkey(covar, IID)
 
-# 如需生成 age^2 / age*sex（如果文件里没给）
 if ("age" %in% names(covar) && !"age2" %in% names(covar)) {
   covar[, age2 := as.numeric(age)^2]
 }
@@ -49,11 +48,7 @@ if ("sex" %in% names(covar)) covar[, sex := as.factor(sex)]
 # =========================
 # Choose covariates C
 # =========================
-# 默认：covar 文件里除 IID/FID 外的所有列都纳入
 covar_cols <- setdiff(names(covar), c("FID", "IID"))
-
-# 如果你要严格跟 GWAS 一致，把上面那行换成下面这种（按你真实列名改）
-# covar_cols <- c(paste0("pc_genetic", 1:10), "age", "age2", "sex", "age_sex")
 
 # =========================
 # Residualize phenotype: y_res = resid(lm(y ~ C))
@@ -70,7 +65,7 @@ for (trait in traits) {
     all = FALSE
   )
   
-  # 去掉缺失（lm 也会处理，但这里先筛掉更明确）
+  # drop nas
   dt_y <- dt_y[complete.cases(dt_y)]
   if (nrow(dt_y) < 5) {
     warning(sprintf("Too few complete samples for trait %s after merging covariates.", trait))
@@ -110,7 +105,6 @@ for (trait in traits) {
     prs_ad[, IID := as.character(IID)]
     prs_beta[, IID := as.character(IID)]
     
-    # 用 residual phenotype 合并
     dt_ad <- merge(prs_ad,   yres_dt, by = "IID", all = FALSE)
     dt_be <- merge(prs_beta, yres_dt, by = "IID", all = FALSE)
     
