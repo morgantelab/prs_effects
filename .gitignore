@@ -11,6 +11,7 @@ results/*
 code/original_simulation/*
 code/.snakemake/*
 code/replication/.snakemake/*
+code/Blood_cell_traits/heritibility/
 **/.snakemake/
 script/replication/.snakemake/*
 
