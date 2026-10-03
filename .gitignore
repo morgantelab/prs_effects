@@ -1,45 +1,44 @@
-.Rproj.user
+# R session files
+.Rproj.user/
 .Rhistory
 .RData
 .Ruserdata
+
+# Project folders
 chr_22_test/
 errors/
 filter/
 logs/
 other/
-results/*
-code/original_simulation/*
-code/.snakemake/*
-code/replication/.snakemake/*
-code/Blood_cell_traits/heritibility/
-**/.snakemake/
-script/replication/.snakemake/*
 
-# results (recursive)
-results/**
+# Ignore contents of root results folder and results folders at any depth
+results/*
 **/results/**
 
-# ignore whole script
+# Ignore Snakemake working directories at any depth
+**/.snakemake/
+
+# Ignore unused code and script
+code/original_simulation/*
+script/Blood_cell_traits/heritibility/
+code/Blood_cell_traits/heritibility/
+
+# Ignore all script folders except the selected ones
 script/*
 
-# keep only these folders
 !script/Blood_cell_traits/
 !script/simulation/
 
-# allow all files inside
 !script/Blood_cell_traits/**
 !script/simulation/**
 
-# ignore whole code
+# Ignore all code folders except the selected ones
 code/*
 
-# keep only these folders
 !code/Blood_cell_traits/
 !code/simulation/
+!code/plots/
 
-# allow all files inside
 !code/Blood_cell_traits/**
 !code/simulation/**
-
-# ignore snakemake anywhere
-**/.snakemake/**
+!code/plots/**
