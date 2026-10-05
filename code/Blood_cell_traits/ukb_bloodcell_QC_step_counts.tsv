@@ -1,9 +1,0 @@
-step_name	excluded	remaining
-Non-White British	78555	409390
-Sex mismatch	307	409083
-Het/miss outlier	727	408356
-Not in PCA cohort 22020	71072	337284
-Pregnant	80	337204
-Blood-related disease	50352	286852
-Missing blood traits	13057	273795
-Mahalanobis outlier	0	273795
