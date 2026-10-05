@@ -4,41 +4,41 @@
 .RData
 .Ruserdata
 
-# Project folders
+# Project output folders
 chr_22_test/
 errors/
 filter/
 logs/
 other/
 
-# Ignore contents of root results folder and results folders at any depth
-results/*
+# Ignore results folders at any depth
 **/results/**
 
-# Ignore Snakemake working directories at any depth
+# Ignore original simulation code
+/code/original_simulation/
+
+# Ignore script folders except the selected ones
+/script/*
+
+!/script/Blood_cell_traits/
+!/script/simulation/
+
+!/script/Blood_cell_traits/**
+!/script/simulation/**
+
+# Ignore code folders except the selected ones
+/code/*
+
+!/code/Blood_cell_traits/
+!/code/simulation/
+!/code/plots/
+
+!/code/Blood_cell_traits/**
+!/code/simulation/**
+!/code/plots/**
+
+# Ignore these files and folders after the allow rules above
 **/.snakemake/
-
-# Ignore unused code and script
-code/original_simulation/*
-script/Blood_cell_traits/heritibility/
-code/Blood_cell_traits/heritibility/
-
-# Ignore all script folders except the selected ones
-script/*
-
-!script/Blood_cell_traits/
-!script/simulation/
-
-!script/Blood_cell_traits/**
-!script/simulation/**
-
-# Ignore all code folders except the selected ones
-code/*
-
-!code/Blood_cell_traits/
-!code/simulation/
-!code/plots/
-
-!code/Blood_cell_traits/**
-!code/simulation/**
-!code/plots/**
+/code/Blood_cell_traits/heritibility/
+/script/Blood_cell_traits/heritibility/
+/code/Blood_cell_traits/RMSE_check.R
