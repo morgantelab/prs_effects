@@ -41,4 +41,4 @@ other/
 **/.snakemake/
 /code/Blood_cell_traits/heritibility/
 /script/Blood_cell_traits/heritibility/
-/code/Blood_cell_traits/RMSE_check.R
+/code/plots/unused/
