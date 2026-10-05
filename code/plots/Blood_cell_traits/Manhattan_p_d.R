@@ -240,39 +240,54 @@ for (i in seq_len(nrow(trait_map))) {
 }
 
 ### =========================
-### SAVE SIX PLOTS PER PAGE
-### TWO PLOTS HORIZONTALLY
+### SAVE THREE PLOTS PER PAGE
+### ONE COLUMN VERTICALLY
 ### =========================
 
-plots_per_page <- 6
+plots_per_page <- 4
 n_pages <- ceiling(length(plot_list) / plots_per_page)
 
-### One combined multi-page PDF
+# A4 portrait: 8.27 x 11.69 inches
 cairo_pdf(
-  filename = file.path(PLOT_DIR, "manhattan_pd_all_pages.pdf"),
-  width = 20,
-  height = 15,
+  filename = file.path(
+    PLOT_DIR,
+    "manhattan_pd_all_pages_vertical.pdf"
+  ),
+  width = 8.27,
+  height = 11.69,
   onefile = TRUE
 )
+
 for (pg in seq_len(n_pages)) {
   
   first_plot <- (pg - 1) * plots_per_page + 1
-  last_plot <- min(pg * plots_per_page, length(plot_list))
+  last_plot <- min(
+    pg * plots_per_page,
+    length(plot_list)
+  )
   
   page_plots <- plot_list[first_plot:last_plot]
   
   combined_plot <- wrap_plots(
     page_plots,
-    ncol = 2,
+    ncol = 1,
     byrow = TRUE
-  )
+  ) +
+    plot_layout(
+      heights = rep(1, length(page_plots))
+    )
   
   print(combined_plot)
-  
 }
 
 dev.off()
 
-cat("Saved multi-page PDF:\n")
-cat(file.path(PLOT_DIR, "manhattan_pd_all_pages.pdf"), "\n")
-cat("Done.\n")
+cat("Saved multi-page vertical PDF:\n")
+cat(
+  file.path(
+    PLOT_DIR,
+    "manhattan_pd_all_pages_vertical.pdf"
+  ),
+  "\n"
+)
+cat("Number of pages:", n_pages, "\n")
